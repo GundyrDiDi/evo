@@ -6,7 +6,7 @@ if (user.value) {
   navigateTo('/home')
 }
 
-const r = location.origin
+const r = location?.origin
 </script>
 
 <template>
