@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxtjs/supabase", "@nuxt/ui"],
   css: ["~/assets/css/main.css"],
+  ssr:true,
   ui: {
     theme: {
       colors: ["gray"],
