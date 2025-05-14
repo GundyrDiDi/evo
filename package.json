@@ -8,9 +8,12 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "api":"supabase gen types --lang=typescript --project-id qtxgrtezsdvsutklkwtq > types/database.types.ts"
+    "api":"npx supabase gen types --lang=typescript --project-id qtxgrtezsdvsutklkwtq > types/database.types.ts"
   },
   "dependencies": {
+    "@iconify-json/heroicons": "^1.2.0",
+    "@iconify-json/heroicons-outline": "^1.2.0",
+    "@iconify-json/mdi": "^1.2.0",
     "@nuxt/ui": "^3.1.1",
     "@nuxtjs/supabase": "^1.5.1",
     "nuxt": "^3.17.3",

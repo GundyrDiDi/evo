@@ -11,7 +11,7 @@ const colorModeIcon = computed(() => colorMode.preference === 'dark' ? 'i-heroic
 
 const logout = async () => {
   await client.auth.signOut()
-  navigateTo('/')
+  navigateTo('/login')
 }
 </script>
 

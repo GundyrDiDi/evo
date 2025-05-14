@@ -21,6 +21,7 @@ export type Database = {
           platform: Database["public"]["Enums"]["platform"] | null
           remark: string | null
           tags: string | null
+          user_id: string | null
         }
         Insert: {
           alias?: string | null
@@ -33,6 +34,7 @@ export type Database = {
           platform?: Database["public"]["Enums"]["platform"] | null
           remark?: string | null
           tags?: string | null
+          user_id?: string | null
         }
         Update: {
           alias?: string | null
@@ -45,6 +47,7 @@ export type Database = {
           platform?: Database["public"]["Enums"]["platform"] | null
           remark?: string | null
           tags?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
