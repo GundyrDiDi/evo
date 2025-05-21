@@ -2,9 +2,9 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/supabase", "@nuxt/ui"],
+  modules: ["@nuxtjs/supabase", "@nuxt/ui", "@vueuse/nuxt"],
   css: ["~/assets/css/main.css"],
-  ssr:true,
+  ssr: true,
   ui: {
     theme: {
       colors: ["gray"],
@@ -18,6 +18,6 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ["types/*"],
+    dirs: ["composables/*", "types/*"],
   },
 });

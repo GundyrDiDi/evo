@@ -1,5 +1,8 @@
 {
   "name": "nuxt-app",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +11,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "api":"npx supabase gen types --lang=typescript --project-id qtxgrtezsdvsutklkwtq > types/database.types.ts"
+    "api": "npx supabase gen types --lang=typescript --project-id qtxgrtezsdvsutklkwtq > types/database.types.ts"
   },
   "dependencies": {
     "@iconify-json/heroicons": "^1.2.0",
@@ -16,6 +19,8 @@
     "@iconify-json/mdi": "^1.2.0",
     "@nuxt/ui": "^3.1.1",
     "@nuxtjs/supabase": "^1.5.1",
+    "@vueuse/core": "^13.2.0",
+    "@vueuse/nuxt": "^13.2.0",
     "nuxt": "^3.17.3",
     "tailwindcss": "^4.1.6",
     "vue": "^3.5.13",

@@ -20,6 +20,7 @@ export type Database = {
           name: string
           platform: Database["public"]["Enums"]["platform"] | null
           remark: string | null
+          status: Database["public"]["Enums"]["complete_status"]
           tags: string | null
           user_id: string | null
         }
@@ -33,6 +34,7 @@ export type Database = {
           name?: string
           platform?: Database["public"]["Enums"]["platform"] | null
           remark?: string | null
+          status?: Database["public"]["Enums"]["complete_status"]
           tags?: string | null
           user_id?: string | null
         }
@@ -46,6 +48,7 @@ export type Database = {
           name?: string
           platform?: Database["public"]["Enums"]["platform"] | null
           remark?: string | null
+          status?: Database["public"]["Enums"]["complete_status"]
           tags?: string | null
           user_id?: string | null
         }
@@ -56,18 +59,21 @@ export type Database = {
           children: string | null
           created_at: string
           id: number
+          parents: string | null
           tag: string | null
         }
         Insert: {
           children?: string | null
           created_at?: string
           id?: number
+          parents?: string | null
           tag?: string | null
         }
         Update: {
           children?: string | null
           created_at?: string
           id?: number
+          parents?: string | null
           tag?: string | null
         }
         Relationships: []
@@ -80,6 +86,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      complete_status:
+        | "running"
+        | "completed"
+        | "abandoned"
+        | "frozen"
+        | "not_started"
+        | "not_published"
       platform: "pc" | "ps" | "ns" | "xbox"
     }
     CompositeTypes: {
@@ -196,6 +209,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      complete_status: [
+        "running",
+        "completed",
+        "abandoned",
+        "frozen",
+        "not_started",
+        "not_published",
+      ],
       platform: ["pc", "ps", "ns", "xbox"],
     },
   },
