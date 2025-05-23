@@ -9,3 +9,11 @@ export const _pick = <T, K extends keyof T>(obj: T, k: K | K[]) => {
   }
   return t;
 };
+
+export const _unique = <T>(arr: T[]) => {
+  return [...new Set(arr)];
+};
+
+export const _values = <T extends Object>(t: T) => {
+  return Object.values(t) as RecordValue<T>;
+};

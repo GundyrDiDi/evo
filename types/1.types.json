@@ -1,0 +1,1562 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Database": {
+      "additionalProperties": false,
+      "properties": {
+        "public": {
+          "additionalProperties": false,
+          "properties": {
+            "CompositeTypes": {
+              "additionalProperties": false,
+              "type": "object"
+            },
+            "Enums": {
+              "additionalProperties": false,
+              "properties": {
+                "complete_status": {
+                  "enum": [
+                    "running",
+                    "completed",
+                    "abandoned",
+                    "frozen",
+                    "not_started",
+                    "not_published"
+                  ],
+                  "type": "string"
+                },
+                "platform": {
+                  "enum": [
+                    "pc",
+                    "ps",
+                    "ns",
+                    "xbox"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "complete_status",
+                "platform"
+              ],
+              "type": "object"
+            },
+            "Functions": {
+              "additionalProperties": false,
+              "type": "object"
+            },
+            "Tables": {
+              "additionalProperties": false,
+              "properties": {
+                "game_list": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "Insert": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "alias": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "complete_time": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "heart": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "id": {
+                          "type": "number"
+                        },
+                        "judgment": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "platform": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "remark": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "status": {
+                          "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                        },
+                        "tags": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "user_id": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "Relationships": {
+                      "maxItems": 0,
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "Row": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "alias": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "complete_time": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "heart": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "id": {
+                          "type": "number"
+                        },
+                        "judgment": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "platform": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "remark": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "status": {
+                          "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                        },
+                        "tags": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "user_id": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "alias",
+                        "complete_time",
+                        "created_at",
+                        "heart",
+                        "id",
+                        "judgment",
+                        "name",
+                        "platform",
+                        "remark",
+                        "status",
+                        "tags",
+                        "user_id"
+                      ],
+                      "type": "object"
+                    },
+                    "Update": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "alias": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "complete_time": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "heart": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "id": {
+                          "type": "number"
+                        },
+                        "judgment": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "platform": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "remark": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "status": {
+                          "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                        },
+                        "tags": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "user_id": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "Row",
+                    "Insert",
+                    "Update",
+                    "Relationships"
+                  ],
+                  "type": "object"
+                },
+                "game_tags": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "Insert": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "children": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "number"
+                        },
+                        "parents": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "tag": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "Relationships": {
+                      "maxItems": 0,
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "Row": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "children": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "number"
+                        },
+                        "parents": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "tag": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "children",
+                        "created_at",
+                        "id",
+                        "parents",
+                        "tag"
+                      ],
+                      "type": "object"
+                    },
+                    "Update": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "children": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "number"
+                        },
+                        "parents": {
+                          "anyOf": [
+                            {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "tag": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "Row",
+                    "Insert",
+                    "Update",
+                    "Relationships"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "game_list",
+                "game_tags"
+              ],
+              "type": "object"
+            },
+            "Views": {
+              "additionalProperties": false,
+              "type": "object"
+            }
+          },
+          "required": [
+            "Tables",
+            "Views",
+            "Functions",
+            "Enums",
+            "CompositeTypes"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "public"
+      ],
+      "type": "object"
+    },
+    "DefaultSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "CompositeTypes": {
+          "additionalProperties": false,
+          "type": "object"
+        },
+        "Enums": {
+          "additionalProperties": false,
+          "properties": {
+            "complete_status": {
+              "enum": [
+                "running",
+                "completed",
+                "abandoned",
+                "frozen",
+                "not_started",
+                "not_published"
+              ],
+              "type": "string"
+            },
+            "platform": {
+              "enum": [
+                "pc",
+                "ps",
+                "ns",
+                "xbox"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "complete_status",
+            "platform"
+          ],
+          "type": "object"
+        },
+        "Functions": {
+          "additionalProperties": false,
+          "type": "object"
+        },
+        "Tables": {
+          "additionalProperties": false,
+          "properties": {
+            "game_list": {
+              "additionalProperties": false,
+              "properties": {
+                "Insert": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "alias": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "complete_time": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "heart": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "judgment": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "platform": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "remark": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "status": {
+                      "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                    },
+                    "tags": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "user_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": "object"
+                },
+                "Relationships": {
+                  "maxItems": 0,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "Row": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "alias": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "complete_time": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "heart": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "judgment": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "platform": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "remark": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "status": {
+                      "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                    },
+                    "tags": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "user_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "alias",
+                    "complete_time",
+                    "created_at",
+                    "heart",
+                    "id",
+                    "judgment",
+                    "name",
+                    "platform",
+                    "remark",
+                    "status",
+                    "tags",
+                    "user_id"
+                  ],
+                  "type": "object"
+                },
+                "Update": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "alias": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "complete_time": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "heart": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "judgment": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "platform": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "remark": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "status": {
+                      "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                    },
+                    "tags": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "user_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "Row",
+                "Insert",
+                "Update",
+                "Relationships"
+              ],
+              "type": "object"
+            },
+            "game_tags": {
+              "additionalProperties": false,
+              "properties": {
+                "Insert": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "children": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "parents": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tag": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": "object"
+                },
+                "Relationships": {
+                  "maxItems": 0,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "Row": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "children": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "parents": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tag": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "children",
+                    "created_at",
+                    "id",
+                    "parents",
+                    "tag"
+                  ],
+                  "type": "object"
+                },
+                "Update": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "children": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "parents": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tag": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "Row",
+                "Insert",
+                "Update",
+                "Relationships"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "game_list",
+            "game_tags"
+          ],
+          "type": "object"
+        },
+        "Views": {
+          "additionalProperties": false,
+          "type": "object"
+        }
+      },
+      "required": [
+        "Tables",
+        "Views",
+        "Functions",
+        "Enums",
+        "CompositeTypes"
+      ],
+      "type": "object"
+    },
+    "Json": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Json"
+              },
+              {
+                "not": {}
+              }
+            ]
+          },
+          "type": "object"
+        },
+        {
+          "items": {
+            "$ref": "#/definitions/Json"
+          },
+          "type": "array"
+        }
+      ]
+    },
+    "structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735": {
+      "additionalProperties": false,
+      "properties": {
+        "CompositeTypes": {
+          "additionalProperties": false,
+          "type": "object"
+        },
+        "Enums": {
+          "additionalProperties": false,
+          "properties": {
+            "complete_status": {
+              "enum": [
+                "running",
+                "completed",
+                "abandoned",
+                "frozen",
+                "not_started",
+                "not_published"
+              ],
+              "type": "string"
+            },
+            "platform": {
+              "enum": [
+                "pc",
+                "ps",
+                "ns",
+                "xbox"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "complete_status",
+            "platform"
+          ],
+          "type": "object"
+        },
+        "Functions": {
+          "additionalProperties": false,
+          "type": "object"
+        },
+        "Tables": {
+          "additionalProperties": false,
+          "properties": {
+            "game_list": {
+              "additionalProperties": false,
+              "properties": {
+                "Insert": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "alias": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "complete_time": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "heart": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "judgment": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "platform": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "remark": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "status": {
+                      "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                    },
+                    "tags": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "user_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": "object"
+                },
+                "Relationships": {
+                  "maxItems": 0,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "Row": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "alias": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "complete_time": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "heart": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "judgment": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "platform": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "remark": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "status": {
+                      "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                    },
+                    "tags": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "user_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "alias",
+                    "complete_time",
+                    "created_at",
+                    "heart",
+                    "id",
+                    "judgment",
+                    "name",
+                    "platform",
+                    "remark",
+                    "status",
+                    "tags",
+                    "user_id"
+                  ],
+                  "type": "object"
+                },
+                "Update": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "alias": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "complete_time": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "heart": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "judgment": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "platform": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "remark": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "status": {
+                      "$ref": "#/definitions/structure-1368574751-148-2613-1368574751-138-2613-1368574751-136-2615-1368574751-112-2615-1368574751-0-6735"
+                    },
+                    "tags": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "user_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "Row",
+                "Insert",
+                "Update",
+                "Relationships"
+              ],
+              "type": "object"
+            },
+            "game_tags": {
+              "additionalProperties": false,
+              "properties": {
+                "Insert": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "children": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "parents": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tag": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": "object"
+                },
+                "Relationships": {
+                  "maxItems": 0,
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "Row": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "children": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "parents": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tag": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "children",
+                    "created_at",
+                    "id",
+                    "parents",
+                    "tag"
+                  ],
+                  "type": "object"
+                },
+                "Update": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "children": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "parents": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tag": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "Row",
+                "Insert",
+                "Update",
+                "Relationships"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "game_list",
+            "game_tags"
+          ],
+          "type": "object"
+        },
+        "Views": {
+          "additionalProperties": false,
+          "type": "object"
+        }
+      },
+      "required": [
+        "Tables",
+        "Views",
+        "Functions",
+        "Enums",
+        "CompositeTypes"
+      ],
+      "type": "object"
+    }
+  }
+}
+

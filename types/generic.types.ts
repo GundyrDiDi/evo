@@ -1,0 +1,1 @@
+export type RecordValue<T>=T[keyof T]

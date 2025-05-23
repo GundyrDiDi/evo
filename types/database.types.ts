@@ -9,9 +9,9 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      "game-list": {
+      game_list: {
         Row: {
-          alias: string | null
+          alias: string[] | null
           complete_time: string | null
           created_at: string
           heart: boolean | null
@@ -21,11 +21,11 @@ export type Database = {
           platform: Database["public"]["Enums"]["platform"] | null
           remark: string | null
           status: Database["public"]["Enums"]["complete_status"]
-          tags: string | null
+          tags: string[] | null
           user_id: string | null
         }
         Insert: {
-          alias?: string | null
+          alias?: string[] | null
           complete_time?: string | null
           created_at?: string
           heart?: boolean | null
@@ -35,11 +35,11 @@ export type Database = {
           platform?: Database["public"]["Enums"]["platform"] | null
           remark?: string | null
           status?: Database["public"]["Enums"]["complete_status"]
-          tags?: string | null
+          tags?: string[] | null
           user_id?: string | null
         }
         Update: {
-          alias?: string | null
+          alias?: string[] | null
           complete_time?: string | null
           created_at?: string
           heart?: boolean | null
@@ -49,31 +49,31 @@ export type Database = {
           platform?: Database["public"]["Enums"]["platform"] | null
           remark?: string | null
           status?: Database["public"]["Enums"]["complete_status"]
-          tags?: string | null
+          tags?: string[] | null
           user_id?: string | null
         }
         Relationships: []
       }
-      "game-tags": {
+      game_tags: {
         Row: {
-          children: string | null
+          children: string[] | null
           created_at: string
           id: number
-          parents: string | null
+          parents: string[] | null
           tag: string | null
         }
         Insert: {
-          children?: string | null
+          children?: string[] | null
           created_at?: string
           id?: number
-          parents?: string | null
+          parents?: string[] | null
           tag?: string | null
         }
         Update: {
-          children?: string | null
+          children?: string[] | null
           created_at?: string
           id?: number
-          parents?: string | null
+          parents?: string[] | null
           tag?: string | null
         }
         Relationships: []
@@ -101,7 +101,7 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+export type DefaultSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
