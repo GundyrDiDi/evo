@@ -72,7 +72,7 @@ export const game_list: Config<RowGameList> = {
     enums: enumData["complete_status"],
   },
   game_type: {
-    label: "",
+    label: "分类",
     type: "enum",
     enums: enumData["game_type"],
   },
