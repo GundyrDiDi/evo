@@ -9,11 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      _link_dlc: {
+        Row: {
+          created_at: string
+          dlc: string | null
+          id: number
+          original: string | null
+        }
+        Insert: {
+          created_at?: string
+          dlc?: string | null
+          id?: number
+          original?: string | null
+        }
+        Update: {
+          created_at?: string
+          dlc?: string | null
+          id?: number
+          original?: string | null
+        }
+        Relationships: []
+      }
+      _link_game_tag: {
+        Row: {
+          created_at: string
+          game_name: string | null
+          game_tag: string | null
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          game_name?: string | null
+          game_tag?: string | null
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          game_name?: string | null
+          game_tag?: string | null
+          id?: number
+        }
+        Relationships: []
+      }
       game_list: {
         Row: {
           alias: string[] | null
           complete_time: string | null
           created_at: string
+          game_type: Database["public"]["Enums"]["game_type"] | null
           heart: boolean | null
           id: number
           judgment: string | null
@@ -28,10 +71,11 @@ export type Database = {
           alias?: string[] | null
           complete_time?: string | null
           created_at?: string
+          game_type?: Database["public"]["Enums"]["game_type"] | null
           heart?: boolean | null
           id?: number
           judgment?: string | null
-          name?: string
+          name: string
           platform?: Database["public"]["Enums"]["platform"] | null
           remark?: string | null
           status?: Database["public"]["Enums"]["complete_status"]
@@ -42,6 +86,7 @@ export type Database = {
           alias?: string[] | null
           complete_time?: string | null
           created_at?: string
+          game_type?: Database["public"]["Enums"]["game_type"] | null
           heart?: boolean | null
           id?: number
           judgment?: string | null
@@ -59,22 +104,22 @@ export type Database = {
           children: string[] | null
           created_at: string
           id: number
+          name: string
           parents: string[] | null
-          tag: string | null
         }
         Insert: {
           children?: string[] | null
           created_at?: string
           id?: number
+          name: string
           parents?: string[] | null
-          tag?: string | null
         }
         Update: {
           children?: string[] | null
           created_at?: string
           id?: number
+          name?: string
           parents?: string[] | null
-          tag?: string | null
         }
         Relationships: []
       }
@@ -93,6 +138,7 @@ export type Database = {
         | "frozen"
         | "not_started"
         | "not_published"
+      game_type: "original" | "dlc"
       platform: "pc" | "ps" | "ns" | "xbox"
     }
     CompositeTypes: {
@@ -101,7 +147,7 @@ export type Database = {
   }
 }
 
-export type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
@@ -217,6 +263,7 @@ export const Constants = {
         "not_started",
         "not_published",
       ],
+      game_type: ["original", "dlc"],
       platform: ["pc", "ps", "ns", "xbox"],
     },
   },

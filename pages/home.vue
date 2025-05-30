@@ -2,7 +2,7 @@
 
 const editNewRow = useLocalStorage('editNewRow', {} as RowGameList)
 
-let mock: RowGameList = { name: 'ff7', alias: ['c'], complete_time: '2022', heart: false, judgment: '⭕️', remark: '', status: 'abandoned', tags: null, platform: 'ns', id: 1, created_at: '', user_id: '' }
+let mock: RowGameList = { name: 'ff7', alias: ['c'], complete_time: '2022', heart: false, judgment: '⭕️', remark: '', status: 'abandoned', tags: ['rpg','jrpg'], platform: 'ns', id: 1, created_at: '', user_id: '' }
 
 const client = useSupabaseClient<Database>()
 const user = useSupabaseUser()
@@ -18,7 +18,7 @@ const { data } = await useAsyncData<RowGameList[]>('game-list', loadingHook(asyn
 
 const handleCreate = loadingHook(async (row: RowGameList) => {
   editNewRow.value = {} as RowGameList
-  row && data.value?.push(row)  
+  row && data.value?.push(row)
 })
 
 const handleUpdate = loadingHook(async (row: RowGameList) => {

@@ -1,10 +1,13 @@
+import { ATagModal } from "#components"
 import type { TableColumn } from "@nuxt/ui";
 
 export const gameColumnMap = useGameList(
   {
     name: {},
     alias: {},
-    tags: {},
+    tags: {
+      component: ATagModal,
+    },
     status: {},
     complete_time: {},
     heart: {},
@@ -13,14 +16,17 @@ export const gameColumnMap = useGameList(
     remark: {},
   },
   (k, v) => {
-    const t: TableColumn<RowGameList> & { id: typeof k } = {
+    const t: TableColumn<RowGameList> & {
+      component?: any;
+      id: typeof k;
+    } = {
       id: k,
       accessorKey: k,
       header: v.label,
       meta: {
         class: {
-          th: " text-center",
-          td: " text-center p-0",
+          th: " text-center min-w-32",
+          td: " text-center p-0 ",
         },
       },
     };

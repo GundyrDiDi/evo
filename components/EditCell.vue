@@ -1,7 +1,6 @@
 <script lang="ts" setup generic="Type extends EnumValueType,K extends keyof RowGameList, D extends RowGameList">
-import type { RecordValue } from '~/types/generic.types'
 
-const props = defineProps<{ type?: Type, id?: K, foregin?: any, isCreate: boolean, data: D }>()
+const props = defineProps<{ type?: Type, id?: K, component?: any, enums?: any, isCreate: boolean, data: D }>()
 
 const emits = defineEmits<{ (e: 'update' | 'create', row: D): void }>()
 
@@ -37,25 +36,32 @@ const update = async () => {
   <client-only>
     <div ref="cell" class=" relative z-1">
       <div v-if="isEdit || isCreate" class=" p-4">
-        <template v-if="type === 'text'">
+        <template v-if="component">
+          <component :is="component" v-model="model"></component>
+        </template>
+        <template v-else-if="type === 'text'">
           <u-input v-model="model" />
         </template>
-        <template v-if="type === 'text_list'">
+        <template v-else-if="type === 'text_list'">
           <a-text-list class=" flex flex-col gap-2" v-model="model" />
         </template>
-        <template v-if="type in enumData">
-          <u-select-menu v-model="model" :open="isEdit" value-key="value" :items="_values(foregin)" class=" w-48" />
+        <template v-else-if="type === 'enum'">
+          <u-select-menu v-model="model" :default-open="isEdit" value-key="value" :items="_values(enums!)"
+            class=" min-w-24" />
         </template>
       </div>
       <div v-else class=" cursor-pointer p-4" @click="toggle(true)">
-        <template v-if="type === 'text'">
+        <template v-if="component">
+          <component :is="component" v-model="model"></component>
+        </template>
+        <template v-else-if="type === 'text'">
           {{ model }}
         </template>
-        <template v-if="type === 'text_list'">
+        <template v-else-if="type === 'text_list'">
           {{ model?.join(',') }}
         </template>
-        <template v-if="type in enumData">
-          {{ foregin[model].label }}
+        <template v-else-if="type === 'enum'">
+          {{ enums[model].label }}
         </template>
       </div>
     </div>

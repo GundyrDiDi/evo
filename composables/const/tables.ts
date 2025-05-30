@@ -4,16 +4,14 @@ export type RowGameTags = Tables<"game_tags">;
 
 export type RowEvo = RowGameList | RowGameTags;
 
-export type Affix<T extends string, U extends string> = `${T}_${U}`;
-
 export type EnumValueType =
   | "number"
   | "text"
-  | "text_list"
   | "bool"
   | "date"
+  | "enum"
   | "json"
-  | keyof EnumMap;
+  | "text_list";
 
 type Config<Row extends RowEvo> = {
   [P in keyof Row]: {
@@ -21,7 +19,7 @@ type Config<Row extends RowEvo> = {
     readonly?: boolean;
     value?: Exclude<Row[P], null>;
     type?: EnumValueType;
-    foregin?: any;
+    enums?: Record<string, { value: string; label: string }>;
   };
 };
 
@@ -54,8 +52,8 @@ export const game_list: Config<RowGameList> = {
   },
   platform: {
     label: "平台",
-    type: "platform",
-    foregin: enumData['platform']
+    type: "enum",
+    enums: enumData["platform"],
   },
   remark: {
     label: "其他信息",
@@ -70,8 +68,13 @@ export const game_list: Config<RowGameList> = {
   },
   status: {
     label: "状态",
-    type: "complete_status",
-    foregin: enumData['complete_status']
+    type: "enum",
+    enums: enumData["complete_status"],
+  },
+  game_type: {
+    label: "",
+    type: "enum",
+    enums: enumData["game_type"],
   },
 };
 
@@ -82,7 +85,7 @@ export const game_tags: Config<RowGameTags> = {
   created_at: {
     label: "",
   },
-  tag: {
+  name: {
     label: "标签",
   },
   parents: {
@@ -100,7 +103,7 @@ const useRow = <T extends Config<RowEvo>>(row: T) => {
     Key2 extends keyof T,
     Convert extends <K extends Key>(
       k: K,
-      v: K extends Key2 ? Merge[K] & T[K] : never
+      v: K extends Key2 ? Merge[K] & T[K] : K extends Key ? Merge[K] : never
     ) => any
   >(merge: Merge, convert: Convert) {
     Object.keys(merge).forEach((v) => {
