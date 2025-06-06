@@ -40,6 +40,7 @@ const getMasons=()=>{
 
 <style>
 .m-grid-item {
+  user-select: none;
   margin-bottom: 10px;
   cursor: default;
 }
