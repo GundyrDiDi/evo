@@ -12,6 +12,8 @@ BEGIN
 
   -- 开始事务
   BEGIN
+    -- ALTER TABLE _link_game_tag ADD CONSTRAINT _link_game_tag_unique UNIQUE (game_name, game_tag);
+
     -- 1. 插入新标签（忽略已存在的主键冲突）
     INSERT INTO _link_game_tag (game_name, game_tag)
     SELECT in_game_name, tag_value
@@ -27,18 +29,7 @@ BEGIN
       );
 
     -- 提交事务
-    COMMIT;
-    
-  EXCEPTION
-    WHEN others THEN
-      -- 如果发生任何异常，回滚事务并重新抛出异常
-      ROLLBACK;
-      RAISE EXCEPTION '标签更新失败：%', SQLERRM;
+    -- COMMIT;
   END;
 END;
 $$;
-
-update_game_tags(
-    'test_game', 
-    '["action", "strategy", "simulation"]'::jsonb
-);

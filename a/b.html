@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自适应正方形容器的Flex布局</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            color: #e3f2fd;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #64b5f6, #e1bee7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* 控制面板 */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: rgba(33, 150, 243, 0.4);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            background: rgba(33, 150, 243, 0.6);
+            transform: translateY(-3px);
+        }
+        
+        /* 布局区域 */
+        .layout-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        /* 正方形容器 */
+        .square-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* 关键: 1:1正方形比例 */
+            background: rgba(13, 71, 161, 0.6);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .content-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            padding: 15px;
+            gap: 15px;
+        }
+        
+        /* 内部元素样式 */
+        .flex-element {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #64b5f6;
+            box-sizing: content-box;
+            text-align: center;
+            font-weight: bold;
+            color: #1a237e;
+            word-break: break-word;
+        }
+        
+        .flex-element:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* 信息显示 */
+        .info-container {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .info-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #4fc3f7;
+        }
+        
+        .info-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #bb86fc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-content {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .info-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>自适应正方形容器的Flex布局</h1>
+            <p class="subtitle">动态计算最小容器尺寸及元素宽度，确保所有元素在正方形中不重叠</p>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="addElement">
+                <span>➕</span> 添加元素
+            </button>
+            <button class="btn" id="removeElement">
+                <span>➖</span> 移除元素
+            </button>
+            <button class="btn" id="calculateMin">
+                <span>📐</span> 计算最小尺寸
+            </button>
+            <button class="btn" id="randomLayout">
+                <span>🔀</span> 随机布局
+            </button>
+        </div>
+        
+        <div class="layout-container">
+            <div class="square-container">
+                <div id="contentWrapper" class="content-wrapper">
+                    <!-- 动态添加元素 -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-container">
+            <div class="info-card">
+                <div class="info-title">
+                    <span>📏</span> 容器尺寸信息
+                </div>
+                <div class="info-content">
+                    <p>当前尺寸：<span id="currentSize">600 × 600 px</span></p>
+                    <p>最小尺寸：<span id="minSize">待计算</span></p>
+                    <p>空间利用率：<span id="utilization">--</span></p>
+                    <p>布局状态：<span id="layoutStatus">等待计算</span></p>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">
+                    <span>⚙️</span> 布局算法说明
+                </div>
+                <div class="info-content">
+                    <p>算法基于Flex布局特性计算：</p>
+                    <p>1. 二分法查找最小正方形尺寸</p>
+                    <p>2. 动态调整元素宽度以适应容器</p>
+                    <p>3. 基于空间密度估算最小尺寸</p>
+                    <p>4. 自动换行防止元素重叠</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>自适应正方形容器布局系统 | 基于Flex的动态调整算法</p>
+        </div>
+    </div>
+
+    <script>
+        // 状态管理
+        const layoutState = {
+            containerSize: 600,
+            minSize: null,
+            elements: [],
+            elementCount: 6,
+            aspectRatios: [1, 0.75, 1.5, 1.33, 0.8],
+            minWidthRatio: 0.15, // 元素最小宽度比例
+            maxWidthRatio: 0.35  // 元素最大宽度比例
+        };
+        
+        // DOM元素
+        const contentWrapper = document.getElementById('contentWrapper');
+        const currentSizeSpan = document.getElementById('currentSize');
+        const minSizeSpan = document.getElementById('minSize');
+        const utilizationSpan = document.getElementById('utilization');
+        const layoutStatusSpan = document.getElementById('layoutStatus');
+        
+        // 初始化布局
+        function initLayout() {
+            updateLayoutInfo();
+            generateElements();
+        }
+        
+        // 生成随机元素
+        function generateElements() {
+            contentWrapper.innerHTML = '';
+            layoutState.elements = [];
+            
+            for (let i = 0; i < layoutState.elementCount; i++) {
+                addFlexElement(i);
+            }
+            
+            updateElementSizes();
+        }
+        
+        // 添加单个元素
+        function addFlexElement(id) {
+            const element = document.createElement('div');
+            element.className = 'flex-element';
+            element.id = `el-${id}`;
+            element.textContent = `元素 ${id+1}`;
+            
+            // 随机选择宽高比
+            const aspectRatio = layoutState.aspectRatios[
+                Math.floor(Math.random() * layoutState.aspectRatios.length)
+            ];
+            
+            // 计算面积占比
+            const areaRatio = 0.5 + Math.random() * 0.5;
+            
+            layoutState.elements.push({
+                id,
+                element,
+                aspectRatio,
+                areaRatio,
+                minWidth: 0,
+                minHeight: 0,
+                currentWidth: 0,
+                currentHeight: 0
+            });
+            
+            contentWrapper.appendChild(element);
+        }
+        
+        // 更新元素尺寸
+        function updateElementSizes() {
+            const containerWidth = contentWrapper.offsetWidth;
+            const containerHeight = contentWrapper.offsetHeight;
+            const minDimension = Math.min(containerWidth, containerHeight);
+            const useableWidth = containerWidth - 30; // 减去padding
+            
+            // 计算所有元素的总面积
+            const totalAreaRatio = layoutState.elements.reduce((sum, el) => sum + el.areaRatio, 0);
+            
+            // 为每个元素设置尺寸
+            layoutState.elements.forEach(el => {
+                // 计算目标面积
+                const targetArea = (el.areaRatio / totalAreaRatio) * 
+                                 (useableWidth * containerHeight) * 0.8;
+                
+                // 计算宽度和高度
+                const targetWidth = Math.sqrt(targetArea * el.aspectRatio);
+                const targetHeight = targetWidth / el.aspectRatio;
+                
+                // 应用尺寸限制
+                const minSize = minDimension * layoutState.minWidthRatio;
+                const maxSize = minDimension * layoutState.maxWidthRatio;
+                
+                let finalWidth = Math.max(minSize, Math.min(maxSize, targetWidth));
+                let finalHeight = finalWidth / el.aspectRatio;
+                
+                // 如果高度太大，调整宽度
+                if (finalHeight > containerHeight * 0.4) {
+                    finalHeight = containerHeight * 0.4;
+                    finalWidth = finalHeight * el.aspectRatio;
+                }
+                
+                // 保存尺寸数据
+                el.minWidth = minSize;
+                el.minHeight = minSize / el.aspectRatio;
+                el.currentWidth = finalWidth;
+                el.currentHeight = finalHeight;
+                
+                // 应用样式
+                el.element.style.width = `${finalWidth}px`;
+                el.element.style.height = `${finalHeight}px`;
+                el.element.style.backgroundColor = getColorFromRatio(el.areaRatio);
+            });
+            
+            updateLayoutInfo();
+        }
+        
+        // 根据面积比例获取颜色
+        function getColorFromRatio(ratio) {
+            const hue = 200 + Math.floor(ratio * 100);
+            return `hsl(${hue}, 80%, 85%)`;
+        }
+        
+        // 计算最小容器尺寸
+        function calculateMinSize() {
+            layoutStatusSpan.textContent = "计算中...";
+            
+            // 模拟计算过程
+            setTimeout(() => {
+                // 计算所有元素的最小尺寸需求
+                let minWidth = 0;
+                let minHeight = 0;
+                let totalArea = 0;
+                
+                layoutState.elements.forEach(el => {
+                    // 最小尺寸需求
+                    minWidth = Math.max(minWidth, el.minWidth);
+                    minHeight = Math.max(minHeight, el.minHeight);
+                    
+                    // 面积累计
+                    totalArea += el.currentWidth * el.currentHeight;
+                });
+                
+                // 估算最小尺寸（这里简化，实际需要更复杂的计算）
+                const areaBasedMin = Math.sqrt(totalArea * 1.5);
+                
+                // 最终最小尺寸为各种约束的最大值
+                const minSize = Math.max(
+                    minWidth * layoutState.elementCount / 2,
+                    minHeight * 2,
+                    areaBasedMin,
+                    400 // 最小合理值
+                );
+                
+                // 应用计算结果
+                layoutState.minSize = Math.ceil(minSize);
+                minSizeSpan.textContent = `${layoutState.minSize} × ${layoutState.minSize} px`;
+                
+                // 计算空间利用率
+                const containerArea = layoutState.containerSize * layoutState.containerSize;
+                const utilization = (totalArea / containerArea * 100).toFixed(1);
+                utilizationSpan.textContent = `${utilization}%`;
+                
+                layoutStatusSpan.textContent = "计算完成";
+            }, 1000);
+        }
+        
+        // 更新布局信息
+        function updateLayoutInfo() {
+            currentSizeSpan.textContent = `${layoutState.containerSize} × ${layoutState.containerSize} px`;
+        }
+        
+        // 添加新元素
+        function addElement() {
+            if (layoutState.elementCount < 20) {
+                layoutState.elementCount++;
+                addFlexElement(layoutState.elementCount - 1);
+                updateElementSizes();
+                layoutStatusSpan.textContent = "已添加新元素";
+            } else {
+                layoutStatusSpan.textContent = "达到元素数量上限";
+            }
+        }
+        
+        // 移除元素
+        function removeElement() {
+            if (layoutState.elementCount > 2) {
+                const lastElement = contentWrapper.lastChild;
+                if (lastElement) {
+                    contentWrapper.removeChild(lastElement);
+                    layoutState.elements.pop();
+                    layoutState.elementCount--;
+                    updateElementSizes();
+                    layoutStatusSpan.textContent = "已移除元素";
+                }
+            } else {
+                layoutStatusSpan.textContent = "需要保留至少两个元素";
+            }
+        }
+        
+        // 随机生成布局
+        function randomizeLayout() {
+            layoutState.aspectRatios = [];
+            const ratioCount = 3 + Math.floor(Math.random() * 4);
+            for (let i = 0; i < ratioCount; i++) {
+                layoutState.aspectRatios.push(0.5 + Math.random() * 2);
+            }
+            
+            layoutState.elementCount = 3 + Math.floor(Math.random() * 10);
+            layoutState.minWidthRatio = 0.1 + Math.random() * 0.2;
+            layoutState.maxWidthRatio = 0.3 + Math.random() * 0.2;
+            
+            layoutStatusSpan.textContent = "生成随机布局";
+            generateElements();
+        }
+        
+        // 设置事件监听器
+        document.getElementById('addElement').addEventListener('click', addElement);
+        document.getElementById('removeElement').addEventListener('click', removeElement);
+        document.getElementById('calculateMin').addEventListener('click', calculateMinSize);
+        document.getElementById('randomLayout').addEventListener('click', randomizeLayout);
+        
+        // 窗口大小改变时更新布局
+        window.addEventListener('resize', () => {
+            updateElementSizes();
+        });
+        
+        // 初始化
+        window.addEventListener('load', initLayout);
+    </script>
+</body>
+</html>
