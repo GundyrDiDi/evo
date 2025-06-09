@@ -25,7 +25,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
           // 设置新的计时器
           pressTimer = setTimeout(() => {
-            binding.value();
+            binding.value(e);
             el.dispatchEvent(
               new CustomEvent("longpress-complete", { bubbles: true })
             );

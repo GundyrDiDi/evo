@@ -6,7 +6,7 @@ function balanceSums(numbers: number[], n: number) {
     sum: numbers.reduce((a, b) => a + b, 0)
   }
 
-  const sorted = [...numbers].sort((a, b) => b - a).map((v, i) => [v, i])
+  const sorted = [...numbers].map((v, i) => [v, i]).sort((a, b) => b[0] - a[0])
 
   const groups = Array.from({ length: n }, () => [] as number[])
   const sums = groups.map(() => 0)

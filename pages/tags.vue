@@ -5,8 +5,8 @@ const tags = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque qui
 
 const masonry = ref<Masonry>()
 
-const relavent = {
-  Lorem: tags.slice(0, 10)
+const relavent: any = {
+  Lorem: tags.slice(0, 9)
 }
 
 const layout = ref({
@@ -22,7 +22,7 @@ onMounted(async () => {
   })
 })
 
-const getMasons=()=>{
+const getMasons = () => {
 
 }
 </script>
@@ -30,10 +30,14 @@ const getMasons=()=>{
 <template>
   <div class="w-[500px] m-grid">
     <Dnd v-for="v in tags" class=" m-grid-item border p-2">
-      <div class=" text-center">
-        {{ v }}
-      </div>
-      <div></div>
+      <template #default="{ isDragEl }">
+        <div class=" text-center">
+          {{ v }}
+        </div>
+        <div v-if="!isDragEl">
+          <Adaptive v-if="relavent[v]" class=" gap-3" :list="relavent[v]"></Adaptive>
+        </div>
+      </template>
     </Dnd>
   </div>
 </template>
