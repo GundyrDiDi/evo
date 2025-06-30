@@ -19,7 +19,7 @@ export const useFnHook = <F>({
       try {
         r = await fn(...arg);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
       after();
       return r;

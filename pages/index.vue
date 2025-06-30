@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 const user = useSupabaseUser()
 
-watchEffect(()=>{
-  user.value && navigateTo('/home')
+watchEffect(() => {
+  user.value ? navigateTo('/home') : navigateTo('/login')
 })
 </script>
 

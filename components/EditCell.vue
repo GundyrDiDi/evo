@@ -1,6 +1,6 @@
-<script lang="ts" setup generic="Type extends EnumValueType,K extends keyof RowGameList, D extends RowGameList">
+<script lang="ts" setup generic="D extends Object">
 
-const props = defineProps<{ type?: Type, id?: K, component?: any, enums?: any, isCreate: boolean, data: D }>()
+const props = defineProps<{ type: Column_Type, readonly?: boolean, component?: any, isCreate: boolean, data: D }>()
 
 const emits = defineEmits<{ (e: 'update' | 'create', row: D): void }>()
 
@@ -8,7 +8,9 @@ const [model] = defineModel<any>({ required: true })
 
 const [isEdit, toggle] = useToggle(false)
 
-const type = computed<EnumValueType>(v => props.type ?? 'text')
+const asArray = computed(() => parseType(props.type).asArray)
+
+const enumData = computed(() => props.type in Enum ? Enum[props.type as Enum_Name] : undefined)
 
 const cell = useOutClick(_ => {
   requestAnimationFrame(() => {
@@ -20,10 +22,10 @@ const cell = useOutClick(_ => {
 })
 
 const update = async () => {
-  if (props.type === 'text_list') {
-    model.value = _unique(model.value as string[])
+  if (asArray.value) {
+    model.value = _unique(model.value)
   }
-  if (props.data.id === 1000) {
+  if (props.data['id'] === 1000) {
     emits('update', props.data)
   } else {
     // emits('create', props.data)
@@ -39,29 +41,29 @@ const update = async () => {
         <template v-if="component">
           <component :is="component" v-model="model"></component>
         </template>
-        <template v-else-if="type === 'text'">
+        <template v-else-if="enumData">
+          <u-select-menu v-model="model" :default-open="isEdit" value-key="value" :items="_values(enumData)"
+            class=" min-w-24" />
+        </template>
+        <template v-else-if="type === 'string'">
           <u-input v-model="model" />
         </template>
-        <template v-else-if="type === 'text_list'">
+        <template v-else-if="type === 'string[]'">
           <a-text-list class=" flex flex-col gap-2" v-model="model" />
-        </template>
-        <template v-else-if="type === 'enum'">
-          <u-select-menu v-model="model" :default-open="isEdit" value-key="value" :items="_values(enums!)"
-            class=" min-w-24" />
         </template>
       </div>
       <div v-else class=" cursor-pointer p-4" @click="toggle(true)">
         <template v-if="component">
           <component :is="component" v-model="model"></component>
         </template>
-        <template v-else-if="type === 'text'">
+        <template v-else-if="enumData">
+          {{ enumData[model].label }}
+        </template>
+        <template v-else-if="type === 'string'">
           {{ model }}
         </template>
-        <template v-else-if="type === 'text_list'">
+        <template v-else-if="type === 'string[]'">
           {{ model?.join(',') }}
-        </template>
-        <template v-else-if="type === 'enum'">
-          {{ enums[model].label }}
         </template>
       </div>
     </div>

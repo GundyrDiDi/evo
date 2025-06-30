@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/supabase", "@nuxt/ui", "@vueuse/nuxt"],
+  modules: ["@nuxtjs/supabase", "@nuxt/ui", "@vueuse/nuxt", "@pinia/nuxt"],
   css: ["~/assets/css/main.css"],
   ssr: true,
   ui: {
@@ -14,10 +14,10 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: "/login",
       callback: "/",
-      exclude: ["/"],
+      // exclude: ["/"],
     },
   },
   imports: {
-    dirs: ["composables/*","composables/**", "types/*"],
+    dirs: ["composables/*", "composables/**", "types/*"],
   },
 });

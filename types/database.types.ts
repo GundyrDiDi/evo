@@ -9,61 +9,127 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      _link_dlc: {
+      _relations_dlc: {
         Row: {
           created_at: string
-          dlc: string | null
+          dlc_id: number
           id: number
-          original: string | null
+          original_id: number | null
         }
         Insert: {
           created_at?: string
-          dlc?: string | null
+          dlc_id: number
           id?: number
-          original?: string | null
+          original_id?: number | null
         }
         Update: {
           created_at?: string
-          dlc?: string | null
+          dlc_id?: number
           id?: number
-          original?: string | null
+          original_id?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "_relations_dlc_dlc_id_fkey"
+            columns: ["dlc_id"]
+            isOneToOne: false
+            referencedRelation: "game"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "_relations_dlc_original_id_fkey"
+            columns: ["original_id"]
+            isOneToOne: false
+            referencedRelation: "game"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      _link_game_tag: {
+      _relations_game_tag: {
         Row: {
           created_at: string
-          game_name: string | null
-          game_tag: string | null
+          game_id: number | null
           id: number
+          tag_id: number | null
         }
         Insert: {
           created_at?: string
-          game_name?: string | null
-          game_tag?: string | null
+          game_id?: number | null
           id?: number
+          tag_id?: number | null
         }
         Update: {
           created_at?: string
-          game_name?: string | null
-          game_tag?: string | null
+          game_id?: number | null
           id?: number
+          tag_id?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "_link_game_tag_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "game"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "_link_game_tag_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "game_tag"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      game_list: {
+      _relations_tag: {
+        Row: {
+          child_id: number
+          id: number
+          parent_id: number
+        }
+        Insert: {
+          child_id: number
+          id: number
+          parent_id: number
+        }
+        Update: {
+          child_id?: number
+          id?: number
+          parent_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "_relations_tag_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "game_tag"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "_relations_tag_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "game_tag"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game: {
         Row: {
           alias: string[] | null
           complete_time: string | null
           created_at: string
-          game_type: Database["public"]["Enums"]["game_type"] | null
+          edition: Database["public"]["Enums"]["edition"] | null
+          extra: boolean | null
           heart: boolean | null
           id: number
           judgment: string | null
           name: string
+          owned: boolean | null
           platform: Database["public"]["Enums"]["platform"] | null
           remark: string | null
-          status: Database["public"]["Enums"]["complete_status"]
+          series: string | null
+          status: Database["public"]["Enums"]["complete_status"] | null
           tags: string[] | null
           user_id: string | null
         }
@@ -71,14 +137,17 @@ export type Database = {
           alias?: string[] | null
           complete_time?: string | null
           created_at?: string
-          game_type?: Database["public"]["Enums"]["game_type"] | null
+          edition?: Database["public"]["Enums"]["edition"] | null
+          extra?: boolean | null
           heart?: boolean | null
           id?: number
           judgment?: string | null
           name: string
+          owned?: boolean | null
           platform?: Database["public"]["Enums"]["platform"] | null
           remark?: string | null
-          status?: Database["public"]["Enums"]["complete_status"]
+          series?: string | null
+          status?: Database["public"]["Enums"]["complete_status"] | null
           tags?: string[] | null
           user_id?: string | null
         }
@@ -86,40 +155,37 @@ export type Database = {
           alias?: string[] | null
           complete_time?: string | null
           created_at?: string
-          game_type?: Database["public"]["Enums"]["game_type"] | null
+          edition?: Database["public"]["Enums"]["edition"] | null
+          extra?: boolean | null
           heart?: boolean | null
           id?: number
           judgment?: string | null
           name?: string
+          owned?: boolean | null
           platform?: Database["public"]["Enums"]["platform"] | null
           remark?: string | null
-          status?: Database["public"]["Enums"]["complete_status"]
+          series?: string | null
+          status?: Database["public"]["Enums"]["complete_status"] | null
           tags?: string[] | null
           user_id?: string | null
         }
         Relationships: []
       }
-      game_tags: {
+      game_tag: {
         Row: {
-          children: string[] | null
           created_at: string
           id: number
           name: string
-          parents: string[] | null
         }
         Insert: {
-          children?: string[] | null
           created_at?: string
           id?: number
           name: string
-          parents?: string[] | null
         }
         Update: {
-          children?: string[] | null
           created_at?: string
           id?: number
           name?: string
-          parents?: string[] | null
         }
         Relationships: []
       }
@@ -138,7 +204,7 @@ export type Database = {
         | "frozen"
         | "not_started"
         | "not_published"
-      game_type: "original" | "dlc"
+      edition: "standard" | "deluxe" | "complete"
       platform: "pc" | "ps" | "ns" | "xbox"
     }
     CompositeTypes: {
@@ -263,7 +329,7 @@ export const Constants = {
         "not_started",
         "not_published",
       ],
-      game_type: ["original", "dlc"],
+      edition: ["standard", "deluxe", "complete"],
       platform: ["pc", "ps", "ns", "xbox"],
     },
   },

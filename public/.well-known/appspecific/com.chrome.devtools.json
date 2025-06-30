@@ -1,0 +1,6 @@
+{
+  "id": "chrome-devtools://devtools/bundled/inspector.html",
+  "name": "Chrome DevTools",
+  "path": "/",
+  "type": "chrome-devtools"
+}

@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="T">
 
 const container = ref<HTMLElement>()
 
@@ -18,7 +18,7 @@ const mousedown = (e: MouseEvent) => {
 
 const dragStart = (e: MouseEvent) => {
   const { x, y } = e
-  console.log(e)
+  // console.log(e)
   const el = container.value as HTMLElement
   if (el) {
     const { left, top, width, height } = el.getBoundingClientRect()
@@ -34,7 +34,10 @@ const dragStart = (e: MouseEvent) => {
 
 const dragging = (e: MouseEvent) => {
   setDrag(true)
+  dragData.value = props.data
+
   requestAnimationFrame(() => {
+    if (!dragEl.value) return
     const { width, height } = dragEl.value.getBoundingClientRect()
     if (width === containerSize.width && height === containerSize.height) {
       position.x = e.x - containerSize.x
@@ -48,16 +51,24 @@ const dragging = (e: MouseEvent) => {
 
 const dragEnd = (e: MouseEvent) => {
   setDrag(false)
+  if (stopDragEnd.value) return
+  emits('dragEnd', e)
 }
 
 const drop = () => {
   if (!isDrag.value) {
-    console.log('drop')
-    console.log(data)
+    dragData.value && emits('drop', dragData.value)
+    dragData.value = null
+    stopDragEnd.value = true
+    requestAnimationFrame(() => {
+      stopDragEnd.value = false
+    })
   }
 }
 
-const data = ref()
+const stopDragEnd = useState('stop-drag-end', () => false)
+
+const dragData = useState<T | null>('drag-data', () => null)
 
 const containerSize = reactive({
   x: 0, y: 0, width: 0, height: 0
@@ -72,17 +83,12 @@ const style = computed(() => {
   }
 })
 
-onMounted(() => {
-  container.value?.addEventListener('mouseup', drop)
-})
-
-onUnmounted(() => {
-  container.value?.addEventListener('mouseup', drop)
-})
+const props = defineProps<{ data: T }>()
+const emits = defineEmits<{ (e: 'drop', data: T): void, (e: 'dragEnd', event: MouseEvent): void }>()
 </script>
 
 <template>
-  <div v-bind="$attrs" ref="container" @mousedown="mousedown">
+  <div v-bind="$attrs" ref="container" @mousedown="mousedown" @mouseup="drop">
     <slot v-bind="{ isDragEl: false }"></slot>
   </div>
   <div v-if="isDrag" ref="dragEl" v-bind="$attrs" class=" fixed pointer-events-none opacity-80" :style>
