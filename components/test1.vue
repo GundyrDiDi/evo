@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 defineProps<{ a: string, b: number }>()
 defineEmits<{ (e: 'change', v: string): void, (e: 'update', v: number): void }>()
-
 </script>
 
 <template>

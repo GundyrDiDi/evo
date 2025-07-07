@@ -50,8 +50,12 @@ export function _isMouseOver(element: Element, mouseEvent: MouseEvent) {
 
 export function _randomId(): string {
   // 取时间戳后6位 + 4位随机字符
-  return Date.now().toString(36).slice(-6) + 
-         Math.random().toString(36).substring(2, 6);
+  return (
+    Date.now().toString(36).slice(-6) +
+    Math.random().toString(36).substring(2, 6)
+  );
 }
 
 export const _randomKey = (key) => `${_randomId()}_${key}`;
+
+export const _wait = (t: number = 0) => new Promise((r) => setTimeout(r, t));

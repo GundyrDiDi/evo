@@ -14,7 +14,6 @@ useTableChange()
 
 const columns = game_column
 
-
 const [loading, loadingHook] = useLoading()
 
 const { data } = await useAsyncData('game-list', loadingHook(async () => {
@@ -35,19 +34,6 @@ const handleCreate = loadingHook(async (row: GameDTO) => {
 const handleUpdate = loadingHook(async (row: GameDTO) => {
   // await client.from('game_list').update(row).match({ id: row.id })
 })
-
-
-// onMounted(() => {
-//   const t1 = useComp({ Test1 }, { props: { a: 'aaa', b: 123 } })
-//   t1.mount()
-//   t1.on('Change', v => {
-//     // 
-//     console.log(v)
-//     t1.set({ a: v })
-//     console.log(t1.props)
-//     // t1.unmount()
-//   })
-// })
 
 </script>
 

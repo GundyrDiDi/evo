@@ -2,7 +2,7 @@ import { LazyEditCell, EditCell, Test1 } from "#components";
 import type { VueInstance } from "@vueuse/core";
 
 // 声明范型的vue组件还有问题，无法推导
-type ExtractComponentProps<T> = MustObject<
+type ExtractComponentProps<T> = WithObject<
   T extends new () => {
     $props: infer P;
   }
@@ -10,9 +10,7 @@ type ExtractComponentProps<T> = MustObject<
     : never
 >;
 
-type MustObject<T> = T extends object ? T : {};
-
-type FilterNever<T> = T extends [infer A1, never] ? [A1] : T;
+type WithObject<T> = T extends object ? T : {};
 
 type ExtractEmits<T> = UnionToIntersection<
   Exclude<
@@ -29,8 +27,6 @@ type ExtractEmits<T> = UnionToIntersection<
 
 type z = typeof EditCell;
 type p = typeof LazyEditCell extends z ? 1 : 2;
-
-// type m
 
 type a = ExtractComponentProps<typeof Test1>;
 
@@ -56,13 +52,6 @@ export type Comp<
   readonly unmount: () => void;
 };
 
-export const comps = ref(new Map<string, Comp>());
-
-export const useComps = () =>
-  import.meta.server
-    ? useState("comps", () => new Map<string, Comp>())
-    : comps;
-
 type Options<P> = Partial<{
   global: boolean;
   visible: boolean;
@@ -70,20 +59,25 @@ type Options<P> = Partial<{
   props: P;
 }>;
 
-export const useComp = <T extends Component, C extends Comp<T>>(
+export const useComp = <
+  T extends Component,
+  C extends Comp<T>,
+  O extends Options<C["props"]>
+>(
   recordComponent: Record<string, T>,
-  options?: Options<C["props"]>
+  options?: O
 ) => {
   const comps = useComps().value;
   const [[componentName, component]] = Object.entries(recordComponent);
   const {
     global = false,
     visible = false,
-    props = {} as C["props"],
+    props = {},
     filter = () => true,
   } = options ?? {};
   const id = global ? componentName : _randomKey(componentName);
-  const comp = comps.get(id) as Comp<T> | undefined;
+  const comp = comps[id] as Comp | undefined;
+  // 全局组件
   if (comp) {
     comp.set(props);
     // 如果是复用全局的组件，重新生成key
@@ -91,7 +85,7 @@ export const useComp = <T extends Component, C extends Comp<T>>(
     visible && comp.mount();
     // filter应该不能覆盖，暂时不处理
   } else {
-    const comp: Comp<T> = {
+    let comp: Comp = {
       id,
       component,
       props,
@@ -107,8 +101,8 @@ export const useComp = <T extends Component, C extends Comp<T>>(
       mount(p) {
         comp.visible = true;
         p && comp.set(p);
-        if (!global && !comps.get(id)) {
-          comps.set(id, comp as Comp);
+        if (!comps[id]) {
+          comps[id] = toRaw(comp);
         }
       },
       reload(p) {
@@ -118,11 +112,39 @@ export const useComp = <T extends Component, C extends Comp<T>>(
       unmount() {
         comp.visible = false;
         if (!global) {
-          comps.delete(id);
+          delete comps[id];
         }
       },
     };
-    comps.set(id, comp as Comp);
+    comps[id] = comp;
+    // 转为响应性
+    comp = comps[id];
   }
-  return comps.get(id) as Readonly<Comp<T>>;
+  if (!global) {
+    // 外层组件卸载时，同时也卸载
+    onUnmounted?.(() => {
+      comp?.unmount();
+    });
+  } else {
+    // 全局则提供一个remove方法
+    const remove = () => {
+      delete comps[id];
+    };
+    Object.assign(comps[id], { remove });
+  }
+  return comps[id] as Readonly<Comp<T>> &
+    (O["global"] extends true ? { remove: () => void } : {});
 };
+
+// 客户端可以全局声明，仅在客户端使用
+const clientComps = ref({} as Record<string, Comp>);
+
+// 如果是服务端，由于useState不能保存Component，所以使用pinia绕过useState，但pinia本质上也是将值作为全局值保存，所以不能使用ref(响应性)。这里是一种偷鸡的方式
+export const useServerComp = defineStore("serverComp", () => {
+  // 并非ref值，因为服务端不需要响应性
+  const value = {} as Record<string, Comp>;
+  return { value };
+});
+
+export const useComps = () =>
+  import.meta.server ? useServerComp() : clientComps;

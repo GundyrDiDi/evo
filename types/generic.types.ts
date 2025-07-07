@@ -22,6 +22,8 @@ type EnumValues<T> = [T] extends [Enum_Name]
     : { enum_name: T }
   : {};
 
+type FilterNever<T> = T extends [infer A1, never] ? [A1] : T;
+
 // type test1 = EnumValues<FindEnumKey<Tables<"game">["platform"]>>;
 
 // class Comp1<
