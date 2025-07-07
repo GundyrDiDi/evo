@@ -4,12 +4,6 @@ export type Table_Name = keyof Database["public"]["Tables"];
 
 export type Base_Type = "string" | "number" | "bool" | "date" | "object";
 
-const defineTypes = <T>(tables: {
-  [P in Table_Name]: {
-    [K in keyof Tables<P>]?: T;
-  };
-}) => tables;
-
 export type Value_Type = Base_Type | Enum_Name;
 
 export type Column_Type = Value_Type | `${Value_Type}[]`;
@@ -20,6 +14,12 @@ export const parseType = (ct: Column_Type) => {
     asArray: /\[\]$/.test(ct),
   };
 };
+
+const defineTypes = <T>(tables: {
+  [P in Table_Name]: {
+    [K in keyof Tables<P>]?: T;
+  };
+}) => tables;
 
 export const column_type = defineTypes<Column_Type>({
   game: {

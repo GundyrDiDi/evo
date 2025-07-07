@@ -1,5 +1,5 @@
 const game = defineColumn("game", {
-  id:{},
+  id: {},
   name: {
     label: "游戏名",
   },
@@ -23,18 +23,20 @@ const game = defineColumn("game", {
   },
   user_id: {},
   heart: {},
-  judgment: {},
+  judgment: {
+    label: "评价",
+  },
   status: {},
   complete_time: {
-    label:'完成时间'
+    label: "完成时间",
   },
   owned: {
-    label:'已购买'
+    label: "已购买",
   },
 });
 
 const game_tag = defineColumn("game_tag", {
-  id:{},
+  id: {},
   name: {
     label: "标签名",
   },
