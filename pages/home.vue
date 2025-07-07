@@ -39,13 +39,13 @@ const handleUpdate = loadingHook(async (row: GameDTO) => {
 
 <template>
   <ASearch></ASearch>
-  <!-- <UTable :class="['w-full', loading && 'pointer-events-none']" :data="data?.concat(editNewRow)" :columns="columns"
+  <UTable :class="['w-full', loading && 'pointer-events-none']" :data="data?.concat(editNewRow)" :columns="columns"
     :loading="loading">
     <template v-for="c in columns" #[`${c.id}-cell`]="{ row }">
-      <EditCell v-model="row.original[c.id!]" :type="c._type" :data="row.original" :isCreate="row.original === editNewRow"
-        @create="handleCreate" @update="handleUpdate" />
+      <EditCell v-model="row.original[c.id!]" :type="c._type" :data="row.original"
+        :isCreate="row.original === editNewRow" @create="handleCreate" @update="handleUpdate" />
     </template>
-</UTable> -->
+  </UTable>
 </template>
 
 <style lang="scss" scoped></style>
