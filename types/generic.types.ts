@@ -23,3 +23,32 @@ type EnumValues<T> = [T] extends [Enum_Name]
   : {};
 
 // type test1 = EnumValues<FindEnumKey<Tables<"game">["platform"]>>;
+
+// class Comp1<
+//   T extends Component = Component,
+//   Props = ExtractComponentProps<T>,
+//   PartProps = Partial<Props>,
+//   Emits = ExtractEmits<Props>
+// > {
+//   readonly id: string;
+//   readonly component: T;
+//   readonly props: Props;
+//   ref?:VueInstance;
+//   key: string;
+//   visible: boolean;
+//   filter: () => any;
+//   set(props:PartProps){
+
+//   }
+//   on<E extends keyof Emits>(EventName: E, fn: Emits[E]){
+
+//   }
+//   mount(props?: PartProps){}
+//   reload(props?: PartProps){}
+//   unmount(){}
+//   constructor({id,component,props,visible}){
+//     this.id=id
+//     this.component=component
+//     this
+//   }
+// }

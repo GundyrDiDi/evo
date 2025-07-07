@@ -36,3 +36,11 @@ export const useLoading = () => {
   });
   return [loading, hook] as const;
 };
+
+export const useMountListen = (fn, unmount = true) => {
+  let stop;
+  onMounted(() => {
+    stop = fn();
+  });
+  unmount && onUnmounted(stop);
+};

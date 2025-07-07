@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { Test1 } from '#components'
+
+
 
 const editNewRow = useLocalStorage('editNewRow', {} as GameDTO)
 
@@ -7,12 +10,10 @@ let mock = { name: 'ff7', alias: ['c'], complete_time: '2022', heart: false, jud
 const client = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 
-const channel=useUserChannel()
-console.log('aaaaaaaaa')
-// console.log(channel.b)
-channel.a(()=>{})
+useTableChange()
 
 const columns = game_column
+
 
 const [loading, loadingHook] = useLoading()
 
@@ -35,17 +36,30 @@ const handleUpdate = loadingHook(async (row: GameDTO) => {
   // await client.from('game_list').update(row).match({ id: row.id })
 })
 
+
+// onMounted(() => {
+//   const t1 = useComp({ Test1 }, { props: { a: 'aaa', b: 123 } })
+//   t1.mount()
+//   t1.on('Change', v => {
+//     // 
+//     console.log(v)
+//     t1.set({ a: v })
+//     console.log(t1.props)
+//     // t1.unmount()
+//   })
+// })
+
 </script>
 
 <template>
   <ASearch></ASearch>
-  <UTable :class="['w-full', loading && 'pointer-events-none']" :data="data?.concat(editNewRow)" :columns="columns"
+  <!-- <UTable :class="['w-full', loading && 'pointer-events-none']" :data="data?.concat(editNewRow)" :columns="columns"
     :loading="loading">
     <template v-for="c in columns" #[`${c.id}-cell`]="{ row }">
       <EditCell v-model="row.original[c.id!]" :type="c._type" :data="row.original" :isCreate="row.original === editNewRow"
         @create="handleCreate" @update="handleUpdate" />
     </template>
-  </UTable>
+</UTable> -->
 </template>
 
 <style lang="scss" scoped></style>
