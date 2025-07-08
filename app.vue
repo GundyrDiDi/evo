@@ -2,7 +2,7 @@
   <AppContainer>
     <AppHeader />
     <PageContainer>
-      <NuxtPage />
+      <NuxtPage  />
       <ContextComp />
     </PageContainer>
   </AppContainer>

@@ -10,8 +10,6 @@ let mock = { name: 'ff7', alias: ['c'], complete_time: '2022', heart: false, jud
 const client = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 
-useTableChange()
-
 const columns = game_column
 
 const [loading, loadingHook] = useLoading()
@@ -35,6 +33,7 @@ const handleUpdate = loadingHook(async (row: GameDTO) => {
   // await client.from('game_list').update(row).match({ id: row.id })
 })
 
+const channel = useChannel()
 </script>
 
 <template>
