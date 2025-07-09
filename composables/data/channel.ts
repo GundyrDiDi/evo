@@ -1,44 +1,3 @@
-const useTableChannel = (_opts: {
-  table: string;
-  readonly callback: () => void;
-  filter?: string;
-  event?: string;
-  schema?: "public";
-}) => {
-  const client = useSupabaseClient<Database>();
-
-  const opts = reactive({
-    event: "*",
-    schema: "public",
-    ..._opts,
-  }) as any;
-
-  let channel = client.channel(`${_randomId()}_table_channel`);
-  channel.on("postgres_changes", opts, opts.callback).subscribe();
-
-  const on = (_callback) => {
-    channel.on("postgres_changes", opts, _callback);
-  };
-  const clear = () => {
-    channel.unsubscribe();
-    client.removeChannel(channel);
-  };
-  watch(opts, () => {
-    clear();
-    channel = client.channel(`${_randomId()}_table_channel`);
-    channel.on("postgres_changes", opts, opts.callback).subscribe();
-  });
-
-  onUnmounted(clear);
-
-  return {
-    opts,
-    channel,
-    on,
-    clear,
-  };
-};
-
 export const useReferUser = <T, K extends string>(
   fn: (user: Ref<{ id: string } | null>, reset?: boolean) => T,
   keyName: K
@@ -53,8 +12,8 @@ export const useReferUser = <T, K extends string>(
 };
 
 type PostgresOption = {
-  table: string;
-  filter?: string;
+  table: Table_Name;
+  filter?: string | ((user: ReturnType<typeof useSupabaseUser>) => string);
   event?: "*" | "INSERT" | "UPDATE" | "DELETE";
   schema?: "public";
 };
@@ -65,13 +24,13 @@ export const useBroadcast = () => {};
 // presence
 export const usePresence = () => {};
 
-// 监听表变化 postgres_changes
+// 监听表变化 postgres_changes，转为响应式
 export const useChannel = (
-  _opts: { name: string; callback: (payload) => void } & PostgresOption
+  _opts: { name: string; callback?: (payload) => void } & PostgresOption
 ) => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
-  const { name, callback, ...opt } = {
+  const { name, callback, filter, ...opt } = {
     event: "*",
     schema: "public",
     ..._opts,
@@ -79,9 +38,12 @@ export const useChannel = (
 
   let channel: ReturnType<typeof client.channel>;
 
-  let listeners = new Set<(payload) => void>([callback]);
+  let listeners = new Set<(payload) => void>([]);
+  callback && listeners.add(callback);
 
-  const option = reactive(opt);
+  const computedFilter = computed(() => {
+    return typeof filter === "function" ? filter(user) : filter;
+  });
 
   const init = () => {
     const key = `client_${user.value?.id ?? `visitor_${_randomId}`}`;
@@ -92,40 +54,43 @@ export const useChannel = (
         },
       },
     });
-    channel.on("postgres_changes", option as any, (payload) => {
-      listeners.forEach((callback) => callback(payload));
-    });
+    channel.on(
+      "postgres_changes",
+      { ...opt, filter: computedFilter.value } as any,
+      (payload) => {
+        listeners.forEach((callback) => callback(payload));
+      }
+    );
+    // import.meta.client && channel.subscribe(console.log);
   };
+  init();
 
-  const clear = async () => {
+  const unsubscribe = async () => {
     await channel.unsubscribe();
-    listeners.clear();
     client.removeChannel(channel);
   };
+
   const addListener = (callback) => {
     listeners.add(callback);
     return () => listeners.delete(callback);
   };
 
-  init();
   const reconnect = async () => {
-    await clear();
+    await unsubscribe();
     init();
-    channel.subscribe();
   };
-  watch(option, reconnect);
+  watch([user, computedFilter], reconnect);
 
-  onMounted(() => {
-    channel.subscribe(console.log);
-  });
-
-  onUnmounted(clear);
+  const close = async () => {
+    await unsubscribe();
+    listeners.clear();
+  };
+  onUnmounted(close);
 
   return {
-    option,
     addListener,
-    clear,
     reconnect,
+    close,
   };
 };
 

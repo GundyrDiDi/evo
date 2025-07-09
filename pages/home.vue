@@ -33,7 +33,14 @@ const handleUpdate = loadingHook(async (row: GameDTO) => {
   // await client.from('game_list').update(row).match({ id: row.id })
 })
 
-const channel = useChannel()
+const channel = useChannel({
+  name: 'table_change',
+  table: 'game',
+  filter: (user) => `user_id=eq.${user.value?.id}`,
+  callback(payload) {
+    console.log(payload)
+  }
+})
 </script>
 
 <template>
