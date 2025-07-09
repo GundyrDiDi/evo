@@ -1,15 +1,10 @@
-export const useReferUser = <T, K extends string>(
-  fn: (user: Ref<{ id: string } | null>, reset?: boolean) => T,
-  keyName: K
-) => {
-  const user = useSupabaseUser();
-  const ref: { [k in K]: T } = {} as any;
-  watch(user, () => {
-    ref[keyName] = fn(user, true);
-  });
-  ref[keyName] = fn(user);
-  return ref;
-};
+// 维护一个当前所有注册的通道数，监测安全
+export const channelStore = defineStore("channelStore", () => {
+  const map = new Map();
+  return {
+    map,
+  };
+});
 
 type PostgresOption = {
   table: Table_Name;
@@ -94,54 +89,54 @@ export const useChannel = (
   };
 };
 
-// 公共channel方式，保持只有一个channel长期存在的场景
-export const useChannelStore = defineStore("channel", () => {
-  const ref = useReferUser((user, reset) => {
-    const client = useSupabaseClient<Database>();
-    if (reset) {
-      ref.channel.unsubscribe();
-      client.removeChannel(ref.channel);
-    }
-    const key = `client_${user.value?.id ?? `visitor_${_randomId}`}`;
-    const channel = client.channel("table_change_1", {
-      config: {
-        presence: {
-          key,
-        },
-      },
-    });
-    // import.meta.client && channel.subscribe(console.log);
-    return channel;
-  }, "channel");
+// // 公共channel方式，保持只有一个channel长期存在的场景
+// export const useChannelStore = defineStore("channel", () => {
+//   const ref = useReferUser((user, reset) => {
+//     const client = useSupabaseClient<Database>();
+//     if (reset) {
+//       ref.channel.unsubscribe();
+//       client.removeChannel(ref.channel);
+//     }
+//     const key = `client_${user.value?.id ?? `visitor_${_randomId}`}`;
+//     const channel = client.channel("table_change_1", {
+//       config: {
+//         presence: {
+//           key,
+//         },
+//       },
+//     });
+//     // import.meta.client && channel.subscribe(console.log);
+//     return channel;
+//   }, "channel");
 
-  const listeners: Record<string, ((payload) => void) | undefined> = {};
+//   const listeners: Record<string, ((payload) => void) | undefined> = {};
 
-  const on = (
-    _opts: {
-      id: string;
-      readonly callback: (payload) => void;
-    } & PostgresOption
-  ) => {
-    const { callback, id, ...opts } = {
-      event: "*",
-      schema: "public",
-      ..._opts,
-    };
-    if (!listeners[id]) {
-      ref.channel.on("postgres_changes", opts as any, (payload) => {
-        listeners[id]?.(payload);
-      });
-    }
-    listeners[id] = callback;
+//   const on = (
+//     _opts: {
+//       id: string;
+//       readonly callback: (payload) => void;
+//     } & PostgresOption
+//   ) => {
+//     const { callback, id, ...opts } = {
+//       event: "*",
+//       schema: "public",
+//       ..._opts,
+//     };
+//     if (!listeners[id]) {
+//       ref.channel.on("postgres_changes", opts as any, (payload) => {
+//         listeners[id]?.(payload);
+//       });
+//     }
+//     listeners[id] = callback;
 
-    const clear = () => {
-      listeners[id] = undefined;
-    };
-    onUnmounted(clear);
-  };
-  return {
-    ref,
-    listeners,
-    on,
-  };
-});
+//     const clear = () => {
+//       listeners[id] = undefined;
+//     };
+//     onUnmounted(clear);
+//   };
+//   return {
+//     ref,
+//     listeners,
+//     on,
+//   };
+// });
