@@ -12,6 +12,8 @@ export type UnionToIntersection<T> = (
 
 export type Tree<T, K extends string = "children"> = T & { [P in K]?: T[] };
 
+export type orArray<T> = T extends infer P?(P|P[]):never
+
 type FindEnumKey<_, T = Exclude<_, null>, U = Database["public"]["Enums"]> = {
   [P in keyof U]: U[P] extends T ? (T extends U[P] ? P : never) : never;
 }[keyof U];

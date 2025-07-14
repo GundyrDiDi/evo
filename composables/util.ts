@@ -59,3 +59,28 @@ export function _randomId(): string {
 export const _randomKey = (key) => `${_randomId()}_${key}`;
 
 export const _wait = (t: number = 0) => new Promise((r) => setTimeout(r, t));
+
+export const _clone = <T>(data: T): T => {
+  if (typeof data !== "object" || data === null) return data;
+  const copy = (Array.isArray(data) ? [] : {}) as T;
+  Object.entries(data).forEach(([key, value]) => {
+    copy[key] = _clone(value);
+  });
+  return copy;
+};
+
+export const _lock = (runtime = 5) => {
+  let lock = false;
+  const wrap =
+    (fn: (...a) => unknown) =>
+    (...r) => {
+      if (lock) return;
+      lock = true;
+      const res = fn(...r);
+      setTimeout(() => {
+        lock = false;
+      }, runtime);
+      return res;
+    };
+  return wrap;
+};
