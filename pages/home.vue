@@ -1,32 +1,46 @@
 <script lang="ts" setup>
-const editNewRow = useLocalStorage('editNewRow', {} as GameDTO)
+import { UButton } from '#components'
+import type { TableColumn } from '@nuxt/ui'
 
-let mock = { name: 'ff7', alias: ['c'], complete_time: '2022', heart: false, judgment: '⭕️', remark: '', status: 'abandoned', tags: ['rpg', 'jrpg'], platform: 'ns', id: 1, user_id: '' } as GameDTO
-
-const client = useSupabaseClient<Database>()
-const user = useSupabaseUser()
-
-const columns = game_column
+const editNewRow = useLocalStorage('editNewRow_GameDTO', useGameDTODefault())
 
 const [loading, withLoading] = useLoading()
 
-const { data } = await useAsyncData('game-list', withLoading(async () => {
-  const { data } = await client.from('game').select('*').eq('user_id', user.value!.id).order('created_at')
+const { data } = await useAsyncData(withLoading(async () => {
   // const {data}=await client.rpc('',{})
-  return (data?.length ? data : [mock]) as GameDTO[]
-}))
-
-onMounted(async () => {
-  // const { data } = await client.from('game').select('*').eq('user_id', user.value!.id).order('created_at')
+  const { data } = await selectTable('game[]')
+  console.log(data)
+  return data ?? []
+}), {
+  server: false,
+  immediate: false
 })
 
-const handleCreate = withLoading(async (row: GameDTO) => {
-  // editNewRow.value = {}
-  // row && data.value?.push(row)
+const withNewRowData = computed(() => (data.value ?? []).concat(editNewRow.value as any))
+
+const columns = useGameColumn<GameDTO>()
+
+const action: TableColumn<GameDTO> = {
+  accessorKey: 'action',
+  header: '',
+  cell({ row }) {
+    const isCreate = row.original === editNewRow.value
+    return h(UButton, { disabled: loading.value, onClick: () => isCreate ? handleCreate(row.original) : handleDelete(row.original) }, isCreate ? 'Create' : 'Delete')
+  }
+}
+
+const handleCreate = withLoading(async (row: PartGameDTO) => {
+  await _wait(1000)
+  editNewRow.value = useGameDTODefault()
 })
 
-const handleUpdate = withLoading(async (row: GameDTO) => {
+const handleUpdate = useDebounceFn(withLoading(async (row: GameDTO) => {
+  console.log(row)
   // await client.from('game_list').update(row).match({ id: row.id })
+}), 300)
+
+const handleDelete = withLoading(async (row: GameDTO) => {
+
 })
 
 // const channel = useChannel({
@@ -38,35 +52,23 @@ const handleUpdate = withLoading(async (row: GameDTO) => {
 //   }
 // })
 
-const a = useRouteQuery({
-  a: Number,
-  b: Number,
-  f: 2,
-  h: [1]
-})
-
-onMounted(() => {
-  console.log(a.state)
-  setTimeout(() => {
-    pushQuery({ a: Math.random(),b:100 })
-  }, 1000)
-  // console.log(a.state)
-  // console.log(useRoute().query)
-  // fromRawQuery()
+onMounted(async () => {
+  // const { data } = await client.from('game').select('*').eq('user_id', user.value!.id).order('created_at')
 })
 
 </script>
 
 <template>
   <ASearch></ASearch>
-  {{ a.state }}
-  <!-- <UTable :class="['w-full', loading && 'pointer-events-none']" :data="data?.concat(editNewRow)" :columns="columns"
-    :loading="loading">
+  <UTable :class="[' max-w-[1000px]', loading && 'pointer-events-none']" :data="withNewRowData"
+    :columns="[action].concat(columns)" :loading="loading">
     <template v-for="c in columns" #[`${c.id}-cell`]="{ row }">
-      <EditCell v-model="row.original[c.id!]" :type="c._type" :data="row.original"
-        :isCreate="row.original === editNewRow" @create="handleCreate" @update="handleUpdate" />
+      <component v-if="c.component" v-model="row.original[c.id]" :data="row.original" :is="c.component"
+        @update="handleUpdate" />
+      <EditCell v-else v-model="row.original[c.id]" :data="row.original" :type="c._type"
+        :always="row.original === editNewRow" @update="handleUpdate" />
     </template>
-</UTable> -->
+  </UTable>
 </template>
 
 <style lang="scss" scoped></style>

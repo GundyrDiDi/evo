@@ -25,11 +25,10 @@ type ExtractEmits<T> = UnionToIntersection<
   >
 >;
 
+/** test */
 type z = typeof EditCell;
 type p = typeof LazyEditCell extends z ? 1 : 2;
-
 type a = ExtractComponentProps<typeof Test1>;
-
 type b = ExtractEmits<a>;
 
 export type Comp<
@@ -148,3 +147,30 @@ export const useServerComp = defineStore("serverComp", () => {
 
 export const useComps = () =>
   import.meta.server ? useServerComp() : clientComps;
+
+/**
+ * 基于useComp的管理弹窗state
+ */
+export const useModalComp = defineStore("modal", () => {
+  const comps = useComps().value;
+
+  const modals = [];
+  const group = [];
+
+  // 需要控制排序的弹窗
+  const queue = ref([]);
+  // 在一个循环内，获取所有queue的条件
+  watch(queue, () => {});
+
+  const mount = <
+    T extends Component,
+    C extends Comp<T>,
+    O extends Options<C["props"]>
+  >(
+    c: T,
+    opts: O
+  ) => {};
+  return {
+    mount,
+  };
+});

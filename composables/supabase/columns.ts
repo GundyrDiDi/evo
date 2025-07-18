@@ -5,6 +5,7 @@ const game = defineColumn("game", {
   },
   alias: {
     label: "别名",
+    filter: (val) => _unique(val),
   },
   platform: {
     label: "平台",
@@ -22,11 +23,15 @@ const game = defineColumn("game", {
     label: "其他",
   },
   user_id: {},
-  heart: {},
+  heart: {
+    label: "星标",
+  },
   judgment: {
     label: "评价",
   },
-  status: {},
+  status: {
+    label: "游玩状态",
+  },
   complete_time: {
     label: "完成时间",
   },

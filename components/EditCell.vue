@@ -1,18 +1,16 @@
 <script lang="ts" setup generic="D extends Object">
-
-const props = defineProps<{ type: Column_Type, readonly?: boolean, component?: any, isCreate: boolean, data: D }>()
-
-const emits = defineEmits<{ (e: 'update' | 'create', row: D): void }>()
-
 const [model] = defineModel<any>({ required: true })
 
-const [isEdit, toggle] = useToggle(false)
+const props = defineProps<{ type: Column_Type, data: D, readonly?: boolean, always?: boolean }>()
 
-const asArray = computed(() => parseType(props.type).asArray)
+const emits = defineEmits<{ (e: 'update', row: D): void, (e: 'change', model): void }>()
 
-const enumData = computed(() => props.type in Enum ? Enum[props.type as Enum_Name] : undefined)
+const cType = useColumnType(() => props.type)
+
+const [isEdit, toggle] = useToggle(!!props.always)
 
 const cell = useOutClick(_ => {
+  if (props.always) return
   requestAnimationFrame(() => {
     if (isEdit.value) {
       toggle()
@@ -21,53 +19,25 @@ const cell = useOutClick(_ => {
   })
 })
 
-const update = async () => {
-  if (asArray.value) {
-    model.value = _unique(model.value)
-  }
-  if (props.data['id'] === 1000) {
-    emits('update', props.data)
-  } else {
-    // emits('create', props.data)
-  }
+const update = () => {
+  emits('update', props.data)
 }
+
+watch(model, (v) => {
+  emits('change', v)
+})
 
 </script>
 
 <template>
-  <client-only>
-    <div ref="cell" class=" relative z-1">
-      <div v-if="isEdit || isCreate" class=" p-4">
-        <template v-if="component">
-          <component :is="component" v-model="model"></component>
-        </template>
-        <template v-else-if="enumData">
-          <u-select-menu v-model="model" :default-open="isEdit" value-key="value" :items="_values(enumData)"
-            class=" min-w-24" />
-        </template>
-        <template v-else-if="type === 'string'">
-          <u-input v-model="model" />
-        </template>
-        <template v-else-if="type === 'string[]'">
-          <a-text-list class=" flex flex-col gap-2" v-model="model" />
-        </template>
-      </div>
-      <div v-else class=" cursor-pointer p-4" @click="toggle(true)">
-        <template v-if="component">
-          <component :is="component" v-model="model"></component>
-        </template>
-        <template v-else-if="enumData">
-          {{ enumData[model].label }}
-        </template>
-        <template v-else-if="type === 'string'">
-          {{ model }}
-        </template>
-        <template v-else-if="type === 'string[]'">
-          {{ model?.join(',') }}
-        </template>
-      </div>
-    </div>
-  </client-only>
+  <div ref="cell" class=" relative z-1" @click="always || toggle()">
+    <e-select v-if="cType.enums" v-model="model" :readonly="readonly" :edit="isEdit" :enums="cType.enums"
+      :default-open="always ? false : true"></e-select>
+    <e-date v-else-if="cType.valueType === 'date'" v-model="model" v-bind="cType" :readonly="readonly" :edit="isEdit"
+      :default-open="always ? false : true"></e-date>
+    <e-text v-else-if="cType.valueType === 'string'" v-model="model" v-bind="cType" :readonly="readonly"
+      :edit="isEdit"></e-text>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

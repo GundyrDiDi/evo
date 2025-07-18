@@ -1,8 +1,41 @@
 // 维护一个当前所有注册的通道数，监测安全
 export const channelStore = defineStore("channelStore", () => {
-  const map = new Map();
+  const client = useSupabaseClient<Database>();
+  type Channel = ReturnType<typeof client.channel> & {
+    remove: () => Promise<void>;
+  };
+  const map = new Map<Symbol, Channel>();
+  const create = (name, opt) => {
+    if (map.size > 10) console.warn("当前通道数已超过10个");
+    const channel = client.channel(name, opt);
+    const key = Symbol();
+    map.set(
+      key,
+      Object.assign(channel, {
+        async remove() {
+          const status = await channel.unsubscribe();
+          console.log(status);
+          client.removeChannel(channel);
+          map.delete(key);
+        },
+      })
+    );
+    return channel as Channel;
+  };
+
+  const getAllChannel = () => [...map.values()];
+
+  const clear = () => {
+    map.forEach((channel) => {
+      channel.remove();
+    });
+    map.clear();
+  };
+
   return {
-    map,
+    create,
+    getAllChannel,
+    clear,
   };
 });
 
@@ -31,7 +64,8 @@ export const useChannel = (
     ..._opts,
   };
 
-  let channel: ReturnType<typeof client.channel>;
+  const store = channelStore();
+  let channel: ReturnType<typeof store.create>;
 
   let listeners = new Set<(payload) => void>([]);
   callback && listeners.add(callback);
@@ -42,7 +76,7 @@ export const useChannel = (
 
   const init = () => {
     const key = `client_${user.value?.id ?? `visitor_${_randomId}`}`;
-    channel = client.channel(name, {
+    channel = store.create(name, {
       config: {
         presence: {
           key,
@@ -61,8 +95,7 @@ export const useChannel = (
   init();
 
   const unsubscribe = async () => {
-    await channel.unsubscribe();
-    client.removeChannel(channel);
+    await channel.remove();
   };
 
   const addListener = (callback) => {

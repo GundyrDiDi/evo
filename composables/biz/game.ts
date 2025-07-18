@@ -1,5 +1,9 @@
-import { ATagModal } from "#components";
+import { ACheck, AHeart, ATagModal } from "#components";
 import type { TableColumn } from "@nuxt/ui";
+
+export type GameDTO = Tables<"game">;
+
+export type PartGameDTO = Partial<GameDTO>;
 
 const {
   game: {
@@ -17,50 +21,51 @@ const {
   },
 } = Columns;
 
-export type GameDTO = Pick<
-    Tables<"game">,
-    | "id"
-    | "name"
-    | "alias"
-    | "platform"
-    | "tags"
-    | "extra"
-    | "remark"
-    | "heart"
-    | "status"
-    | "complete_time"
-    | "judgment"
-    | "owned"
-    | "user_id"
-  >;
+export const useGameDTODefault = () => {
+  const d: Pick<GameDTO, "edition" | "status" | "platform"> = {
+    platform: "pc",
+    edition: "standard",
+    status: "not_started",
+  };
+  return d as PartGameDTO;
+};
 
-export const game_column = [
-  name,
-  alias,
-  {
-    ...tags,
-    component: ATagModal,
-  },
-  platform,
-  heart,
-  owned,
-  status,
-  complete_time,
-  judgment,
-].map((v) => {
-  const t: TableColumn<GameDTO> & { id: string; component?: Component } = {
-    id: v.name,
-    accessorKey: v.name,
-    header: "label" in v ? v.label : v.name,
-    meta: {
-      class: {
-        th: " text-center min-w-32",
-        td: " text-center p-0 ",
-      },
+export const useGameColumn = <T = any>() =>
+  [
+    name,
+    alias,
+    {
+      ...tags,
+      component: ATagModal,
     },
-  };
-  return {
-    ...v,
-    ...t,
-  };
-});
+    platform,
+    {
+      ...heart,
+      component: AHeart,
+    },
+    {
+      ...owned,
+      component: ACheck,
+    },
+    status,
+    complete_time,
+    judgment,
+    extra,
+  ].map((v) => {
+    const t: TableColumn<T> & { id: string; component?: Component } = {
+      id: v.name,
+      accessorKey: v.name,
+      header: v["label"] ?? v.name,
+      meta: {
+        class: {
+          th: " text-center min-w-32",
+          td: " text-center p-0 ",
+        },
+      },
+    };
+    return { ...t, ...v };
+  });
+
+type GameRPC = {
+  get_game_with_tags: GameDTO;
+};

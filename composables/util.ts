@@ -14,8 +14,8 @@ export const _unique = <T>(arr: T[]) => {
   return [...new Set(arr)];
 };
 
-export const _values = <T extends Object>(t: T) => {
-  return Object.values(t) as RecordValue<T>;
+export const _values = <T extends Object>(t?: T) => {
+  return t ? (Object.values(t) as Valueof<T>[]) : [];
 };
 
 export const _listenEvent = <T extends string>(
@@ -60,6 +60,7 @@ export const _randomKey = (key) => `${_randomId()}_${key}`;
 
 export const _wait = (t: number = 0) => new Promise((r) => setTimeout(r, t));
 
+//
 export const _clone = <T>(data: T): T => {
   if (typeof data !== "object" || data === null) return data;
   const copy = (Array.isArray(data) ? [] : {}) as T;
@@ -69,6 +70,7 @@ export const _clone = <T>(data: T): T => {
   return copy;
 };
 
+//
 export const _lock = (runtime = 5) => {
   let lock = false;
   const wrap =
@@ -83,4 +85,30 @@ export const _lock = (runtime = 5) => {
       return res;
     };
   return wrap;
+};
+
+//
+const _until = <T extends (...r: any) => any, R = Awaited<ReturnType<T>>>(
+  fn: T,
+  opts: {
+    count?: number;
+    delay?: number;
+    filter?: (v: R) => any;
+  } = {}
+) => {
+  const { count = 10, delay = 30, filter = (v) => !!v } = opts;
+  const wrap = (...r) => {
+    let cost = 0;
+    return (async function _(...r) {
+      const data = await fn(...r);
+      cost++;
+      if (filter(data)) return data;
+      if (cost >= count) {
+        throw new Error(`Max try ${cost} fail`);
+      }
+      await _wait(delay);
+      return _(...r);
+    })(...r);
+  };
+  return wrap as (...p: Parameters<T>) => Promise<R>;
 };

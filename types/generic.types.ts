@@ -1,5 +1,3 @@
-export type RecordValue<T> = T[keyof T];
-
 export type Affix<T extends string, U extends string> = `${T}_${U}`;
 
 export type Flat<T> = { [P in keyof T]: T[P] };
@@ -12,7 +10,13 @@ export type UnionToIntersection<T> = (
 
 export type Tree<T, K extends string = "children"> = T & { [P in K]?: T[] };
 
-export type orArray<T> = T extends infer P?(P|P[]):never
+export type orArray<T> = T extends infer P ? P | P[] : never;
+
+export type Valueof<T extends Object> = T extends {
+  [k: string | number | symbol]: infer P;
+}
+  ? P
+  : never;
 
 type FindEnumKey<_, T = Exclude<_, null>, U = Database["public"]["Enums"]> = {
   [P in keyof U]: U[P] extends T ? (T extends U[P] ? P : never) : never;

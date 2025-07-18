@@ -1,5 +1,13 @@
 export type Enum_Name = keyof Database["public"]["Enums"];
 
+// 通用枚举定义
+export type Enum_Data<T extends Enum_Name = Enum_Name> = {
+  [P in Enums<T>]: {
+    value: P;
+    label?: string;
+  };
+};
+
 const defineEnum = <
   E extends Enum_Name,
   C extends { [P in Enums<E>]: unknown }
@@ -23,7 +31,7 @@ let complete_status = defineEnum("complete_status", {
   abandoned: {
     label: "放弃",
   },
-  frozen: {
+  set_aside: {
     label: "之后再玩",
   },
   not_started: {
