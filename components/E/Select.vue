@@ -1,6 +1,10 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="D extends string|number">
 const props = defineProps<{
-  enums: Enum_Data
+  enums: Record<D, {
+    value: D,
+    label?: string
+  }>,
+  asArray?: boolean,
   edit: boolean,
   readonly?: boolean
   max?: number,
@@ -8,17 +12,17 @@ const props = defineProps<{
 
 defineEmits<{ (e: 'change', v): void }>()
 
-const model = defineModel<any>()
+const model = defineModel<D | D[] | null>()
 
 const showModel = computed(() => {
-  return Array.isArray(model.value) ? model.value.map(v => props.enums[v].label).join() : props.enums[model.value]?.label
+  if (!model.value) return ''
+  return Array.isArray(model.value) ? model.value?.map(v => props.enums[v].label).join() : props.enums[model.value]
 })
 </script>
 
 <template>
   <template v-if="edit">
-    <u-select-menu v-model="model" value-key="value" :multiple="Array.isArray(model)" :items="_values(enums)"
-      v-bind="$attrs" />
+    <u-select-menu v-model="model" value-key="value" :multiple="asArray" :items="<any>_values(enums)" v-bind="$attrs" />
   </template>
   <div v-else>
     {{ showModel }}

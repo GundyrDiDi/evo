@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const model = defineModel<boolean>()
+const model = defineModel<boolean | null>()
 
 const emits = defineEmits<{ (e: 'change', val: boolean): void }>()
 

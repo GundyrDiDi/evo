@@ -44,3 +44,17 @@ export const useMountListen = (fn, unmount = true) => {
   });
   unmount && onUnmounted(stop);
 };
+
+export const useCopy = <T extends Ref>(original: T) => {
+  const copy = ref() as T;
+  const lock = _lock();
+  watchEffect(
+    lock(() => {
+      copy.value = _clone(original.value);
+    })
+  );
+  const sync = lock(() => {
+    original.value = _clone(copy.value);
+  });
+  return { copy, sync };
+};

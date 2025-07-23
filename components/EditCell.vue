@@ -1,42 +1,39 @@
-<script lang="ts" setup generic="D extends Object">
+<script lang="ts" setup>
+type CellType = 'text' | 'date' | 'enum'
+
+const props = defineProps<{ readonly?: boolean, always?: boolean, type?: CellType, asArray?: boolean, enums?: Record<string, any> }>()
+
+const emits = defineEmits<{ (e: 'update', val): void }>()
+
+// 注意：值可以是数组
 const [model] = defineModel<any>({ required: true })
 
-const props = defineProps<{ type: Column_Type, data: D, readonly?: boolean, always?: boolean }>()
+const { copy, sync } = useCopy(model)
 
-const emits = defineEmits<{ (e: 'update', row: D): void, (e: 'change', model): void }>()
-
-const cType = useColumnType(() => props.type)
-
-const [isEdit, toggle] = useToggle(!!props.always)
+const [isEdit, toggle] = useToggle(props.always)
 
 const cell = useOutClick(_ => {
   if (props.always) return
   requestAnimationFrame(() => {
     if (isEdit.value) {
       toggle()
-      update()
+      emits('update', copy.value)
     }
   })
 })
 
-const update = () => {
-  emits('update', props.data)
-}
-
-watch(model, (v) => {
-  emits('change', v)
-})
+watch(copy, (v) => {
+  // 绕过update，直接修改model
+  props.always && sync()
+}, { deep: true })
 
 </script>
 
 <template>
-  <div ref="cell" class=" relative z-1" @click="always || toggle()">
-    <e-select v-if="cType.enums" v-model="model" :readonly="readonly" :edit="isEdit" :enums="cType.enums"
-      :default-open="always ? false : true"></e-select>
-    <e-date v-else-if="cType.valueType === 'date'" v-model="model" v-bind="cType" :readonly="readonly" :edit="isEdit"
-      :default-open="always ? false : true"></e-date>
-    <e-text v-else-if="cType.valueType === 'string'" v-model="model" v-bind="cType" :readonly="readonly"
-      :edit="isEdit"></e-text>
+  <div ref="cell" class=" relative z-1 p-2" @click="always || toggle()">
+    <e-select class=" min-w-24" v-if="enums" v-model="copy" :readonly="readonly" :edit="isEdit" :enums="enums"
+      :asArray="asArray" :default-open="always ? false : true"></e-select>
+    <e-text v-else v-model="copy" :readonly="readonly" :edit="isEdit" :asArray="asArray"></e-text>
   </div>
 </template>
 

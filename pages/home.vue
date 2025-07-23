@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { UButton } from '#components'
+import { ClientOnly, UButton } from '#components'
 import type { TableColumn } from '@nuxt/ui'
 
 const editNewRow = useLocalStorage('editNewRow_GameDTO', useGameDTODefault())
@@ -18,17 +18,6 @@ const { data } = await useAsyncData(withLoading(async () => {
 
 const withNewRowData = computed(() => (data.value ?? []).concat(editNewRow.value as any))
 
-const columns = useGameColumn<GameDTO>()
-
-const action: TableColumn<GameDTO> = {
-  accessorKey: 'action',
-  header: '',
-  cell({ row }) {
-    const isCreate = row.original === editNewRow.value
-    return h(UButton, { disabled: loading.value, onClick: () => isCreate ? handleCreate(row.original) : handleDelete(row.original) }, isCreate ? 'Create' : 'Delete')
-  }
-}
-
 const handleCreate = withLoading(async (row: PartGameDTO) => {
   await _wait(1000)
   editNewRow.value = useGameDTODefault()
@@ -36,12 +25,64 @@ const handleCreate = withLoading(async (row: PartGameDTO) => {
 
 const handleUpdate = useDebounceFn(withLoading(async (row: GameDTO) => {
   console.log(row)
+  if (row === editNewRow.value) return
   // await client.from('game_list').update(row).match({ id: row.id })
 }), 300)
 
-const handleDelete = withLoading(async (row: GameDTO) => {
+const handleDelete = useDebounceFn(withLoading(async (row: GameDTO) => {
 
+}), 300)
+
+const set = <K extends keyof GameDTO>(row: GameDTO, key: K, val: GameDTO[K]) => {
+  if (row === editNewRow.value) {
+    row[key] = val
+  } else {
+    return handleUpdate({ ...row, [key]: val })
+  }
+}
+
+const { name, alias, tags, platform, heart, owned, edition, status, complete_time, judgment, extra } = useGameColumn()
+
+const columns = [
+  name,
+  alias,
+  tags,
+  platform,
+  heart,
+  owned,
+  edition,
+  status,
+  complete_time,
+  judgment,
+  extra,
+].map((v) => {
+  const t: TableColumn<GameDTO> & { meta: Valueof<GameColumns> } = {
+    id: v.name,
+    accessorKey: v.name,
+    header: v.label,
+    meta: {
+      class: {
+        th: " text-center min-w-32",
+        td: " text-center p-0 ",
+      },
+      ...v
+    },
+  }
+  return t
 })
+
+const action: TableColumn<GameDTO> = {
+  accessorKey: 'action',
+  header: '',
+  cell({ row }) {
+    const isCreate = row.original === editNewRow.value
+    return h(UButton, {
+      disabled: loading.value,
+      onClick: () => isCreate ? handleCreate(row.original) : handleDelete(row.original)
+    }, isCreate ? 'Create' : 'Delete')
+  }
+}
+
 
 // const channel = useChannel({
 //   name: 'table_change',
@@ -53,22 +94,28 @@ const handleDelete = withLoading(async (row: GameDTO) => {
 // })
 
 onMounted(async () => {
-  // const { data } = await client.from('game').select('*').eq('user_id', user.value!.id).order('created_at')
 })
 
 </script>
 
 <template>
   <ASearch></ASearch>
-  <UTable :class="[' max-w-[1000px]', loading && 'pointer-events-none']" :data="withNewRowData"
-    :columns="[action].concat(columns)" :loading="loading">
-    <template v-for="c in columns" #[`${c.id}-cell`]="{ row }">
-      <component v-if="c.component" v-model="row.original[c.id]" :data="row.original" :is="c.component"
-        @update="handleUpdate" />
-      <EditCell v-else v-model="row.original[c.id]" :data="row.original" :type="c._type"
-        :always="row.original === editNewRow" @update="handleUpdate" />
-    </template>
-  </UTable>
+  <ClientOnly>
+    <UTable :class="[' max-w-[1000px]', loading && 'pointer-events-none']" :data="withNewRowData"
+      :columns="[action].concat(columns)" :loading="loading">
+      <template v-for="{ meta, id } in columns" #[`${id}-cell`]="{ row: { original, index } }">
+        <ATagModal v-if="meta.name === 'tags'" />
+        <AHeart v-else-if="meta.name === 'heart'" :model-value="original.heart"
+          @change="set(original, 'heart', $event)" />
+        <ACheck v-else-if="meta.name === 'owned'" :model-value="original.owned"
+          @change="set(original, 'owned', $event)" />
+        <!-- EditCell存在两种状态，展示和编辑 -->
+        <EditCell v-else v-model="original[meta.name]" v-bind="_pick(meta, ['enums', 'asArray'])"
+          :always="original === editNewRow"
+          @update="set(original, meta.name, meta.filter ? meta.filter($event) : $event)" />
+      </template>
+    </UTable>
+  </ClientOnly>
 </template>
 
 <style lang="scss" scoped></style>

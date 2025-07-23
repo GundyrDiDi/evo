@@ -1,27 +1,40 @@
 <script lang="ts" setup>
 const props = defineProps<{
-  asArray: boolean,
+  asArray?: boolean,
   edit: boolean,
   readonly?: boolean
-  max?: number,
 }>()
 
 defineEmits<{ (e: 'change', v: string | string[]): void }>()
 
-const model = defineModel<string | string[]>({ default: ()=>props.asArray ? [''] : '' })
+const model = defineModel<string | string[] | null>()
+
+const list = reactive<string[]>([])
+
+if (!props.asArray) {
+  list.push(model.value as string ?? '')
+} else {
+  Array.isArray(model.value) ? list.push(...model.value) : list.push('')
+}
+
+watch(list, () => {
+  if (props.asArray) {
+    model.value = list
+  } else {
+    model.value = list[0]
+  }
+})
 </script>
 
 <template>
-  <div v-if="Array.isArray(model)" class=" flex flex-col gap-2">
+  <div class=" flex flex-col gap-2">
     <template v-if="edit">
-      <u-input v-for="(_, i) in model" v-model="model[i]"></u-input>
-      <u-button @click="model.push('')">+</u-button>
+      <u-input v-for="(_, i) in list" v-model="list[i]"></u-input>
+      <a-button v-if="asArray" @click="list.push('')">+</a-button>
     </template>
-    <span v-else>{{ model.join() }}</span>
-  </div>
-  <div v-else>
-    <u-input v-if="edit" v-model="model"></u-input>
-    <span v-else>{{ model }}</span>
+    <template v-else>
+      {{ list.join() }}
+    </template>
   </div>
 </template>
 

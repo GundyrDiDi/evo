@@ -18,6 +18,10 @@ export type Valueof<T extends Object> = T extends {
   ? P
   : never;
 
+export type Promisify<T extends (...a) => any> = (
+  ...a: Parameters<T>
+) => Promise<Awaited<ReturnType<T>>>;
+
 type FindEnumKey<_, T = Exclude<_, null>, U = Database["public"]["Enums"]> = {
   [P in keyof U]: U[P] extends T ? (T extends U[P] ? P : never) : never;
 }[keyof U];

@@ -56,7 +56,6 @@ export const usePresence = () => {};
 export const useChannel = (
   _opts: { name: string; callback?: (payload) => void } & PostgresOption
 ) => {
-  const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
   const { name, callback, filter, ...opt } = {
     event: "*",
@@ -121,6 +120,11 @@ export const useChannel = (
     close,
   };
 };
+
+// 全局使用的channel，维护listener列表，注意：监听参数是不可变的，所以需要吗，还是就封装逻辑就好
+export const useGameListChannel = defineStore("", () => {
+  // const channel=useChannel({})
+});
 
 // // 公共channel方式，保持只有一个channel长期存在的场景
 // export const useChannelStore = defineStore("channel", () => {

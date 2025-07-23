@@ -1,24 +1,30 @@
 export type Enum_Name = keyof Database["public"]["Enums"];
 
 // 通用枚举定义
-export type Enum_Data<T extends Enum_Name = Enum_Name> = {
-  [P in Enums<T>]: {
-    value: P;
-    label?: string;
-  };
+export type Enum_Value<P = string> = {
+  value: P;
+  label?: string;
+};
+
+export type Enum_Data<T extends Enum_Name> = {
+  [P in Enums<T>]: Enum_Value<P>;
 };
 
 const defineEnum = <
   E extends Enum_Name,
-  C extends { [P in Enums<E>]: unknown }
+  C extends { [P in Enums<E>]: Omit<Enum_Value<P>, "value"> }
 >(
   e: E,
   c: C
 ) => {
+  let s = {};
   Object.keys(c).forEach((p) => {
-    c[p].value = p;
+    s[p] = {
+      ...c[p],
+      value: p,
+    };
   });
-  return c as { [P in Enums<E>]: { value: P } & C[P] };
+  return s as { [P in Enums<E>]: Enum_Value<P> & C[P] };
 };
 
 let complete_status = defineEnum("complete_status", {
@@ -74,3 +80,7 @@ export const Enum = {
   platform,
   edition,
 } as const;
+
+export type Enums_Type = {
+  [P in Enum_Name]: Enum_Data<P>;
+};
