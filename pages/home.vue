@@ -16,11 +16,17 @@ const { data } = await useAsyncData(withLoading(async () => {
   immediate: false
 })
 
-const withNewRowData = computed(() => (data.value ?? []).concat(editNewRow.value as any))
+const withNewRowData = computed(() => (data.value ?? []).concat(editNewRow.value))
 
-const handleCreate = withLoading(async (row: PartGameDTO) => {
-  await _wait(1000)
-  editNewRow.value = useGameDTODefault()
+const handleCreate = withLoading(async (row: GameInsertDTO) => {
+  // await _wait(1000)
+  console.log(row)
+  if (!row.name) return
+  if (row.alias) {
+    row.alias = alias.filter(row.alias)
+  }
+  await upsertTable('game', row)
+  // editNewRow.value = useGameDTODefault()
 })
 
 const handleUpdate = useDebounceFn(withLoading(async (row: GameDTO) => {
@@ -41,14 +47,13 @@ const set = <K extends keyof GameDTO>(row: GameDTO, key: K, val: GameDTO[K]) => 
   }
 }
 
-const { name, alias, tags, platform, heart, owned, edition, status, complete_time, judgment, extra } = useGameColumn()
+const { name, alias, tags, platform, owned, edition, status, complete_time, judgment, extra } = useGameColumn()
 
 const columns = [
   name,
   alias,
   tags,
   platform,
-  heart,
   owned,
   edition,
   status,
@@ -83,7 +88,6 @@ const action: TableColumn<GameDTO> = {
   }
 }
 
-
 // const channel = useChannel({
 //   name: 'table_change',
 //   table: 'game',
@@ -92,9 +96,6 @@ const action: TableColumn<GameDTO> = {
 //     console.log(payload)
 //   }
 // })
-
-onMounted(async () => {
-})
 
 </script>
 
@@ -105,8 +106,6 @@ onMounted(async () => {
       :columns="[action].concat(columns)" :loading="loading">
       <template v-for="{ meta, id } in columns" #[`${id}-cell`]="{ row: { original, index } }">
         <ATagModal v-if="meta.name === 'tags'" />
-        <AHeart v-else-if="meta.name === 'heart'" :model-value="original.heart"
-          @change="set(original, 'heart', $event)" />
         <ACheck v-else-if="meta.name === 'owned'" :model-value="original.owned"
           @change="set(original, 'owned', $event)" />
         <!-- EditCell存在两种状态，展示和编辑 -->

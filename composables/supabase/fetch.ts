@@ -27,9 +27,24 @@ export const selectTable = <T extends Table_Name, U extends string>(
   return withResponse(client.from(name).select(columns));
 };
 
-export const upsertTable = () => {};
+export const upsertTable = <T extends Table_Name>(
+  table_name: T,
+  record: TablesInsert<T>,
+  primary_key?: keyof Tables<T>
+) => {
+  const builder = useSupabaseClient().from(table_name);
+  const isCreate = primary_key && primary_key in record;
+  return withResponse(
+    (isCreate ? builder.upsert(record as any) : builder.update(record as any))
+      .select("*")
+      .single()
+  );
+};
 
-export const deleteTable = () => {};
+export const deleteTable = (table_name, id) => {
+  const client = useSupabaseClient();
+  // return withResponse(client.from(table_name).delete().match({ id: task.id }))
+};
 
 /**
  * Call a Postgres function

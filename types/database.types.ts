@@ -126,16 +126,16 @@ export type Database = {
           created_at: string
           edition: Database["public"]["Enums"]["edition"] | null
           extra: boolean | null
-          heart: boolean | null
           id: number
           judgment: string | null
           name: string
           owned: boolean | null
-          platform: Database["public"]["Enums"]["platform"] | null
+          platform: Database["public"]["Enums"]["platform"][] | null
           remark: string | null
           series: string | null
           status: Database["public"]["Enums"]["complete_status"] | null
           tags: string[] | null
+          tier: string | null
           user_id: string | null
         }
         Insert: {
@@ -144,16 +144,16 @@ export type Database = {
           created_at?: string
           edition?: Database["public"]["Enums"]["edition"] | null
           extra?: boolean | null
-          heart?: boolean | null
           id?: number
           judgment?: string | null
           name: string
           owned?: boolean | null
-          platform?: Database["public"]["Enums"]["platform"] | null
+          platform?: Database["public"]["Enums"]["platform"][] | null
           remark?: string | null
           series?: string | null
           status?: Database["public"]["Enums"]["complete_status"] | null
           tags?: string[] | null
+          tier?: string | null
           user_id?: string | null
         }
         Update: {
@@ -162,19 +162,27 @@ export type Database = {
           created_at?: string
           edition?: Database["public"]["Enums"]["edition"] | null
           extra?: boolean | null
-          heart?: boolean | null
           id?: number
           judgment?: string | null
           name?: string
           owned?: boolean | null
-          platform?: Database["public"]["Enums"]["platform"] | null
+          platform?: Database["public"]["Enums"]["platform"][] | null
           remark?: string | null
           series?: string | null
           status?: Database["public"]["Enums"]["complete_status"] | null
           tags?: string[] | null
+          tier?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "game_tier_fkey"
+            columns: ["tier"]
+            isOneToOne: false
+            referencedRelation: "tier"
+            referencedColumns: ["name"]
+          },
+        ]
       }
       game_tag: {
         Row: {
@@ -194,6 +202,27 @@ export type Database = {
         }
         Relationships: []
       }
+      tier: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -209,6 +238,8 @@ export type Database = {
         | "set_aside"
         | "not_started"
         | "not_published"
+        | "look_forward"
+        | "mastery"
       edition: "standard" | "deluxe" | "complete"
       platform: "pc" | "ps" | "ns" | "xbox"
     }
@@ -345,6 +376,8 @@ export const Constants = {
         "set_aside",
         "not_started",
         "not_published",
+        "look_forward",
+        "mastery",
       ],
       edition: ["standard", "deluxe", "complete"],
       platform: ["pc", "ps", "ns", "xbox"],

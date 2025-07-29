@@ -14,7 +14,7 @@ const list = reactive<string[]>([])
 if (!props.asArray) {
   list.push(model.value as string ?? '')
 } else {
-  Array.isArray(model.value) ? list.push(...model.value) : list.push('')
+  model.value?.length ? list.push(...model.value) : list.push('')
 }
 
 watch(list, () => {

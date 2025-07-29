@@ -34,6 +34,18 @@ type EnumValues<T> = [T] extends [Enum_Name]
 
 type FilterNever<T> = T extends [infer A1, never] ? [A1] : T;
 
+type PickNotNull<T> = Pick<
+  T,
+  {
+    [P in keyof T]: null extends T[P] ? never : P;
+  }[keyof T]
+>;
+
+type RequiredProperties<T> = {
+  [K in keyof T as T extends Record<K, T[K]> ? K : never]: T[K]
+}
+
+
 // type test1 = EnumValues<FindEnumKey<Tables<"game">["platform"]>>;
 
 // class Comp1<

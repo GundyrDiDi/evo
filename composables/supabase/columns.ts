@@ -8,8 +8,10 @@ export type Column_Value<T, P extends keyof T> = {
   name: P;
   label?: string;
   asArray?: boolean;
+  valid?: (a: T[P]) => boolean;
   filter?: (a: any) => T[P];
   enums?: Valueof<Enums_Type>;
+  primaryKey?: boolean;
 } & Value<T[P]>;
 
 export type Column_Data<T extends Table_Name> = {
@@ -19,7 +21,9 @@ export type Column_Data<T extends Table_Name> = {
 export const defineColumn = <
   E extends Table_Name,
   K extends keyof Tables<E>,
-  C extends { [P in K]?: Omit<Column_Value<Tables<E>, P>, "value" | "name"> },
+  C extends {
+    [P in K]?: Omit<Column_Value<Tables<E>, P>, "value" | "name">;
+  },
   T = Tables<E>
 >(
   e: E,
@@ -29,18 +33,21 @@ export const defineColumn = <
     c[p].name = p;
   });
   return c as {
-    [P in keyof C]: (P extends keyof T ? Column_Value<T, P> : never) & C[P];
+    [P in keyof C]: P extends keyof T ? Column_Value<T, P> & C[P] : never;
   };
 };
 
 const game = defineColumn("game", {
-  id: {},
+  id: {
+    primaryKey: true,
+  },
   name: {
     label: "游戏名",
   },
   alias: {
     label: "别名",
-    filter: (val) => (val ? _unique(val) : null),
+    filter: (val: string[]) =>
+      val ? _unique(val).filter((v) => v.trim()) : null,
     asArray: true,
   },
   platform: {
@@ -61,9 +68,6 @@ const game = defineColumn("game", {
     label: "其他",
   },
   user_id: {},
-  heart: {
-    label: "星标",
-  },
   judgment: {
     label: "评价",
   },

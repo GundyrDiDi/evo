@@ -58,3 +58,21 @@ export const useCopy = <T extends Ref>(original: T) => {
   });
   return { copy, sync };
 };
+
+export const useAsyncCahe = <T>(name, fn: () => Promise<T>) => {
+  const val = useState<T | undefined>(name, () => undefined);
+
+  const p = Promise.resolve({ data: val }) as {
+    data: Ref<T | undefined>;
+  } & Promise<{
+    data: Ref<T | undefined>;
+  }>;
+  p.data = val;
+
+  if (val.value === undefined) {
+    fn().then((res) => {
+      val.value = res;
+    });
+  }
+  return p;
+};

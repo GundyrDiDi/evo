@@ -28,11 +28,17 @@ const defineEnum = <
 };
 
 let complete_status = defineEnum("complete_status", {
+  not_published: {
+    label: "还没发行",
+  },
+  not_started: {
+    label: "还没开始",
+  },
+  look_forward: {
+    label: "🌟",
+  },
   running: {
     label: "正在玩",
-  },
-  completed: {
-    label: "完成",
   },
   abandoned: {
     label: "放弃",
@@ -40,11 +46,11 @@ let complete_status = defineEnum("complete_status", {
   set_aside: {
     label: "之后再玩",
   },
-  not_started: {
-    label: "还没开始",
+  completed: {
+    label: "完成",
   },
-  not_published: {
-    label: "还没发行",
+  mastery: {
+    label: "精进磨练",
   },
 });
 

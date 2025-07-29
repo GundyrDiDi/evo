@@ -122,7 +122,7 @@ export const useChannel = (
 };
 
 // 全局使用的channel，维护listener列表，注意：监听参数是不可变的，所以需要吗，还是就封装逻辑就好
-export const useGameListChannel = defineStore("", () => {
+export const useTableChannel = defineStore("", () => {
   // const channel=useChannel({})
 });
 
