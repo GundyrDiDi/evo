@@ -10,9 +10,15 @@ export const _pick = <T, K extends keyof T>(obj: T, k: K | K[]) => {
   return t;
 };
 
-export const _unique = <T>(arr: T[]) => {
+export const _unique = <T>(arr?: T[]) => {
   return [...new Set(arr)];
 };
+
+export const _trim = (arr?: string[]) => {
+  return arr?.map((v) => v.trim()).filter((v) => v) ?? [];
+};
+
+export const _unique_trim = (val?: string[]) => _trim(_unique(val));
 
 export const _values = <T extends Object>(t?: T) => {
   return t ? (Object.values(t) as Valueof<T>[]) : [];
@@ -138,27 +144,29 @@ export const _mergeClass = (
   // 初始化类名列表
   const normalizeToArray = (value: any): string[] => {
     if (value === null || value === undefined) return [];
-    if (typeof value === 'string') return value.split(/\s+/).filter(x => x !== '');
-    if (typeof value === 'number') return [String(value)];
-    if (Array.isArray(value)) return value.flatMap(normalizeToArray).filter(x => x !== '');
+    if (typeof value === "string")
+      return value.split(/\s+/).filter((x) => x !== "");
+    if (typeof value === "number") return [String(value)];
+    if (Array.isArray(value))
+      return value.flatMap(normalizeToArray).filter((x) => x !== "");
     return [];
   };
   const clxList: string[] = [];
-  
+
   // 处理原始对象的类名
-  if ('class' in original && original.class !== undefined) {
+  if ("class" in original && original.class !== undefined) {
     const originalValue = original.class;
-    
+
     // 处理字符串类名
-    if (typeof originalValue === 'string') {
-      clxList.push(...originalValue.split(/\s+/).filter(x => x !== ''));
+    if (typeof originalValue === "string") {
+      clxList.push(...originalValue.split(/\s+/).filter((x) => x !== ""));
     }
     // 处理数组类名
     else if (Array.isArray(originalValue)) {
-      originalValue.forEach(item => {
-        if (typeof item === 'string') {
-          clxList.push(...item.split(/\s+/).filter(x => x !== ''));
-        } else if (typeof item === 'number') {
+      originalValue.forEach((item) => {
+        if (typeof item === "string") {
+          clxList.push(...item.split(/\s+/).filter((x) => x !== ""));
+        } else if (typeof item === "number") {
           clxList.push(String(item));
         } else if (Array.isArray(item)) {
           // 处理嵌套数组
@@ -167,7 +175,7 @@ export const _mergeClass = (
       });
     }
     // 处理数字类名
-    else if (typeof originalValue === 'number') {
+    else if (typeof originalValue === "number") {
       clxList.push(String(originalValue));
     }
   }
@@ -175,16 +183,14 @@ export const _mergeClass = (
   // 处理传入的额外类名
   for (const clx of clxs) {
     // 处理对象格式 { class: ... }
-    if (typeof clx === 'object' && clx !== null && 'class' in clx) {
+    if (typeof clx === "object" && clx !== null && "class" in clx) {
       const classValue = clx.class;
-      
-      if (typeof classValue === 'string') {
-        clxList.push(...classValue.split(/\s+/).filter(x => x !== ''));
-      } 
-      else if (typeof classValue === 'number') {
+
+      if (typeof classValue === "string") {
+        clxList.push(...classValue.split(/\s+/).filter((x) => x !== ""));
+      } else if (typeof classValue === "number") {
         clxList.push(String(classValue));
-      } 
-      else if (Array.isArray(classValue)) {
+      } else if (Array.isArray(classValue)) {
         clxList.push(...normalizeToArray(classValue));
       }
     }
@@ -195,5 +201,11 @@ export const _mergeClass = (
   }
 
   // 去重并设置结果
-  return [...new Set(clxList)].join(' ')
+  return [...new Set(clxList)].join(" ");
 };
+
+import _dayjs from "dayjs";
+
+export const dayjs = _dayjs;
+
+export const _iso = (a: string) => dayjs(a).toISOString();

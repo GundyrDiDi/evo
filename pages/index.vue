@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 const user = useSupabaseUser()
+const supabase = useSupabaseClient()
 const logging = computed(() => useRoute().query.code)
 
 watchEffect(() => {
-  user.value ? navigateTo('/home') : logging ? null : navigateTo('/login')
+  user.value ? navigateTo('/home') : logging.value ? null : navigateTo('/login')
 })
 </script>
 

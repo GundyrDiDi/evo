@@ -33,9 +33,9 @@ export const upsertTable = <T extends Table_Name>(
   primary_key?: keyof Tables<T>
 ) => {
   const builder = useSupabaseClient().from(table_name);
-  const isCreate = primary_key && primary_key in record;
+  const isUpdate = primary_key && primary_key in record;
   return withResponse(
-    (isCreate ? builder.upsert(record as any) : builder.update(record as any))
+    (isUpdate ? builder.update(record as any) : builder.upsert(record as any))
       .select("*")
       .single()
   );

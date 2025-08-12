@@ -8,6 +8,7 @@ watchEffect(()=>{
   }
 })
 
+// http://192.168.102.105:3000/ http://localhost:3000
 const r = location?.origin
 </script>
 

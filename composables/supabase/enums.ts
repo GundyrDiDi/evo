@@ -50,7 +50,7 @@ let complete_status = defineEnum("complete_status", {
     label: "完成",
   },
   mastery: {
-    label: "精进磨练",
+    label: "精进",
   },
 });
 

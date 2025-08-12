@@ -1,53 +1,55 @@
 <script lang="ts" setup>
-import { ClientOnly, UButton } from '#components'
+import { UButton } from '#components'
 import type { TableColumn } from '@nuxt/ui'
 
 const editNewRow = useLocalStorage('editNewRow_GameDTO', useGameDTODefault())
 
 const [loading, withLoading] = useLoading()
 
-const { data } = await useAsyncData(withLoading(async () => {
+const { data, refresh } = await useAsyncData(withLoading(async () => {
   // const {data}=await client.rpc('',{})
-  const { data } = await selectTable('game[]')
-  console.log(data)
-  return data ?? []
+  const { data } = await selectTable('game[]').order('created_at', { ascending: false })
+  return data?.map(v => {
+    v.complete_time = v.complete_time && _iso(v.complete_time)
+    return v
+  }) ?? []
 }), {
   server: false,
-  immediate: false
+  // immediate: false
 })
 
-const withNewRowData = computed(() => (data.value ?? []).concat(editNewRow.value))
-
 const handleCreate = withLoading(async (row: GameInsertDTO) => {
-  // await _wait(1000)
   console.log(row)
-  if (!row.name) return
-  if (row.alias) {
-    row.alias = alias.filter(row.alias)
+
+  row.alias = row.alias && _unique_trim(row.alias)
+  row.complete_time = row.complete_time && _iso(row.complete_time)
+
+  const { data, error } = upsertGame.safeParse(row)
+  console.log(data, error)
+  if (data) {
+    await upsertTable('game', data)
+    refresh()
+    editNewRow.value = useGameDTODefault()
   }
-  await upsertTable('game', row)
-  // editNewRow.value = useGameDTODefault()
 })
 
 const handleUpdate = useDebounceFn(withLoading(async (row: GameDTO) => {
   console.log(row)
   if (row === editNewRow.value) return
-  // await client.from('game_list').update(row).match({ id: row.id })
+  const { data, error } = upsertGame.safeParse(row)
+  console.log(data, error)
+  if (data) {
+    console.log('updateData', data)
+    // await upsertTable('game', data)
+    // refresh()
+  }
 }), 300)
 
 const handleDelete = useDebounceFn(withLoading(async (row: GameDTO) => {
 
 }), 300)
 
-const set = <K extends keyof GameDTO>(row: GameDTO, key: K, val: GameDTO[K]) => {
-  if (row === editNewRow.value) {
-    row[key] = val
-  } else {
-    return handleUpdate({ ...row, [key]: val })
-  }
-}
-
-const { name, alias, tags, platform, owned, edition, status, complete_time, judgment, extra } = useGameColumn()
+const { name, alias, tags, series, platform, owned, edition, status, complete_time, judgment, extra } = useGameColumn()
 
 const columns = [
   name,
@@ -55,6 +57,7 @@ const columns = [
   tags,
   platform,
   owned,
+  series,
   edition,
   status,
   complete_time,
@@ -76,17 +79,19 @@ const columns = [
   return t
 })
 
-const action: TableColumn<GameDTO> = {
-  accessorKey: 'action',
-  header: '',
-  cell({ row }) {
-    const isCreate = row.original === editNewRow.value
-    return h(UButton, {
-      disabled: loading.value,
-      onClick: () => isCreate ? handleCreate(row.original) : handleDelete(row.original)
-    }, isCreate ? 'Create' : 'Delete')
-  }
-}
+// const action: TableColumn<GameDTO> = {
+//   accessorKey: 'action',
+//   header: '',
+//   cell({ row }) {
+//     const isCreate = row.original === editNewRow.value
+//     return h(UButton, {
+//       disabled: loading.value,
+//       onClick: () => isCreate ? handleCreate(row.original) : handleDelete(row.original)
+//     }, isCreate ? 'Create' : 'Delete')
+//   }
+// }
+
+const { upsertGame } = useGameZod()
 
 // const channel = useChannel({
 //   name: 'table_change',
@@ -97,24 +102,16 @@ const action: TableColumn<GameDTO> = {
 //   }
 // })
 
+const update = (row: GameDTO) => {
+  if (row == editNewRow.value) return
+  console.log('update data')
+}
+
+// 筛选、
 </script>
 
 <template>
-  <ASearch></ASearch>
-  <ClientOnly>
-    <UTable :class="[' max-w-[1000px]', loading && 'pointer-events-none']" :data="withNewRowData"
-      :columns="[action].concat(columns)" :loading="loading">
-      <template v-for="{ meta, id } in columns" #[`${id}-cell`]="{ row: { original, index } }">
-        <ATagModal v-if="meta.name === 'tags'" />
-        <ACheck v-else-if="meta.name === 'owned'" :model-value="original.owned"
-          @change="set(original, 'owned', $event)" />
-        <!-- EditCell存在两种状态，展示和编辑 -->
-        <EditCell v-else v-model="original[meta.name]" v-bind="_pick(meta, ['enums', 'asArray'])"
-          :always="original === editNewRow"
-          @update="set(original, meta.name, meta.filter ? meta.filter($event) : $event)" />
-      </template>
-    </UTable>
-  </ClientOnly>
+  
 </template>
 
 <style lang="scss" scoped></style>

@@ -3,15 +3,14 @@ export type Table_Name = keyof Database["public"]["Tables"];
 // value一般用于筛选项的定义
 type Value<T> = null extends T ? { value?: Exclude<T, null> } : { value: T };
 
-// 通用列字段定义
+// 通用列字段定义,遵循database转成的ts定义有哪些关联值，暂不增加多余的信息
 export type Column_Value<T, P extends keyof T> = {
   name: P;
   label?: string;
   asArray?: boolean;
-  valid?: (a: T[P]) => boolean;
-  filter?: (a: any) => T[P];
   enums?: Valueof<Enums_Type>;
-  primaryKey?: boolean;
+  // primaryKey?: boolean; 提交校验
+  // filter?: (a: any) => T[P];
 } & Value<T[P]>;
 
 export type Column_Data<T extends Table_Name> = {
@@ -38,21 +37,18 @@ export const defineColumn = <
 };
 
 const game = defineColumn("game", {
-  id: {
-    primaryKey: true,
-  },
+  id: {},
   name: {
     label: "游戏名",
   },
   alias: {
     label: "别名",
-    filter: (val: string[]) =>
-      val ? _unique(val).filter((v) => v.trim()) : null,
     asArray: true,
   },
   platform: {
     label: "平台",
     enums: Enum.platform,
+    asArray: true,
   },
   tags: {
     label: "标签",
@@ -80,7 +76,7 @@ const game = defineColumn("game", {
     enums: Enum.edition,
   },
   complete_time: {
-    label: "完成时间",
+    label: "游玩时间",
   },
   owned: {
     label: "已购买",

@@ -29,7 +29,7 @@ watch(list, () => {
 <template>
   <div class=" flex flex-col gap-2">
     <template v-if="edit">
-      <u-input v-for="(_, i) in list" v-model="list[i]"></u-input>
+      <u-input v-for="(_, i) in list" v-model="list[i]" :autofocus="typeof model==='string'"></u-input>
       <a-button v-if="asArray" @click="list.push('')">+</a-button>
     </template>
     <template v-else>

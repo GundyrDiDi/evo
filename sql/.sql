@@ -39,3 +39,5 @@ AS $$
   WHERE orders.user_id = $1
   GROUP BY orders.id;
 $$;
+
+--  (user_id = auth.uid())

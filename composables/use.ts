@@ -45,6 +45,7 @@ export const useMountListen = (fn, unmount = true) => {
   unmount && onUnmounted(stop);
 };
 
+// 和computed的get/set类似，不同之处在于调用sync来触发set
 export const useCopy = <T extends Ref>(original: T) => {
   const copy = ref() as T;
   const lock = _lock();
@@ -62,11 +63,11 @@ export const useCopy = <T extends Ref>(original: T) => {
 export const useAsyncCahe = <T>(name, fn: () => Promise<T>) => {
   const val = useState<T | undefined>(name, () => undefined);
 
-  const p = Promise.resolve({ data: val }) as {
+  type M = {
     data: Ref<T | undefined>;
-  } & Promise<{
-    data: Ref<T | undefined>;
-  }>;
+  };
+
+  const p = Promise.resolve({ data: val }) as M & Promise<M>;
   p.data = val;
 
   if (val.value === undefined) {
@@ -75,4 +76,11 @@ export const useAsyncCahe = <T>(name, fn: () => Promise<T>) => {
     });
   }
   return p;
+};
+
+export const useLocalExpire = (name, step = "D") => {
+  const l = useLocalStorage(name, "");
+  if (!l.value) {
+    l.value = dayjs().format("YYYY/MM/DD");
+  }
 };

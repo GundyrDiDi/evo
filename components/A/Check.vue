@@ -4,8 +4,7 @@ const model = defineModel<boolean | null>()
 const emits = defineEmits<{ (e: 'change', val: boolean): void }>()
 
 const handleClick = () => {
-  emits('change', !model.value)
-  model.value = !model.value
+  emits('change', model.value = !model.value)
 }
 </script>
 

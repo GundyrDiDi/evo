@@ -1,13 +1,11 @@
 <script lang="ts" setup>
-const [model]=defineModel<string[]>()
+const [model] = defineModel<string[] | null>()
 
 </script>
 
 <template>
-  {{model}}
+  {{ model }}
   <!-- <u-modal></u-modal> -->
 </template>
 
-<style lang="scss" scoped>
-  
-</style>
+<style lang="scss" scoped></style>
