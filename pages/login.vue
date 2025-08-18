@@ -2,14 +2,13 @@
 const user = useSupabaseUser()
 const { auth } = useSupabaseClient()
 
-watchEffect(()=>{
+watchEffect(() => {
   if (user.value) {
     navigateTo('/home')
   }
 })
 
-// http://192.168.102.105:3000/ http://localhost:3000
-const r = location?.origin
+const r = location?.origin + '/auth/callback'
 </script>
 
 <template>

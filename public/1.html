@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="google-signin-client_id" content="490502084475-dssnir2sfempd0p5ga2a0eqt4f1l0fui.apps.googleusercontent.com">
+  
+  <!-- 关键：正确加载 Google 身份服务库 -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <div id="google-signin-button"></div>
+  
+  <script>
+    // 确保在库加载完成后执行
+    function initGoogleSignIn() {
+      // 检查 google 对象是否已定义
+      if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+        console.error('Google 库尚未加载完成');
+        // 3秒后重试
+        setTimeout(initGoogleSignIn, 3000);
+        return;
+      }
+      
+      // 初始化 Google 身份服务
+      google.accounts.id.initialize({
+        client_id: "490502084475-dssnir2sfempd0p5ga2a0eqt4f1l0fui.apps.googleusercontent.com",
+        callback: handleCredentialResponse,
+        auto_select: true, // 自动选择已登录账号
+        ux_mode: "popup"  // 使用弹出窗口
+      });
+      
+      // 渲染登录按钮
+      google.accounts.id.renderButton(
+        document.getElementById("google-signin-button"),
+        { 
+          theme: "filled_blue", 
+          size: "large",
+          text: "signin_with",
+          shape: "pill"
+        }
+      );
+      
+      // 关键：调用 prompt() 方法
+      google.accounts.id.prompt((notification) => {
+        if (notification.isNotDisplayed() || notification.isSkipped()) {
+          console.log('一键登录未显示，原因:', notification.getNotDisplayedReason());
+        }
+      });
+    }
+    
+    function handleCredentialResponse(response) {
+      console.log('Google 登录响应:', response);
+      // 发送 ID Token 到后端验证
+      const idToken = response.credential;
+      // ... 验证逻辑
+    }
+    
+    // 在页面加载完成后初始化
+    window.addEventListener('load', initGoogleSignIn);
+  </script>
+</body>
+</html>

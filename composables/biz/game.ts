@@ -1,9 +1,5 @@
 import z, { ZodAny, ZodObject } from "zod";
 
-export type GameDTO = Tables<"game">;
-
-export type GameInsertDTO = TablesInsert<"game">;
-
 export const useGameColumn = () => Columns.game;
 
 export type GameColumns = Pick<
@@ -22,8 +18,22 @@ export const useGameDTODefault = () => {
   return d as GameDTO;
 };
 
+export type GameDTO = Tables<"game"> & {
+  cpt_date: string | null;
+};
+
+export const injectGameRow = (data: Tables<"game">) => {
+  // complete_time 转成 iso 格式
+  data.complete_time = data.complete_time && _iso(data.complete_time);
+  const cpt_date = data.complete_time
+    ? dayjs(data.complete_time).format("MM/YY")
+    : null;
+  // 添加计算字段
+  return Object.assign(data, { cpt_date });
+};
+
 // 校验和数据的类型定义是分开的
-const defineGameZod = <U extends { [P in keyof GameInsertDTO]?: any }>(o: U) =>
+const defineGameZod = <U extends { [P in keyof GameDTO]?: any }>(o: U) =>
   z.object(o);
 
 const partialZod = <
@@ -104,15 +114,6 @@ export const useGameZod = defineStore("game_zod", () => {
     ["name"],
     "invert"
   );
-
-  console.log(dayjs("2020-01-01T06:15:00.123456+04:00").toISOString());
-
-  const a = upsertGame.safeParse({
-    complete_time: "2025-08-11T08:34:17Z",
-    name: "",
-  });
-  console.log(a);
-
   //
   return {
     upsertGame,

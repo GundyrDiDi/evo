@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --host",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -21,6 +21,7 @@
     "@nuxtjs/supabase": "^1.5.3",
     "@pinia/nuxt": "^0.11.1",
     "@vueuse/core": "^13.2.0",
+    "@vueuse/gesture": "^2.0.0",
     "@vueuse/nuxt": "^13.2.0",
     "dayjs": "^1.11.13",
     "masonry-layout": "^4.2.2",
@@ -33,6 +34,8 @@
     "zod": "^4.0.11"
   },
   "devDependencies": {
-    "@types/masonry-layout": "^4.2.8"
+    "@types/masonry-layout": "^4.2.8",
+    "@vant/nuxt": "^1.0.7",
+    "vant": "^4.9.21"
   }
 }

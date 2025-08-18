@@ -81,10 +81,20 @@ let edition = defineEnum("edition", {
   },
 });
 
+let tier = {
+  "S+": {},
+  S: {},
+  A: {},
+  B: {},
+  C: {},
+  D: {},
+};
+
 export const Enum = {
   complete_status,
   platform,
   edition,
+  tier,
 } as const;
 
 export type Enums_Type = {

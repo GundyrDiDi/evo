@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { UButton } from '#components'
-import type { TableColumn } from '@nuxt/ui'
 
 const editNewRow = useLocalStorage('editNewRow_GameDTO', useGameDTODefault())
 
@@ -9,16 +7,15 @@ const [loading, withLoading] = useLoading()
 const { data, refresh } = await useAsyncData(withLoading(async () => {
   // const {data}=await client.rpc('',{})
   const { data } = await selectTable('game[]').order('created_at', { ascending: false })
-  return data?.map(v => {
-    v.complete_time = v.complete_time && _iso(v.complete_time)
-    return v
-  }) ?? []
+  return data?.map(v => injectGameRow(v)) ?? []
 }), {
   server: false,
   // immediate: false
 })
 
-const handleCreate = withLoading(async (row: GameInsertDTO) => {
+const { upsertGame } = useGameZod()
+
+const handleCreate = withLoading(async (row: GameDTO) => {
   console.log(row)
 
   row.alias = row.alias && _unique_trim(row.alias)
@@ -49,35 +46,35 @@ const handleDelete = useDebounceFn(withLoading(async (row: GameDTO) => {
 
 }), 300)
 
-const { name, alias, tags, series, platform, owned, edition, status, complete_time, judgment, extra } = useGameColumn()
+// const { name, alias, tags, series, platform, owned, edition, status, complete_time, judgment, extra } = useGameColumn()
 
-const columns = [
-  name,
-  alias,
-  tags,
-  platform,
-  owned,
-  series,
-  edition,
-  status,
-  complete_time,
-  judgment,
-  extra,
-].map((v) => {
-  const t: TableColumn<GameDTO> & { meta: Valueof<GameColumns> } = {
-    id: v.name,
-    accessorKey: v.name,
-    header: v.label,
-    meta: {
-      class: {
-        th: " text-center min-w-32",
-        td: " text-center p-0 ",
-      },
-      ...v
-    },
-  }
-  return t
-})
+// const columns = [
+//   name,
+//   alias,
+//   tags,
+//   platform,
+//   owned,
+//   series,
+//   edition,
+//   status,
+//   complete_time,
+//   judgment,
+//   extra,
+// ].map((v) => {
+//   const t: TableColumn<GameDTO> & { meta: Valueof<GameColumns> } = {
+//     id: v.name,
+//     accessorKey: v.name,
+//     header: v.label,
+//     meta: {
+//       class: {
+//         th: " text-center min-w-32",
+//         td: " text-center p-0 ",
+//       },
+//       ...v
+//     },
+//   }
+//   return t
+// })
 
 // const action: TableColumn<GameDTO> = {
 //   accessorKey: 'action',
@@ -90,8 +87,6 @@ const columns = [
 //     }, isCreate ? 'Create' : 'Delete')
 //   }
 // }
-
-const { upsertGame } = useGameZod()
 
 // const channel = useChannel({
 //   name: 'table_change',
@@ -107,11 +102,22 @@ const update = (row: GameDTO) => {
   console.log('update data')
 }
 
-// 筛选、
+const sortBy = useLocalStorage('sortBy', '')
+
+// 记录修改过的数据
+
+// 筛选、手势、pwa、定时同步
+
 </script>
 
 <template>
-  
+  <div class=" flex p-4 justify-between">
+    <u-button color="primary" variant="outline" icon="i-heroicons-bars-arrow-down"></u-button>
+    <u-button color="primary" variant="outline" icon="i-heroicons-cog-6-tooth"></u-button>
+  </div>
+  <div class=" flex flex-col px-4">
+    <Cell v-for="v in data" :model-value="v" @update="update(v)" />
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

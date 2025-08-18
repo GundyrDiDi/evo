@@ -1,3 +1,9 @@
+/**
+ * 
+ * @param defineState {name: }
+ * @param mode 
+ * @returns 
+ */
 export const useRouteQuery = <
   T extends Record<
     string,
@@ -130,7 +136,7 @@ export const pushQuery = (queryState) => {
   const query = { ...useRoute().query };
   Object.keys(queryState).forEach((key) => {
     let val = queryState[key];
-    // 非string都转string, 比如 0=>"0" true=>"true" []=>"" null|undefined=>""
+    // 非string都转string, 比如 ['a','b']=>'a,b' 0=>"0" true=>"true" []=>"" null|undefined=>""
     if (typeof val !== "string") {
       val = queryState[key]?.toString() ?? "";
     }

@@ -16,40 +16,18 @@ const logout = async () => {
 </script>
 
 <template>
-  <div>
-    <Title>Nuxt 3 x Supabase</Title>
+  <div class=" sticky z-1 top-0 bg-[var(--ui-bg)]">
+    <Title>Gardios</Title>
     <div class="flex items-center md:justify-between justify-center">
       <div class="hidden md:block">
-        <UButton
-          label="Source"
-          variant="link"
-          color="gray"
-          target="_blank"
-          to="https://github.com/nuxt-modules/supabase/tree/main/demo"
-          icon="i-heroicons-outline-external-link"
-        />
-        <UButton
-          label="Hosted on Netlify"
-          variant="link"
-          color="gray"
-          target="_blank"
-          to="https://netlify.com"
-          icon="i-heroicons-outline-external-link"
-        />
+        <UButton label="Source" variant="link" color="gray" target="_blank"
+          to="https://github.com/nuxt-modules/supabase/tree/main/demo" icon="i-heroicons-outline-external-link" />
+        <UButton label="Hosted on Netlify" variant="link" color="gray" target="_blank" to="https://netlify.com"
+          icon="i-heroicons-outline-external-link" />
       </div>
       <div class="flex items-center">
-        <UButton
-          variant="link"
-          color="gray"
-          :icon="colorModeIcon"
-          @click="toggleDark"
-        />
-        <UButton
-          v-if="user"
-          variant="link"
-          color="gray"
-          @click="logout"
-        >
+        <UButton variant="link" color="gray" :icon="colorModeIcon" @click="toggleDark" />
+        <UButton v-if="user" variant="link" color="gray" @click="logout">
           Logout
         </UButton>
       </div>
