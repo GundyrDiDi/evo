@@ -31,45 +31,42 @@ export default defineNuxtConfig({
     dirs: ["composables/*", "composables/**", "types/*"],
   },
   vant: {},
-  pwa: {
-    strategies: sw ? "injectManifest" : "generateSW",
-    srcDir: sw ? "service-worker" : undefined,
-    filename: sw ? "sw.ts" : undefined,
-    registerType: "autoUpdate",
-    manifest: {
-      name: "Gardios",
-      short_name: "evo",
-      icons: [
-        {
-          src: "./img/logo.png",
-          sizes: "128x128",
-          type: "image/png",
-        },
-        {
-          src: "./img/logo.png",
-          sizes: "512x512",
-          type: "image/png",
-        },
-      ],
-    },
-    workbox: {
-      globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
-    },
-    injectManifest: {
-      globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
-    },
-    client: {
-      installPrompt: true
-    },
-    // experimental: {
-    //   includeAllowlist: true,
-    // },
-    devOptions: {
-      enabled: true,
-      suppressWarnings: true,
-      navigateFallback: "/",
-      navigateFallbackAllowlist: [/^\/$/],
-      type: "module",
-    },
-  },
+  // pwa: {
+  //   strategies: sw ? "injectManifest" : "generateSW",
+  //   srcDir: sw ? "service-worker" : undefined,
+  //   filename: sw ? "sw.ts" : undefined,
+  //   registerType: "autoUpdate",
+  //   manifest: {
+  //     name: "Gardios",
+  //     short_name: "evo",
+  //     icons: [
+  //       {
+  //         src: "./img/logo.png",
+  //         sizes: "128x128",
+  //         type: "image/png",
+  //       },
+  //       {
+  //         src: "./img/logo.png",
+  //         sizes: "512x512",
+  //         type: "image/png",
+  //       },
+  //     ],
+  //   },
+  //   workbox: {
+  //     globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+  //   },
+  //   injectManifest: {
+  //     globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+  //   },
+  //   client: {
+  //     installPrompt: true
+  //   },
+  //   devOptions: {
+  //     enabled: true,
+  //     suppressWarnings: true,
+  //     navigateFallback: "/",
+  //     navigateFallbackAllowlist: [/^\/$/],
+  //     type: "module",
+  //   },
+  // },
 });

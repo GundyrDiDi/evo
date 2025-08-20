@@ -19,17 +19,17 @@ export const useGameDTODefault = () => {
 };
 
 export type GameDTO = Tables<"game"> & {
-  cpt_date: string | null;
+  // complete_date: string | null;
 };
 
 export const injectGameRow = (data: Tables<"game">) => {
   // complete_time 转成 iso 格式
   data.complete_time = data.complete_time && _iso(data.complete_time);
-  const cpt_date = data.complete_time
-    ? dayjs(data.complete_time).format("MM/YY")
-    : null;
+  // const complete_date = data.complete_time
+  //   ? dayjs(data.complete_time).format("MM/YY")
+  //   : null;
   // 添加计算字段
-  return Object.assign(data, { cpt_date });
+  return Object.assign(data, { });
 };
 
 // 校验和数据的类型定义是分开的

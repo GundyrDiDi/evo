@@ -208,4 +208,7 @@ import _dayjs from "dayjs";
 
 export const dayjs = _dayjs;
 
-export const _iso = (a: string) => dayjs(a).toISOString();
+export const _iso = (a: string | Date) => dayjs(a).toISOString();
+
+export const _date_str = (a?: string | Date, format = "YYYY/MM/DD") =>
+  dayjs(a).format(format);

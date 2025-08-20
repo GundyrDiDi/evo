@@ -9,7 +9,6 @@ defineEmits<{ (e: 'update', v?: GameDTO): void }>()
 const [show, toggle] = useToggle()
 
 // const cell = useOutClick(_ => {
-//   // 
 //   requestAnimationFrame(() => {
 //     toggle(false)
 //   })
@@ -20,9 +19,7 @@ const title = ref()
 onLongPress(
   title,
   () => toggle(true),
-  {
-    delay: 300,
-  }
+  { delay: 300 }
 )
 
 const { alias, complete_time } = useGameColumn()
@@ -38,21 +35,23 @@ const badge = computed(() => {
 
 <template>
   <div ref="cell">
-    <div class=" flex items-center relative pb-2" ref="title">
-      <van-field v-model="data.name" />
+    <div class=" flex items-center relative pb-2">
+      <v-field v-model="data.name" ref="title"/>
       <span class="absolute right-0 flex gap-3 items-center">
-        <span class=" text-[12px]">{{ data.cpt_date ?? '--/--' }}</span>
+        <v-date-picker v-model="data.complete_time">
+          <span class=" text-[12px]">{{ data.complete_time ? dayjs(data.complete_time).format("MM/YY") : '--/--' }}</span>
+        </v-date-picker>
         <a-tier-text v-if="data.tier" class=" w-4 h-4 rounded text-[10px] font-[700]" :text="badge">
         </a-tier-text>
         <span v-else>{{ badge }}</span>
       </span>
     </div>
     <div v-if="show">
-      <v-field :label="alias.label" v-model="data.alias" />
+      <v-field v-model="data.alias" :label="alias.label" :as-array="alias.asArray" />
       <!-- <van-date-picker :title="complete_time.label" /> -->
-      <div class=" w-full text-center mt-2" @click="toggle(false)">
-        <i-chevron-double-up-solid class=" inline-block text-sky-700 text-[20px]" />
-      </div>
+      <u-button class=" w-full justify-center my-2" @click="toggle()">
+        <i-chevron-double-up-solid class=" inline-block text-gray-800 text-[20px]" />
+      </u-button>
     </div>
   </div>
 </template>

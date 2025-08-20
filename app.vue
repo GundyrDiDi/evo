@@ -1,5 +1,4 @@
 <template>
-  <NuxtPwaManifest />
   <van-config-provider :theme="<'dark'>colorMode?.preference">
     <AppContainer>
       <AppHeader />
@@ -18,8 +17,6 @@ app.vueApp.use(ConfigProvider)
 app.vueApp.use(GesturePlugin)
 
 const colorMode = useColorMode()
-
-const pwa=useNuxtApp().$pwa
 </script>
 <style>
 :root {
