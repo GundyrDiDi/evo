@@ -41,7 +41,7 @@ const badge = computed(() => {
     <div class=" flex items-center relative pb-2" ref="title">
       <van-field v-model="data.name" />
       <span class="absolute right-0 flex gap-3 items-center">
-        <span v-if="data.cpt_date" class=" text-[12px]">{{ data.cpt_date }}</span>
+        <span class=" text-[12px]">{{ data.cpt_date ?? '--/--' }}</span>
         <a-tier-text v-if="data.tier" class=" w-4 h-4 rounded text-[10px] font-[700]" :text="badge">
         </a-tier-text>
         <span v-else>{{ badge }}</span>
@@ -50,7 +50,7 @@ const badge = computed(() => {
     <div v-if="show">
       <v-field :label="alias.label" v-model="data.alias" />
       <!-- <van-date-picker :title="complete_time.label" /> -->
-      <div class=" w-full text-center">
+      <div class=" w-full text-center mt-2" @click="toggle(false)">
         <i-chevron-double-up-solid class=" inline-block text-sky-700 text-[20px]" />
       </div>
     </div>

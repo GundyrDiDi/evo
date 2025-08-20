@@ -9,6 +9,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "test": "nuxt generate & npx serve .output/public",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "api": "npx supabase gen types --lang=typescript --project-id qtxgrtezsdvsutklkwtq > types/database.types.ts"
@@ -36,6 +37,7 @@
   "devDependencies": {
     "@types/masonry-layout": "^4.2.8",
     "@vant/nuxt": "^1.0.7",
-    "vant": "^4.9.21"
+    "vant": "^4.9.21",
+    "@vite-pwa/nuxt": "^1.0.4"
   }
 }

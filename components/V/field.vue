@@ -15,7 +15,7 @@ const text = computed<string>({
 </script>
 
 <template>
-  <van-field v-bind="$attrs" v-model="text" />
+  <van-field label-width="auto" v-bind="$attrs" v-model="text" />
 </template>
 
 <style lang="scss" scoped></style>
