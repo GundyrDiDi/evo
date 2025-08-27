@@ -14,15 +14,14 @@ const options = computed<Options>(() => {
   return props.options ?? []
 })
 
-const model = defineModel<Numeric>()
+const model = defineModel<Numeric[]>()
 
-const change = (e) => {
-  console.log(e)
-  model.value = e.selectedValues[0]
-}
+const modelSet = computed(() => {
+  return new Set(model.value)
+})
 
-const selectOpt = computed(() => {
-  return options.value.find(v => v.value == model.value)
+const selectOpts = computed(() => {
+  return options.value.filter(v => model.value?.includes(v.value))
 })
 
 const default_slot = useSlots().default
@@ -43,17 +42,33 @@ const clear = () => {
   model.value = undefined
 }
 
+const check = (opt: Options[number]) => {
+  if (modelSet.value.has(opt.value)) {
+    model.value = model.value?.filter(v => v !== opt.value)
+  } else {
+    model.value ? model.value.push(opt.value) : (model.value = [opt.value])
+  }
+}
+
 const vin = ref()
 
 </script>
 
 <template>
   <component v-if="default_slot" :is="renderSlot" />
-  <v-field v-else :label="$attrs.label ?? ''" readonly :model-value="selectOpt?.text ?? model?.toString() ?? ''"
+  <v-field v-else :label="$attrs.label ?? ''" readonly :model-value="selectOpts.map(v => v.text).join()"
     placeholder="请选择" @click="toggle(true)" />
   <!--  -->
-  <van-popup v-model:show="show" position="bottom" class=" h-[50%]" destroy-on-close @open="open">
-    <!--  -->
+  <van-popup v-model:show="show" position="bottom" class=" pt-4" destroy-on-close @open="open">
+    <!-- <div class=" header"></div> -->
+    <div class=" max-h-[50vh] pb-6 overflow-auto">
+      <div class=" flex items-center h-12 px-4 text-[#fff] justify-center gap-4" v-for="v in options"
+        :class="[model?.includes(v.value) && ' text-primary-500 font-[600]']" @click="check(v)">
+        <slot v-bind="{ item: v }">
+          {{ v.text }}
+        </slot>
+      </div>
+    </div>
   </van-popup>
 </template>
 

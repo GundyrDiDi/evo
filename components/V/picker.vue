@@ -44,7 +44,7 @@ const vin = ref()
   <v-field v-else :label="$attrs.label ?? ''" readonly :model-value="selectItems.map(v => v?.text).join()"
     placeholder="请选择" @click="toggle(true)" />
   <!--  -->
-  <van-popup v-model:show="show" position="bottom" class=" h-[50%]" destroy-on-close @open="open">
+  <van-popup v-model:show="show" position="bottom" destroy-on-close @open="open">
     <van-picker ref="vin" v-model="model" :columns="columns" cancel-button-text="清空" @cancel="clear"
       confirm-button-text="重置" @confirm="reset" />
   </van-popup>
