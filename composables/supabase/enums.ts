@@ -4,6 +4,7 @@ export type Enum_Name = keyof Database["public"]["Enums"];
 export type Enum_Value<P = string> = {
   value: P;
   label?: string;
+  icon?: string;
 };
 
 export type Enum_Data<T extends Enum_Name> = {
@@ -30,27 +31,35 @@ const defineEnum = <
 let complete_status = defineEnum("complete_status", {
   not_published: {
     label: "还没发行",
+    icon: "⏰",
   },
-  not_started: {
+  not_start: {
     label: "还没开始",
+    icon: "📋",
   },
   look_forward: {
-    label: "🌟",
+    label: "相当期待",
+    icon: "🌟",
   },
   running: {
     label: "正在玩",
+    icon: "🎮",
   },
-  abandoned: {
+  abandon: {
     label: "放弃",
+    icon: "🗑️",
   },
   set_aside: {
     label: "之后再玩",
+    icon: "⌛️",
   },
-  completed: {
-    label: "完成",
+  finish: {
+    label: "通关",
+    icon: "✅",
   },
   mastery: {
-    label: "精进",
+    label: "修炼",
+    icon: "💪",
   },
 });
 
@@ -81,14 +90,19 @@ let edition = defineEnum("edition", {
   },
 });
 
-let tier = {
+// tier等级更多是基于在同一类型游戏中的表现，比如
+// S为独一无二(比如个人年度)的作品，A为佳作，B为平庸，C以下为不值得玩，D则表示对精神造成创伤
+// 同等级中“+”代表存在差距但不大(比如S与A+的差距比A+与A的差距会大得多)，更多是个人喜好，或者品味
+let tier = defineEnum("g_tier", {
   "S+": {},
   S: {},
+  "A+": {},
   A: {},
+  "B+": {},
   B: {},
   C: {},
   D: {},
-};
+});
 
 export const Enum = {
   complete_status,
@@ -97,6 +111,7 @@ export const Enum = {
   tier,
 } as const;
 
+// 
 export type Enums_Type = {
   [P in Enum_Name]: Enum_Data<P>;
 };

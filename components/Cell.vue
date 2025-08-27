@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 const model = defineModel<GameDTO>({ required: true })
 
 const data = toValue(model.value)
@@ -22,33 +21,31 @@ onLongPress(
   { delay: 300 }
 )
 
-const { alias, complete_time } = useGameColumn()
+const { alias, finish_date, status } = useGameColumn()
 
-// 
-const badge = computed(() => {
-  if (data.tier) return data.tier
-  if (data.judgment) return data.judgment.slice(0, 1)
-  if (data.status === 'look_forward') return '🌟'
-  return ''
-})
+// const update = useDebounceFn((v) => {
+//   console.log(v)
+// }, 5000)
+// watch(data, update)
+
 </script>
 
 <template>
   <div ref="cell">
     <div class=" flex items-center relative pb-2">
-      <v-field v-model="data.name" ref="title"/>
+      <v-field v-model="data.name" ref="title" />
       <span class="absolute right-0 flex gap-3 items-center">
-        <v-date-picker v-model="data.complete_time">
-          <span class=" text-[12px]">{{ data.complete_time ? dayjs(data.complete_time).format("MM/YY") : '--/--' }}</span>
+        <v-date-picker v-model="data.finish_date">
+          <span class=" text-[12px]">{{
+            data.finish_date ? dayjs(data.finish_date).format("MM/YY") : '--/--'
+          }}</span>
         </v-date-picker>
-        <a-tier-text v-if="data.tier" class=" w-4 h-4 rounded text-[10px] font-[700]" :text="badge">
-        </a-tier-text>
-        <span v-else>{{ badge }}</span>
+        <Badge v-model="data" />
       </span>
     </div>
     <div v-if="show">
       <v-field v-model="data.alias" :label="alias.label" :as-array="alias.asArray" />
-      <!-- <van-date-picker :title="complete_time.label" /> -->
+      <!-- <v-pick-single v-model="data.status!" :label="status.label" :enums="status.enums" /> -->
       <u-button class=" w-full justify-center my-2" @click="toggle()">
         <i-chevron-double-up-solid class=" inline-block text-gray-800 text-[20px]" />
       </u-button>
@@ -57,8 +54,12 @@ const badge = computed(() => {
 </template>
 
 <style scoped>
-.van-field {
+:deep(.van-field) {
   line-height: 32px;
+}
+
+:deep(.van-picker__toolbar) {
+  padding: 0 1rem;
 }
 </style>
 

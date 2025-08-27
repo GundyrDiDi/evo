@@ -45,6 +45,8 @@ type RequiredProperties<T> = {
   [K in keyof T as T extends Record<K, T[K]> ? K : never]: T[K]
 }
 
+export type Numeric = number | string;
+
 
 // type test1 = EnumValues<FindEnumKey<Tables<"game">["platform"]>>;
 

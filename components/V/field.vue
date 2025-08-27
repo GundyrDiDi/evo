@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const props = defineProps<{ asArray?: boolean, allowEmpty?: boolean }>()
 
+// 支持根据分隔符转换成数组类型
 const model = defineModel<string[] | string | null>({ required: true })
 
 const text = computed<string>({

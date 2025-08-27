@@ -20,6 +20,7 @@ const colorMode = useColorMode()
 </script>
 <style>
 :root {
+  --ui-bg:rgb(23, 23, 23);
   /* --van-black: red; */
   --van-background-2: var(--ui-bg);
   --van-padding-md: 0px !important;

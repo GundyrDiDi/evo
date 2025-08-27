@@ -24,36 +24,6 @@ export const _values = <T extends Object>(t?: T) => {
   return t ? (Object.values(t) as Valueof<T>[]) : [];
 };
 
-export const _listenEvent = <T extends string>(
-  event: T,
-  fn: any,
-  el: Element | Document = document
-) => {
-  el.addEventListener(event, fn);
-  return () => el.removeEventListener(event, fn);
-};
-
-export const _onceEvent = <T extends string>(
-  event: T,
-  fn: Function,
-  el: Element | Document = document
-) => {
-  const once = (e: any) => {
-    fn(e);
-    el.removeEventListener(event, once);
-  };
-  el.addEventListener(event, once);
-  return () => el.removeEventListener(event, once);
-};
-
-export function _isMouseOver(element: Element, mouseEvent: MouseEvent) {
-  const rect = element.getBoundingClientRect();
-  const x = mouseEvent.clientX;
-  const y = mouseEvent.clientY;
-
-  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-}
-
 export function _randomId(): string {
   // 取时间戳后6位 + 4位随机字符
   return (
@@ -204,11 +174,57 @@ export const _mergeClass = (
   return [...new Set(clxList)].join(" ");
 };
 
+export const _obj2map = <K extends string | number, T>(obj: Record<K, T>) => {
+  return new Map<K,T>(Object.entries(obj) as any)
+};
+
+/**
+ * dayjs
+ *
+ */
+
 import _dayjs from "dayjs";
 
 export const dayjs = _dayjs;
 
 export const _iso = (a: string | Date) => dayjs(a).toISOString();
 
-export const _date_str = (a?: string | Date, format = "YYYY/MM/DD") =>
+export const _date_str = (a?: string | Date, format = "YYYY-MM-DD") =>
   dayjs(a).format(format);
+
+/**
+ * DOM
+ *
+ *
+ */
+
+// 将removeEventListener打包返回
+export const _listenEvent = <T extends string>(
+  event: T,
+  fn: any,
+  el: Element | Document = document
+) => {
+  el.addEventListener(event, fn);
+  return () => el.removeEventListener(event, fn);
+};
+
+export const _onceEvent = <T extends string>(
+  event: T,
+  fn: Function,
+  el: Element | Document = document
+) => {
+  const once = (e: any) => {
+    fn(e);
+    el.removeEventListener(event, once);
+  };
+  el.addEventListener(event, once);
+  return () => el.removeEventListener(event, once);
+};
+
+export function _isMouseOver(element: Element, mouseEvent: MouseEvent) {
+  const rect = element.getBoundingClientRect();
+  const x = mouseEvent.clientX;
+  const y = mouseEvent.clientY;
+
+  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+}

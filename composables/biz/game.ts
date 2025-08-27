@@ -13,23 +13,25 @@ export const useGameDTODefault = () => {
     name: "",
     platform: ["pc"],
     edition: "standard",
-    status: "not_started",
+    status: "not_start",
   };
   return d as GameDTO;
 };
 
-export type GameDTO = Tables<"game"> & {
-  // complete_date: string | null;
-};
+export type GameDTO = Tables<"game"> & {};
+
+export const before_play_status = [
+  null,
+  "not_published",
+  "not_start",
+  "look_forward",
+] as Enums<"complete_status">[];
+
+// const played = ['abandon', 'finished', 'mastery'] as Enums<'complete_status'>[]
 
 export const injectGameRow = (data: Tables<"game">) => {
-  // complete_time 转成 iso 格式
-  data.complete_time = data.complete_time && _iso(data.complete_time);
-  // const complete_date = data.complete_time
-  //   ? dayjs(data.complete_time).format("MM/YY")
-  //   : null;
   // 添加计算字段
-  return Object.assign(data, { });
+  return Object.assign(data, {});
 };
 
 // 校验和数据的类型定义是分开的
@@ -94,7 +96,8 @@ export const useGameZod = defineStore("game_zod", () => {
   //
   const allGame = defineGameZod({
     alias: z.array(z.string()),
-    complete_time: z.iso.datetime(),
+    finish_date: z.iso.date(),
+    publish_date: z.iso.date(),
     edition: z.enum(Constants.public.Enums.edition),
     extra: z.boolean(),
     id: z.int().readonly(),

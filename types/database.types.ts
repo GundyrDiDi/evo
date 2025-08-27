@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -122,15 +122,17 @@ export type Database = {
       game: {
         Row: {
           alias: string[] | null
-          complete_time: string | null
           created_at: string
           edition: Database["public"]["Enums"]["edition"] | null
           extra: boolean | null
+          finish_date: string | null
           id: number
           judgment: string | null
           name: string
           owned: boolean | null
           platform: Database["public"]["Enums"]["platform"][] | null
+          play_time: number | null
+          publish_date: string | null
           remark: string | null
           series: string | null
           status: Database["public"]["Enums"]["complete_status"] | null
@@ -140,15 +142,17 @@ export type Database = {
         }
         Insert: {
           alias?: string[] | null
-          complete_time?: string | null
           created_at?: string
           edition?: Database["public"]["Enums"]["edition"] | null
           extra?: boolean | null
+          finish_date?: string | null
           id?: number
           judgment?: string | null
           name: string
           owned?: boolean | null
           platform?: Database["public"]["Enums"]["platform"][] | null
+          play_time?: number | null
+          publish_date?: string | null
           remark?: string | null
           series?: string | null
           status?: Database["public"]["Enums"]["complete_status"] | null
@@ -158,15 +162,17 @@ export type Database = {
         }
         Update: {
           alias?: string[] | null
-          complete_time?: string | null
           created_at?: string
           edition?: Database["public"]["Enums"]["edition"] | null
           extra?: boolean | null
+          finish_date?: string | null
           id?: number
           judgment?: string | null
           name?: string
           owned?: boolean | null
           platform?: Database["public"]["Enums"]["platform"][] | null
+          play_time?: number | null
+          publish_date?: string | null
           remark?: string | null
           series?: string | null
           status?: Database["public"]["Enums"]["complete_status"] | null
@@ -233,14 +239,15 @@ export type Database = {
     Enums: {
       complete_status:
         | "running"
-        | "completed"
-        | "abandoned"
+        | "finish"
+        | "abandon"
         | "set_aside"
-        | "not_started"
+        | "not_start"
         | "not_published"
         | "look_forward"
         | "mastery"
       edition: "standard" | "deluxe" | "complete"
+      g_tier: "S+" | "S" | "A+" | "A" | "B+" | "B" | "C" | "D"
       platform: "pc" | "ps" | "ns" | "xbox"
     }
     CompositeTypes: {
@@ -371,15 +378,16 @@ export const Constants = {
     Enums: {
       complete_status: [
         "running",
-        "completed",
-        "abandoned",
+        "finish",
+        "abandon",
         "set_aside",
-        "not_started",
+        "not_start",
         "not_published",
         "look_forward",
         "mastery",
       ],
       edition: ["standard", "deluxe", "complete"],
+      g_tier: ["S+", "S", "A+", "A", "B+", "B", "C", "D"],
       platform: ["pc", "ps", "ns", "xbox"],
     },
   },

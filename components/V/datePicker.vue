@@ -7,19 +7,19 @@ const date = ref()
 
 const [show, toggle] = useToggle()
 
-const setDate = (now?: 'now') => {
-  now ? change({ selectedValues: dayjs().format('YYYY/MM/DD').split('/') }) : (model.value = null)
+const setNowOrNull = (now?: boolean) => {
+  now ? change({ selectedValues: _date_str().split('-') }) : (model.value = null)
   toggle(false)
 }
 
 const change = ({ selectedValues }) => {
   date.value = selectedValues
-  const transfer = props.transfer ?? ((val) => val.length ? val.join('/') : null)
+  const transfer = props.transfer ?? ((val) => val.length ? val.join('-') : null)
   model.value = transfer(selectedValues)
 }
 
 const open = () => {
-  date.value = _date_str(model.value || undefined).split('/')
+  date.value = _date_str(model.value || undefined).split('-')
   toggle(true)
 }
 
@@ -29,14 +29,11 @@ const open = () => {
   <div @click="open">
     <slot v-bind="{ date }"></slot>
   </div>
-  <van-popup v-model:show="show" position="bottom" class=" h-[50%]">
+  <van-popup v-model:show="show" position="bottom" class=" h-[50%]" destroy-on-close>
     <van-date-picker :model-value="date" v-bind="$attrs" title="选择日期" confirm-button-text="今日" cancel-button-text="置空"
-      @confirm="setDate('now')" @cancel="setDate()" @change="change" />
+      @confirm="setNowOrNull(true)" @cancel="setNowOrNull()" @change="change" />
   </van-popup>
 </template>
 
 <style scoped>
-:deep(.van-picker__toolbar) {
-  padding: 0 1rem;
-}
 </style>

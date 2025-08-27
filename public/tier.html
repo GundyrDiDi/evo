@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tier 色彩方案预览</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: #f5f7fa;
+        color: #333;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+
+      header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        padding: 30px 40px;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .mode-toggle {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+        gap: 15px;
+      }
+
+      .toggle-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .toggle-btn.active {
+        background: white;
+        color: #6a11cb;
+        border-color: white;
+      }
+
+      .toggle-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .colors-container {
+        padding: 30px;
+      }
+
+      .mode-title {
+        text-align: center;
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+        color: #2c3e50;
+        display: none;
+      }
+
+      .mode-title.active {
+        display: block;
+      }
+
+      .colors-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+      }
+
+      .color-card {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .color-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .color-preview {
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: rgba(0, 0, 0, 0.7);
+      }
+
+      .color-info {
+        padding: 15px;
+        background: white;
+        text-align: center;
+      }
+
+      .color-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-size: 1.1rem;
+      }
+
+      .color-value {
+        font-family: "Courier New", monospace;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+      }
+
+      .legend {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+      }
+
+      .legend-text {
+        font-size: 0.9rem;
+      }
+
+      .original {
+        background: #e0e0e0;
+      }
+
+      .new {
+        background: #a0a0a0;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        border-top: 1px solid #eee;
+      }
+
+      @media (max-width: 768px) {
+        .colors-grid {
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Tier 背景色方案</h1>
+        <p class="subtitle">扩展后的色彩方案预览 - 新增第0、2、4位色值</p>
+
+        <div class="mode-toggle">
+          <button class="toggle-btn active" data-mode="light">
+            Light 模式
+          </button>
+          <button class="toggle-btn" data-mode="dark">Dark 模式</button>
+        </div>
+      </header>
+
+      <div class="colors-container">
+        <h2 class="mode-title active" id="light-title">Light 模式色值</h2>
+        <h2 class="mode-title" id="dark-title">Dark 模式色值</h2>
+
+        <div class="colors-grid" id="colors-grid">
+          <!-- 颜色卡片将通过JS动态生成 -->
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-color original"></div>
+            <span class="legend-text">原始色值</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color new"></div>
+            <span class="legend-text">新增色值</span>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>扩展色值方案 | 设计遵循原有色彩渐变逻辑</p>
+      </footer>
+    </div>
+
+    <script>
+      // 扩展后的色值数据
+const tier_bg = {
+  "light": [
+    "#C62828", // 深红 (位置0)
+    "#E53935", // 红 (位置1)
+    "#FF5722", // 橙红 (位置2)
+    "#FF9800", // 橙黄 (位置3)
+    "#FFEB3B", // 黄 (位置4)
+    "#81C784", // 青绿 (位置5)
+    "#4CAF50", // 绿 (位置6)
+    "#2196F3", // 蓝 (位置7)
+    "#9C27B0"  // 紫 (位置8)
+  ],
+  "dark": [
+    "#FF6B6B", // 深红 (位置0) - 亮红色
+    "#FF8A80", // 红 (位置1) - 亮珊瑚红
+    "#FFAB91", // 橙红 (位置2) - 亮橙红色
+    "#FFCC80", // 橙黄 (位置3) - 亮橙黄色
+    "#FFF176", // 黄 (位置4) - 亮黄色
+    "#A5D6A7", // 青绿 (位置5) - 亮青绿色
+    "#66BB6A", // 绿 (位置6) - 亮绿色
+    "#64B5F6", // 蓝 (位置7) - 亮蓝色
+    "#BA68C8"  // 紫 (位置8) - 亮紫色
+  ]
+};
+
+      // 新增色值位置
+      const newColorPositions = [0, 2, 4];
+
+      // 获取DOM元素
+      const toggleBtns = document.querySelectorAll(".toggle-btn");
+      const modeTitles = document.querySelectorAll(".mode-title");
+      const colorsGrid = document.getElementById("colors-grid");
+
+      // 当前激活模式
+      let activeMode = "light";
+
+      // 渲染颜色卡片
+      function renderColors(mode) {
+        colorsGrid.innerHTML = "";
+
+        tier_bg[mode].forEach((color, index) => {
+          const isNew = newColorPositions.includes(index);
+
+          const card = document.createElement("div");
+          card.className = "color-card";
+          card.innerHTML = `
+                    <div class="color-preview" style="background: ${color}">
+                        ${isNew ? "NEW" : ""}
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">Tier ${index}</div>
+                        <div class="color-value">${color}</div>
+                    </div>
+                `;
+
+          colorsGrid.appendChild(card);
+        });
+      }
+
+      // 初始化
+      renderColors(activeMode);
+
+      // 模式切换
+      toggleBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // 更新按钮状态
+          toggleBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // 更新模式
+          activeMode = btn.dataset.mode;
+
+          // 更新标题
+          modeTitles.forEach((title) => title.classList.remove("active"));
+          document
+            .getElementById(`${activeMode}-title`)
+            .classList.add("active");
+
+          // 重新渲染颜色
+          renderColors(activeMode);
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -63,20 +63,25 @@ const game = defineColumn("game", {
   remark: {
     label: "其他",
   },
-  user_id: {},
   judgment: {
     label: "评价",
   },
   status: {
-    label: "游玩状态",
+    label: "状态",
     enums: Enum.complete_status,
   },
   edition: {
     label: "版本",
     enums: Enum.edition,
   },
-  complete_time: {
-    label: "游玩时间",
+  publish_date: {
+    label: "发售日",
+  },
+  finish_date: {
+    label: "完成日期",
+  },
+  play_time: {
+    label: "游戏时长",
   },
   owned: {
     label: "已购买",

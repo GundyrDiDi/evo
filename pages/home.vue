@@ -5,7 +5,7 @@ const editNewRow = useLocalStorage('editNewRow_GameDTO', useGameDTODefault())
 const [loading, withLoading] = useLoading()
 
 const { data, refresh } = await useAsyncData(withLoading(async () => {
-  // const {data}=await client.rpc('',{})
+  // const {data}=await client.rpc('',{})`
   const { data } = await selectTable('game[]').order('created_at', { ascending: false })
   return data?.map(v => injectGameRow(v)) ?? []
 }), {
@@ -19,7 +19,7 @@ const handleCreate = withLoading(async (row: GameDTO) => {
   console.log(row)
 
   row.alias = row.alias && _unique_trim(row.alias)
-  row.complete_time = row.complete_time && _iso(row.complete_time)
+  // row.complete_time = row.complete_time && _iso(row.complete_time)
 
   const { data, error } = upsertGame.safeParse(row)
   console.log(data, error)
@@ -108,6 +108,14 @@ const sortBy = useLocalStorage('sortBy', '')
 
 // 筛选、手势、pwa、定时同步
 
+onMounted(() => {
+  $fetch(`https://oapi.dingtalk.com/robot/send?access_token=7b331e469e897f8fb26930fb09797a5e0760f83612e03979cfa5d3c8b1ce7599`, {
+    method: 'post',
+    // body: { text: { content: 'so far just found 1 bug ' }, msgtype: 'text' }
+    // body: { text: { content: 'A new day with 2 bugs. well done bro,well done' }, msgtype: 'text' }
+    // body: { text: { content: 'A new day with no bugs. wait,should I check it again' }, msgtype: 'text' }
+  })
+})
 </script>
 
 <template>
