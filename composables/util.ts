@@ -18,7 +18,7 @@ export const _trim = (arr?: string[]) => {
   return arr?.map((v) => v.trim()).filter((v) => v) ?? [];
 };
 
-export const _unique_trim = (val?: string[]) => _trim(_unique(val));
+export const _unique_trim = (val?: string[]) => _unique(_trim(val));
 
 export const _values = <T extends Object>(t?: T) => {
   return t ? (Object.values(t) as Valueof<T>[]) : [];
@@ -105,6 +105,7 @@ export const _valid = <T extends (...a) => any>(
   return wrap as T;
 };
 
+//
 type Clxs = string | number | (string | number)[];
 type ClxsValue = Clxs | { class: Clxs };
 export const _mergeClass = (
@@ -175,9 +176,64 @@ export const _mergeClass = (
 };
 
 export const _obj2map = <K extends string | number, T>(obj: Record<K, T>) => {
-  return new Map<K,T>(Object.entries(obj) as any)
+  return new Map<K, T>(Object.entries(obj) as any);
 };
 
+// 状态事务取消
+export const exclusiveRunner = <S extends AnyFn, E extends (...r: any[]) => void>(
+  start: S,
+  end: E
+) => {
+  let state!: string;
+  return () => {
+    let current!: string;
+    const before = (...r) => {
+      current = state = _randomId();
+      return start(...r);
+    };
+    const after = (...r) => {
+      if (current !== state) return;
+      return end(...r);
+    };
+    return [before, after] as [S, E];
+  };
+};
+
+//
+export const throttleAsync = <T extends any[], R>(
+  fn: (...rest: T) => Promise<R>
+) => {
+  let pending: Promise<R> | null;
+  return (...arg: T): Promise<R> => {
+    if (!pending) {
+      pending = fn(...arg).then((res) => {
+        pending = null;
+        return res;
+      });
+    }
+    return pending;
+  };
+};
+
+// 和上面相反，请求多次发送，只获取最终请求的结果
+export function toUniqueAsync<T extends any[], K extends Promise<any>>(
+  request: (...r: T) => K
+) {
+  const unique: { value: K } = { value: null as any };
+  const loop = async () => {
+    const tag = unique.value;
+    await unique.value;
+    if (tag === unique.value) return unique.value;
+    return loop();
+  };
+  const fn = async (...r: T) => {
+    unique.value = request(...r);
+    return loop();
+  };
+  return fn;
+}
+
+import type { AnyFn } from "@vueuse/core";
 /**
  * dayjs
  *

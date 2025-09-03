@@ -55,7 +55,7 @@ let complete_status = defineEnum("complete_status", {
   },
   finish: {
     label: "通关",
-    icon: "✅",
+    icon: "🏆",
   },
   mastery: {
     label: "修炼",

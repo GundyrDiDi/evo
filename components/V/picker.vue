@@ -42,7 +42,7 @@ const vin = ref()
 <template>
   <component v-if="default_slot" :is="renderSlot" />
   <v-field v-else :label="$attrs.label ?? ''" readonly :model-value="selectItems.map(v => v?.text).join()"
-    placeholder="请选择" @click="toggle(true)" />
+    placeholder="请选择" clickable @click="toggle(true)" />
   <!--  -->
   <van-popup v-model:show="show" position="bottom" destroy-on-close @open="open">
     <van-picker ref="vin" v-model="model" :columns="columns" cancel-button-text="清空" @cancel="clear"

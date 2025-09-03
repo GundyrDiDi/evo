@@ -1,6 +1,5 @@
 const handleResponse = (res) => {
-  // console.log("handleResponse");
-  // console.log(res);
+  console.log('handleResponse',res);
   return res;
 };
 
@@ -35,7 +34,8 @@ export const upsertTable = <T extends Table_Name>(
   const builder = useSupabaseClient().from(table_name);
   const isUpdate = primary_key && primary_key in record;
   return withResponse(
-    (isUpdate ? builder.update(record as any) : builder.upsert(record as any))
+    builder
+      .upsert(record as any)
       .select("*")
       .single()
   );

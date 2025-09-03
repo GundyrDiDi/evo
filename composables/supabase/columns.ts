@@ -57,8 +57,8 @@ const game = defineColumn("game", {
   series: {
     label: "系列",
   },
-  extra: {
-    label: "DLC",
+  dlc_associated_game: {
+    label: "DLC本体",
   },
   remark: {
     label: "其他",

@@ -16,9 +16,7 @@ const options = computed<Options>(() => {
 
 const model = defineModel<Numeric[]>()
 
-const modelSet = computed(() => {
-  return new Set(model.value)
-})
+const modelSet = computed(() => new Set(model.value))
 
 const selectOpts = computed(() => {
   return options.value.filter(v => model.value?.includes(v.value))
@@ -50,14 +48,14 @@ const check = (opt: Options[number]) => {
   }
 }
 
-const vin = ref()
+const vins = ref()
 
 </script>
 
 <template>
   <component v-if="default_slot" :is="renderSlot" />
   <v-field v-else :label="$attrs.label ?? ''" readonly :model-value="selectOpts.map(v => v.text).join()"
-    placeholder="请选择" @click="toggle(true)" />
+    placeholder="请选择" clickable @click="toggle(true)" />
   <!--  -->
   <van-popup v-model:show="show" position="bottom" class=" pt-4" destroy-on-close @open="open">
     <!-- <div class=" header"></div> -->

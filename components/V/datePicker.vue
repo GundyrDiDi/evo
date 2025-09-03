@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { cloneVNode } from 'vue'
+
 const props = defineProps<{ transfer?: (val: string[]) => string | Date | null }>()
 
 const model = defineModel<string | Date | null>()
@@ -20,20 +22,22 @@ const change = ({ selectedValues }) => {
 
 const open = () => {
   date.value = _date_str(model.value || undefined).split('-')
-  toggle(true)
 }
+watch(show, (v) => v && open())
 
+const default_slot = useSlots().default
+const renderSlot = () => cloneVNode(default_slot!()[0], { onClick: () => toggle(true) })
 </script>
 
 <template>
-  <div @click="open">
-    <slot v-bind="{ date }"></slot>
-  </div>
+  <component v-if="default_slot" :is="renderSlot" />
+  <v-field v-else :label="$attrs.label ?? ''" :model-value="model?.toString() ?? ''"
+    @input="e => model = e.target.value" readonly placeholder="选择日期" clickable @click="toggle(true)" />
+  <!--  -->
   <van-popup v-model:show="show" position="bottom" class=" h-[50%]" destroy-on-close>
     <van-date-picker :model-value="date" v-bind="$attrs" title="选择日期" confirm-button-text="今日" cancel-button-text="置空"
       @confirm="setNowOrNull(true)" @cancel="setNowOrNull()" @change="change" />
   </van-popup>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

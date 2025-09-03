@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const props = defineProps<{ asArray?: boolean, allowEmpty?: boolean }>()
+const props = defineProps<{ asArray?: boolean, allowEmpty?: boolean, trim?: boolean }>()
 
 // 支持根据分隔符转换成数组类型
 const model = defineModel<string[] | string | null>({ required: true })
@@ -10,7 +10,7 @@ const text = computed<string>({
   },
   set(val) {
     // 默认过滤空
-    model.value = props.asArray ? val.split(',').filter(v => props.allowEmpty || v) : val
+    model.value = props.asArray ? val.split(/(,|，)/) : val
   }
 })
 </script>

@@ -116,7 +116,7 @@ export const useComp = <
       },
     };
     comps[id] = comp;
-    // 转为响应性
+    // 转为响应性的代理值
     comp = comps[id];
   }
   if (!global) {

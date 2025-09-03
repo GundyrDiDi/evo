@@ -28,6 +28,10 @@ export const useFnHook = <F>({
   return hook;
 };
 
+export const useOverlay = (overlay: string | HTMLElement | VNode) => {
+  // document.body.appendChild(loadingEl);
+};
+
 export const useLoading = () => {
   const [loading, toggle] = useToggle(false);
   const hook = useFnHook({
@@ -36,6 +40,8 @@ export const useLoading = () => {
   });
   return [loading, hook] as const;
 };
+
+export const usePending=()=>{}
 
 export const useMountListen = (fn, unmount = true) => {
   let stop;

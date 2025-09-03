@@ -123,8 +123,8 @@ export type Database = {
         Row: {
           alias: string[] | null
           created_at: string
+          dlc_associated_game: number | null
           edition: Database["public"]["Enums"]["edition"] | null
-          extra: boolean | null
           finish_date: string | null
           id: number
           judgment: string | null
@@ -143,8 +143,8 @@ export type Database = {
         Insert: {
           alias?: string[] | null
           created_at?: string
+          dlc_associated_game?: number | null
           edition?: Database["public"]["Enums"]["edition"] | null
-          extra?: boolean | null
           finish_date?: string | null
           id?: number
           judgment?: string | null
@@ -163,8 +163,8 @@ export type Database = {
         Update: {
           alias?: string[] | null
           created_at?: string
+          dlc_associated_game?: number | null
           edition?: Database["public"]["Enums"]["edition"] | null
-          extra?: boolean | null
           finish_date?: string | null
           id?: number
           judgment?: string | null
@@ -181,6 +181,13 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "game_dlc_associated_game_fkey"
+            columns: ["dlc_associated_game"]
+            isOneToOne: false
+            referencedRelation: "game"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "game_tier_fkey"
             columns: ["tier"]

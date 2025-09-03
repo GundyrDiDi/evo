@@ -16,7 +16,7 @@ const logout = async () => {
 </script>
 
 <template>
-  <div class=" sticky z-1 top-0 bg-[var(--ui-bg)]">
+  <div class=" sticky z-1 top-0">
     <Title>Gardios</Title>
     <div class="flex items-center md:justify-between justify-center">
       <div class="hidden md:block">

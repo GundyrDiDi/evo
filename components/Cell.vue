@@ -1,11 +1,19 @@
 <script lang="ts" setup>
 const model = defineModel<GameDTO>({ required: true })
 
-const data = toValue(model.value)
+const data = toValue(model)
 
-defineEmits<{ (e: 'update', v?: GameDTO): void }>()
+const props = defineProps<{ cell_key?: Numeric }>()
 
-const [show, toggle] = useToggle()
+const emit = defineEmits<{ (e: 'update', v: GameDTO): void }>()
+
+const cell_id = props.cell_key ? useState<Numeric | undefined>('cell_id', () => undefined) : ref()
+
+const toggle = (v?: Numeric) => {
+  cell_id.value = v
+}
+
+const title = ref()
 
 // const cell = useOutClick(_ => {
 //   requestAnimationFrame(() => {
@@ -13,7 +21,6 @@ const [show, toggle] = useToggle()
 //   })
 // })
 
-const title = ref()
 
 // onLongPress(
 //   title,
@@ -21,41 +28,54 @@ const title = ref()
 //   { delay: 300 }
 // )
 
-const { alias, finish_date, status, platform } = useGameColumn()
+const { alias, publish_date, dlc_associated_game, status, platform, edition, owned, play_time, series, tags, judgment } = useGameColumn()
 
-// const update = useDebounceFn((v) => {
-//   console.log(v)
-// }, 5000)
-// watch(data, update)
+const update = useDebounceFn(() => {
+  emit('update', data)
+}, 5000)
+watch(data, update)
 
 </script>
 
 <template>
   <div ref="cell" class="py-1">
     <div class=" flex items-center relative">
-      <v-field v-model="data.name" ref="title" @click="toggle(true)" />
+      <v-field v-model="data.name" ref="title" @click="toggle(data.id)" />
       <span class="absolute right-0 flex gap-3 items-center">
         <v-date-picker v-model="data.finish_date">
           <span class=" text-[12px]">{{
-            data.finish_date ? dayjs(data.finish_date).format("MM/YY") : '--/--'
-            }}</span>
+            data.finish_date ? dayjs(data.finish_date).format("YYYY/MM") : '--/--'
+          }}</span>
         </v-date-picker>
         <Badge v-model="data" />
       </span>
     </div>
-    <div v-if="show">
-      <v-field v-model="data.alias" :label="alias.label" :as-array="alias.asArray" />
-      <v-pick-single v-model="data.status!" :label="status.label" :enums="status.enums" />
-      <v-select v-model="data.platform!" :label="platform.label" :enums="platform.enums" />
-      <u-button class=" w-full justify-center my-2" @click="toggle()">
-        <i-chevron-double-up-solid class=" inline-block text-gray-800 text-[20px]" />
-      </u-button>
-    </div>
+    <a-transition :duration="500">
+      <div v-if="cell_id === data.id">
+        <v-field v-model="data.tags" :label="tags.label" />
+        <v-field v-model="data.alias" :label="alias.label" :as-array="alias.asArray" />
+        <v-pick-single v-model="data.status!" :label="status.label" :enums="status.enums" />
+        <v-select v-model="data.platform!" :label="platform.label" :enums="platform.enums" />
+        <v-field-number v-model="data.play_time" :label="play_time.label" />
+        <!--  -->
+        <v-date-picker v-model="data.publish_date" :label="publish_date.label" />
+        <v-pick-single v-model="data.edition!" :label="edition.label" :enums="edition.enums" />
+        <v-check v-model="data.owned" :label="owned.label" />
+        <v-field v-model="data.series" :label="series.label" />
+        <v-pick-single v-model="data.dlc_associated_game!" :label="dlc_associated_game.label"
+          :options="[{ text: '无', value: '' }]" />
+        <v-field v-model="data.judgment" :label="judgment.label" :rows="1" autosize type="textarea" />
+        <!--  -->
+        <u-button class=" w-full justify-center my-2" @click="toggle()">
+          <i-chevron-double-up-solid class=" inline-block text-gray-800 text-[20px]" />
+        </u-button>
+      </div>
+    </a-transition>
   </div>
 </template>
 
 <style scoped>
-:deep(.van-field) {
+:deep(.van-cell) {
   line-height: 36px;
 }
 
@@ -63,16 +83,7 @@ const { alias, finish_date, status, platform } = useGameColumn()
   padding: 0 1rem;
 }
 
-:deep(label) {
+:deep(.van-cell__title) {
   color: var(--van-text-color-2)
 }
 </style>
-
-<!-- <van-swipe-cell>
-  <div class=" flex items-center">
-    <van-field v-model="data.name" />
-  </div>
-  <template #right>
-    <u-button class=" rounded-none h-full w-12 justify-center" icon="i-heroicons-trash"/>
-  </template>
-</van-swipe-cell> -->

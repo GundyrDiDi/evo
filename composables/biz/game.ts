@@ -34,10 +34,6 @@ export const injectGameRow = (data: Tables<"game">) => {
   return Object.assign(data, {});
 };
 
-// 校验和数据的类型定义是分开的
-const defineGameZod = <U extends { [P in keyof GameDTO]?: any }>(o: U) =>
-  z.object(o);
-
 const partialZod = <
   U extends z.ZodObject,
   K extends keyof U["shape"],
@@ -91,18 +87,27 @@ const pickZod = <
   }>;
 };
 
-// 查询,提交的校验
+// 校验和数据的类型定义是分开的
+const defineZod = <
+  T extends Table_Name,
+  U extends { [P in keyof Tables<T>]?: any }
+>(
+  a: T,
+  o: U
+) => z.object(o);
+
+// 查询,提交的过滤和校验
 export const useGameZod = defineStore("game_zod", () => {
   //
-  const allGame = defineGameZod({
-    alias: z.array(z.string()),
+  const allGame = defineZod("game", {
+    alias: z.array(z.string().trim().min(1)),
     finish_date: z.iso.date(),
     publish_date: z.iso.date(),
     edition: z.enum(Constants.public.Enums.edition),
-    extra: z.boolean(),
+    dlc_associated_game: z.number(),
     id: z.int().readonly(),
     judgment: z.string(),
-    name: z.string(),
+    name: z.string().trim().min(1),
     owned: z.boolean(),
     platform: z.array(z.enum(Constants.public.Enums.platform)),
     remark: z.string(),
@@ -110,15 +115,23 @@ export const useGameZod = defineStore("game_zod", () => {
     status: z.enum(Constants.public.Enums.complete_status),
     tier: z.string(),
     user_id: z.string(),
+    play_time: z.number(),
+    tags: z.array(z.string()),
   });
 
-  const upsertGame = partialZod(
+  const insertGame = partialZod(
     pickZod(allGame, ["id"], "invert"),
     ["name"],
     "invert"
   );
+
+  // const { data, error } = insertGame.safeParse({ name: " 1", alias: [" cc"] });
+  // console.log(data, error);
+  //
+  const upsertGame = partialZod(allGame, ["id", "name"], "invert");
   //
   return {
+    insertGame,
     upsertGame,
   };
 });
