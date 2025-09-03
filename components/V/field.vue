@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const props = defineProps<{ asArray?: boolean, allowEmpty?: boolean, trim?: boolean }>()
+const props = defineProps<{ asArray?: boolean, trim?: boolean }>()
 
 // 支持根据分隔符转换成数组类型
 const model = defineModel<string[] | string | null>({ required: true })
@@ -10,13 +10,31 @@ const text = computed<string>({
   },
   set(val) {
     // 默认过滤空
-    model.value = props.asArray ? val.split(/(,|，)/) : val
+    if (props.asArray) {
+      model.value = val ? val.split(/,|，/) : []
+    } else {
+      model.value = val
+    }
   }
 })
+
+const blur = () => {
+  if (props.trim) {
+    if (props.asArray) {
+      text.value = text.value.split(/,|，/).map(v => v.trim()).filter(v => v).toString()
+    } else {
+      text.value = text.value.trim()
+    }
+  }
+}
+
+const { expose, vins } = useExpose()
+defineExpose(expose)
+
 </script>
 
 <template>
-  <van-field label-width="auto" v-bind="$attrs" v-model="text" />
+  <van-field :ref="vins" label-width="auto" v-bind="$attrs" v-model="text" @blur="blur" />
 </template>
 
 <style lang="scss" scoped></style>

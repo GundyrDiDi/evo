@@ -3,7 +3,7 @@ const model = defineModel<GameDTO>({ required: true })
 
 const data = toValue(model)
 
-const props = defineProps<{ cell_key?: Numeric }>()
+const props = defineProps<{ cell_key?: Numeric, expand?: boolean }>()
 
 const emit = defineEmits<{ (e: 'update', v: GameDTO): void }>()
 
@@ -35,12 +35,16 @@ const update = useDebounceFn(() => {
 }, 5000)
 watch(data, update)
 
+onMounted(() => {
+  props.expand && title.value.focus()
+})
+
 </script>
 
 <template>
   <div ref="cell" class="py-1">
     <div class=" flex items-center relative">
-      <v-field v-model="data.name" ref="title" @click="toggle(data.id)" />
+      <v-field v-model="data.name" ref="title" @click="toggle(data.id)" trim/>
       <span class="absolute right-0 flex gap-3 items-center">
         <v-date-picker v-model="data.finish_date">
           <span class=" text-[12px]">{{
@@ -53,7 +57,7 @@ watch(data, update)
     <a-transition :duration="500">
       <div v-if="cell_id === data.id">
         <v-field v-model="data.tags" :label="tags.label" />
-        <v-field v-model="data.alias" :label="alias.label" :as-array="alias.asArray" />
+        <v-field v-model="data.alias" :label="alias.label" :as-array="alias.asArray" trim />
         <v-pick-single v-model="data.status!" :label="status.label" :enums="status.enums" />
         <v-select v-model="data.platform!" :label="platform.label" :enums="platform.enums" />
         <v-field-number v-model="data.play_time" :label="play_time.label" />
@@ -66,7 +70,7 @@ watch(data, update)
           :options="[{ text: '无', value: '' }]" />
         <v-field v-model="data.judgment" :label="judgment.label" :rows="1" autosize type="textarea" />
         <!--  -->
-        <u-button class=" w-full justify-center my-2" @click="toggle()">
+        <u-button v-if="!expand" class=" w-full justify-center my-2" @click="toggle()">
           <i-chevron-double-up-solid class=" inline-block text-gray-800 text-[20px]" />
         </u-button>
       </div>

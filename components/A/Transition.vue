@@ -15,6 +15,7 @@ const animation = ({ el, done }: { el: HTMLElement, done: () => void }, type: 'e
   }
   const start_time = Date.now()
   const { height } = el.getBoundingClientRect()
+  // const height=el.scrollHeight
 
   const animate = () => {
     // js模式

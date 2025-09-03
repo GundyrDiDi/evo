@@ -3,9 +3,15 @@ const emit = defineEmits<{ (e: 'commit', data: any): void }>()
 
 const data = useLocalStorage('new_game_data', {} as any)
 
+const { insertGame } = useGameZod()
 const commit = () => {
-  emit('commit', data.value)
-  data.value = useGameDTODefault()
+  const safe = insertGame.safeParse(data.value)
+  if (safe.data) {
+    emit('commit', data.value)
+    data.value = useGameDTODefault()
+  } else {
+    alert(safe.error)
+  }
 }
 </script>
 
@@ -15,8 +21,8 @@ const commit = () => {
       <i-plus-solid class="text-[32px]" />
     </div>
     <template #content="{ close }">
-      <div class=" h-[50vh] px-4">
-        <Cell v-model="data" />
+      <div class=" h-[80vh] px-4">
+        <Cell v-model="data" :expand="true" />
         <u-button class=" w-full justify-center my-2" @click="commit(); close()">新增</u-button>
       </div>
     </template>

@@ -90,3 +90,19 @@ export const useLocalExpire = (name, step = "D") => {
     l.value = dayjs().format("YYYY/MM/DD");
   }
 };
+
+/** 获取子组件的expose，并可以继续向上暴露 */
+export const useExpose = <T extends Component, K extends Object>(self?: K) => {
+  type Expose = any; //ExtractExposed<InstanceType<T>>
+  const expose = reactive<Expose & K>((self ?? {}) as any);
+  // defineExpose(expose); defineExpose是宏编程，即使引用也不会暴露出值
+
+  const vins = (ref: Expose | null) => {
+    if (ref) {
+      Object.entries(ref).forEach(([k, v]) => {
+        expose[k] = v;
+      });
+    }
+  };
+  return { expose, vins };
+};

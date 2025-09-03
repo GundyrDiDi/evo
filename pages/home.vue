@@ -16,13 +16,15 @@ const { insertGame, upsertGame } = useGameZod()
 const handleUpsert = useDebounceFn(withLoading(async (row: GameDTO, type: 'create' | 'update' = 'create') => {
   console.log({ ...row })
   const zod = type === 'create' ? insertGame : upsertGame
-  const { data, error } = zod.safeParse(row)
-  if (data) {
-    await upsertTable('game', data)
+  const { data: params, error } = zod.safeParse(row)
+  if (params) {
+    const { data: row } = await upsertTable('game', params)
+    // 
+    if (type === 'create' && row) data.value?.unshift(row)
   } else {
     alert(error)
   }
-}),300)
+}), 300)
 
 const handleUpdate = (row: GameDTO) => handleUpsert(row, 'update')
 
