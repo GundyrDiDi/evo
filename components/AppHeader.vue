@@ -16,9 +16,9 @@ const logout = async () => {
 </script>
 
 <template>
-  <div class=" sticky z-1 top-0">
+  <div class=" sticky z-1 top-0 bg-[var(--ui-bg)]">
     <Title>Gardios</Title>
-    <div class="flex items-center md:justify-between justify-center">
+    <!-- <div class="flex items-center md:justify-between justify-center">
       <div class="hidden md:block">
         <UButton label="Source" variant="link" color="gray" target="_blank"
           to="https://github.com/nuxt-modules/supabase/tree/main/demo" icon="i-heroicons-outline-external-link" />
@@ -27,9 +27,16 @@ const logout = async () => {
       </div>
       <div class="flex items-center">
         <UButton variant="link" color="gray" :icon="colorModeIcon" @click="toggleDark" />
-        <UButton v-if="user" variant="link" color="gray" @click="logout">
-          Logout
-        </UButton>
+      </div>
+    </div> -->
+    <div class=" flex items-center justify-between px-4 h-10">
+      <div class="flex items-center gap-2">
+        <i-logout class="text-xl" @click="logout" />
+        <!-- <u-button color="primary" variant="outline" icon="i-heroicons-bars-arrow-down"></u-button>
+        <u-button color="primary" variant="outline" icon="i-heroicons-cog-6-tooth"></u-button> -->
+      </div>
+      <div class="flex items-center gap-2">
+        <sync-icon />
       </div>
     </div>
   </div>

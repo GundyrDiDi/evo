@@ -14,6 +14,7 @@ export const useGameDTODefault = () => {
     platform: ["pc"],
     edition: "standard",
     status: "not_start",
+    owned: false,
   };
   return d as GameDTO;
 };

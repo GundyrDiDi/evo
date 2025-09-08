@@ -8,7 +8,7 @@ const { data, refresh } = await useAsyncData(withLoading(async () => {
   return data?.map(v => injectGameRow(v)) ?? []
 }), {
   server: false,
-  // immediate: false
+  // immediate:false
 })
 
 const { insertGame, upsertGame } = useGameZod()
@@ -18,9 +18,10 @@ const handleUpsert = useDebounceFn(withLoading(async (row: GameDTO, type: 'creat
   const zod = type === 'create' ? insertGame : upsertGame
   const { data: params, error } = zod.safeParse(row)
   if (params) {
-    const { data: row } = await upsertTable('game', params)
+    const { data: row, error } = await upsertTable('game', params)
     // 
     if (type === 'create' && row) data.value?.unshift(row)
+    error && alert(error.message)
   } else {
     alert(error)
   }
@@ -34,21 +35,25 @@ const handleDelete = useDebounceFn(withLoading(async (row: GameDTO) => {
 
 const sortBy = useLocalStorage('sortBy', '')
 
-// 记录修改过的数据
 
-// 筛选、手势、pwa、定时同步
+// 总数 虚拟列表
+// 筛选 手势
+// pwa、定时同步,记录修改过的数据
+// 自动填写系列 合并dlc按钮
+// 术语表 同义词集合
 </script>
 
 <template>
-  <!-- <div class=" flex p-4 justify-between">
-    <u-button color="primary" variant="outline" icon="i-heroicons-bars-arrow-down"></u-button>
-    <u-button color="primary" variant="outline" icon="i-heroicons-cog-6-tooth"></u-button>
-  </div> -->
   <AppHeader />
-  <div class=" flex flex-col px-4">
+  <div class=" flex-1 flex flex-col px-4">
     <Cell v-for="v in data" :key="v.id" :cell_key="v.id" :model-value="v" @update="handleUpdate" />
   </div>
   <Plus @commit="handleUpsert"></Plus>
+  <AppFooter>
+    <div class=" flex justify-end text-xs text-gray-400 font-[500]">
+      {{ data?.length }} records
+    </div>
+  </AppFooter>
 </template>
 
 <style lang="scss" scoped></style>

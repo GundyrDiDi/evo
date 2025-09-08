@@ -17,7 +17,6 @@ const options = computed<Options>(() => {
 const model = defineModel<Numeric>()
 
 const change = (e) => {
-  console.log(e)
   model.value = e.selectedValues[0]
 }
 

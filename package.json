@@ -15,6 +15,7 @@
     "api": "npx supabase gen types --lang=typescript --project-id qtxgrtezsdvsutklkwtq > types/database.types.ts"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.9.0",
     "@iconify-json/heroicons": "^1.2.0",
     "@iconify-json/heroicons-outline": "^1.2.0",
     "@iconify-json/mdi": "^1.2.0",

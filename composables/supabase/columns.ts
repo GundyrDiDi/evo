@@ -84,7 +84,7 @@ const game = defineColumn("game", {
     label: "游戏时长",
   },
   owned: {
-    label: "已购买",
+    label: "已拥有",
   },
 });
 

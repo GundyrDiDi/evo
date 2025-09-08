@@ -46,7 +46,7 @@ onMounted(() => {
     <div class=" flex items-center relative">
       <v-field v-model="data.name" ref="title" @click="toggle(data.id)" trim/>
       <span class="absolute right-0 flex gap-3 items-center">
-        <v-date-picker v-model="data.finish_date">
+        <v-date-picker v-model="data.finish_date" :min-date="new Date('2000/01/01')" :max-date="new Date()">
           <span class=" text-[12px]">{{
             data.finish_date ? dayjs(data.finish_date).format("YYYY/MM") : '--/--'
           }}</span>
