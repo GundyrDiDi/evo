@@ -39,22 +39,23 @@ onMounted(() => {
   props.expand && title.value.focus()
 })
 
+const showDay = (d) => dayjs(d).format("YYYY/MM")
 </script>
 
 <template>
   <div ref="cell" class="py-1">
     <div class=" flex items-center relative">
-      <v-field v-model="data.name" ref="title" @click="toggle(data.id)" trim/>
+      <v-field v-model="data.name" ref="title" @click="toggle(data.id)" trim />
       <span class="absolute right-0 flex gap-3 items-center">
         <v-date-picker v-model="data.finish_date" :min-date="new Date('2000/01/01')" :max-date="new Date()">
           <span class=" text-[12px]">{{
-            data.finish_date ? dayjs(data.finish_date).format("YYYY/MM") : '--/--'
-          }}</span>
+            data.finish_date ? showDay(data.finish_date) : '--/--'
+            }}</span>
         </v-date-picker>
         <Badge v-model="data" />
       </span>
     </div>
-    <a-transition :duration="500">
+    <div v-auto-animate>
       <div v-if="cell_id === data.id">
         <v-field v-model="data.tags" :label="tags.label" />
         <v-field v-model="data.alias" :label="alias.label" :as-array="alias.asArray" trim />
@@ -74,7 +75,7 @@ onMounted(() => {
           <i-chevron-double-up-solid class=" inline-block text-gray-800 text-[20px]" />
         </u-button>
       </div>
-    </a-transition>
+    </div>
   </div>
 </template>
 

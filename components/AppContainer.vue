@@ -1,12 +1,8 @@
 <script lang="ts" setup>
-const h = ref()
-onMounted(() => {
-  h.value = window.innerHeight
-})
 </script>
 
 <template>
-  <div class="min-h-screen overflow-x-hidden flex flex-col" :style="{ height: h + 'px' }">
+  <div class="h-screen overflow-x-hidden flex flex-col">
     <slot></slot>
   </div>
 </template>

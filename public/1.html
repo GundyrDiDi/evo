@@ -1,62 +1,229 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="google-signin-client_id" content="490502084475-dssnir2sfempd0p5ga2a0eqt4f1l0fui.apps.googleusercontent.com">
-  
-  <!-- 关键：正确加载 Google 身份服务库 -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精灵动画基础</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .animation-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 30px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        #sprite {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 64px;
+            height: 64px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="256" height="64" viewBox="0 0 256 64"><rect width="256" height="64" fill="%23f0f0f0"/><circle cx="16" cy="32" r="12" fill="%233498db"/><circle cx="48" cy="32" r="12" fill="%233498db"/><circle cx="80" cy="32" r="12" fill="%233498db"/><circle cx="112" cy="32" r="12" fill="%233498db"/><circle cx="144" cy="32" r="12" fill="%233498db"/><circle cx="176" cy="32" r="12" fill="%233498db"/><circle cx="208" cy="32" r="12" fill="%233498db"/><circle cx="240" cy="32" r="12" fill="%233498db"/></svg>');
+            background-repeat: no-repeat;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Fira Code', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+    </style>
 </head>
 <body>
-  <div id="google-signin-button"></div>
-  
-  <script>
-    // 确保在库加载完成后执行
-    function initGoogleSignIn() {
-      // 检查 google 对象是否已定义
-      if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
-        console.error('Google 库尚未加载完成');
-        // 3秒后重试
-        setTimeout(initGoogleSignIn, 3000);
-        return;
-      }
-      
-      // 初始化 Google 身份服务
-      google.accounts.id.initialize({
-        client_id: "490502084475-dssnir2sfempd0p5ga2a0eqt4f1l0fui.apps.googleusercontent.com",
-        callback: handleCredentialResponse,
-        auto_select: true, // 自动选择已登录账号
-        ux_mode: "popup"  // 使用弹出窗口
-      });
-      
-      // 渲染登录按钮
-      google.accounts.id.renderButton(
-        document.getElementById("google-signin-button"),
-        { 
-          theme: "filled_blue", 
-          size: "large",
-          text: "signin_with",
-          shape: "pill"
-        }
-      );
-      
-      // 关键：调用 prompt() 方法
-      google.accounts.id.prompt((notification) => {
-        if (notification.isNotDisplayed() || notification.isSkipped()) {
-          console.log('一键登录未显示，原因:', notification.getNotDisplayedReason());
-        }
-      });
-    }
+    <div class="container">
+        <h1>精灵动画基础</h1>
+        
+        <div class="animation-container">
+            <div id="sprite"></div>
+        </div>
+        
+        <div class="controls">
+            <button id="start-btn">开始动画</button>
+            <button id="stop-btn">停止</button>
+            <button id="speed-up">加速</button>
+            <button id="speed-down">减速</button>
+        </div>
+        
+        <div class="explanation">
+            <h2>精灵动画原理</h2>
+            <p>精灵动画是通过在固定时间间隔内切换显示精灵表中的不同区域来实现的。</p>
+            
+            <div class="code-block">
+// 1. 定义动画参数
+const frameWidth = 64; // 每帧宽度
+const frameHeight = 64; // 每帧高度
+const totalFrames = 8; // 总帧数
+let currentFrame = 0; // 当前帧
+let frameRate = 10; // 帧率（每秒帧数）
+
+// 2. 更新动画帧
+function updateFrame() {
+    // 计算当前帧在精灵表中的位置
+    const col = currentFrame % 4; // 假设精灵表每行4帧
+    const row = Math.floor(currentFrame / 4);
     
-    function handleCredentialResponse(response) {
-      console.log('Google 登录响应:', response);
-      // 发送 ID Token 到后端验证
-      const idToken = response.credential;
-      // ... 验证逻辑
-    }
+    // 更新背景位置
+    sprite.style.backgroundPosition = `-${col * frameWidth}px -${row * frameHeight}px`;
     
-    // 在页面加载完成后初始化
-    window.addEventListener('load', initGoogleSignIn);
-  </script>
+    // 前进到下一帧
+    currentFrame = (currentFrame + 1) % totalFrames;
+}
+
+// 3. 设置动画循环
+let animationInterval = setInterval(updateFrame, 1000 / frameRate);
+            </div>
+            
+            <p>在这个示例中，我们使用CSS的<code>background-position</code>属性来显示精灵表的不同部分。</p>
+            
+            <h2>精灵表结构</h2>
+            <p>精灵表通常按网格排列所有动画帧。例如，一个8帧的动画可能排列为2行4列：</p>
+            
+            <div class="code-block">
+精灵表布局示例：
++-----+-----+-----+-----+
+| 帧1 | 帧2 | 帧3 | 帧4 |  ← 第一行
++-----+-----+-----+-----+
+| 帧5 | 帧6 | 帧7 | 帧8 |  ← 第二行
++-----+-----+-----+-----+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const sprite = document.getElementById('sprite');
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const speedUpBtn = document.getElementById('speed-up');
+        const speedDownBtn = document.getElementById('speed-down');
+        
+        // 动画参数
+        const frameWidth = 64; // 每帧宽度
+        const frameHeight = 64; // 每帧高度
+        const totalFrames = 8; // 总帧数
+        let currentFrame = 0; // 当前帧
+        let frameRate = 10; // 帧率（每秒帧数）
+        let animationInterval = null;
+        
+        // 更新动画帧
+        function updateFrame() {
+            // 计算当前帧在精灵表中的位置
+            const col = currentFrame % 4; // 每行4帧
+            const row = Math.floor(currentFrame / 4);
+            
+            // 更新背景位置
+            sprite.style.backgroundPosition = `-${col * frameWidth}px -${row * frameHeight}px`;
+            
+            // 前进到下一帧
+            currentFrame = (currentFrame + 1) % totalFrames;
+        }
+        
+        // 开始动画
+        function startAnimation() {
+            if (animationInterval) clearInterval(animationInterval);
+            animationInterval = setInterval(updateFrame, 1000 / frameRate);
+        }
+        
+        // 停止动画
+        function stopAnimation() {
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+        }
+        
+        // 调整速度
+        function changeSpeed(delta) {
+            frameRate = Math.max(1, Math.min(60, frameRate + delta));
+            if (animationInterval) {
+                stopAnimation();
+                startAnimation();
+            }
+        }
+        
+        // 添加事件监听
+        startBtn.addEventListener('click', startAnimation);
+        stopBtn.addEventListener('click', stopAnimation);
+        speedUpBtn.addEventListener('click', () => changeSpeed(5));
+        speedDownBtn.addEventListener('click', () => changeSpeed(-5));
+        
+        // 初始显示第一帧
+        updateFrame();
+    </script>
 </body>
 </html>

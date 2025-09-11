@@ -28,10 +28,6 @@ export const useFnHook = <F>({
   return hook;
 };
 
-export const useOverlay = (overlay: string | HTMLElement | VNode) => {
-  // document.body.appendChild(loadingEl);
-};
-
 export const useLoading = () => {
   const [loading, toggle] = useToggle(false);
   const hook = useFnHook({
@@ -93,7 +89,7 @@ export const useLocalExpire = (name, step = "D") => {
 
 /** 获取子组件的expose，并可以继续向上暴露 */
 export const useExpose = <T extends Component, K extends Object>(self?: K) => {
-  type Expose = any; //ExtractExposed<InstanceType<T>>
+  type Expose = any; // ExtractExposed<InstanceType<T>>
   const expose = reactive<Expose & K>((self ?? {}) as any);
   // defineExpose(expose); defineExpose是宏编程，即使引用也不会暴露出值
 

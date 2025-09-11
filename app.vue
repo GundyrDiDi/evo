@@ -12,7 +12,6 @@ import { GesturePlugin } from '@vueuse/gesture'
 const app = useNuxtApp()
 app.vueApp.use(ConfigProvider)
 app.vueApp.use(GesturePlugin)
-  
 const colorMode = useColorMode()
 </script>
 <style>

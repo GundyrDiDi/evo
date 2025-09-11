@@ -1,9 +1,12 @@
 <script lang="ts" setup>
+import { useDrag } from '@vueuse/gesture'
+
 const emit = defineEmits<{ (e: 'commit', data: any): void }>()
 
 const data = useLocalStorage('new_game_data', {} as any)
 
 const { insertGame } = useGameZod()
+
 const commit = () => {
   const safe = insertGame.safeParse(data.value)
   if (safe.data) {
@@ -13,11 +16,35 @@ const commit = () => {
     alert(safe.error)
   }
 }
+
+const thumb = ref<HTMLElement>()
+
+const dragMotion = useMotion(thumb, {
+  x: 0,
+  y: 0,
+  scale: 1,
+  transition: {
+    type: 'spring',
+    stiffness: 300,
+    damping: 20
+  }
+})
+
+useDrag((state) => {
+  const { offset: [mx, my], dragging } = state
+  dragMotion.apply({
+    x: mx,
+    y: my,
+    scale: dragging ? 0.95 : 1
+  })
+}, { domTarget: thumb })
+
 </script>
 
 <template>
   <v-popup>
-    <div class=" fixed z-99 bottom-12 right-4 h-12 w-12 bg-blue-400 rounded-full flex justify-center items-center">
+    <div ref="thumb"
+      class=" fixed z-99 bottom-12 right-4 h-12 w-12 bg-teal-700 rounded-full flex justify-center items-center">
       <i-plus-solid class="text-[32px]" />
     </div>
     <template #content="{ close }">
@@ -29,4 +56,10 @@ const commit = () => {
   </v-popup>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="css" scoped>
+.test-box {
+  width: 100px;
+  height: 100px;
+  background: red;
+}
+</style>

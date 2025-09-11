@@ -22,11 +22,17 @@ const handleResponse = (res) => {
   return res;
 };
 
-export const withResponse = <T extends { then: Function }>(t: T) => {
+// 注意：useSupabaseClient并不是一个标准的Promise，他只有在调用then后才会发起请求
+export const withResponse = <T extends { then: Function }>(
+  t: T,
+  immediate?: boolean
+) => {
+  // 这种情况其实还是发生在请求后
+  immediate && handleRequest();
   return new Proxy(t, {
     get(t, p) {
       if (p === "then") {
-        handleRequest();
+        immediate || handleRequest();
         return (...res) => t.then(handleResponse).then(...res);
       }
       return t[p];

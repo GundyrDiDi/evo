@@ -12,6 +12,8 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@vant/nuxt",
     "@vite-pwa/nuxt",
+    "@vueuse/motion/nuxt",
+    "nuxt-lottie",
   ],
   css: ["~/assets/css/main.css"],
   ssr: false,
@@ -31,6 +33,12 @@ export default defineNuxtConfig({
     dirs: ["composables/*", "composables/**", "types/*"],
   },
   vant: {},
+  lottie: {
+    componentName: "Lottie", // Optional: Customize the component name
+    lottieFolder: "/assets/lottie", // Optional: Customize the Lottie folder path
+    autoFolderCreation: true, // Optional: Auto create lottie folder (default: true)
+    enableLogs: true, // Optional: Enable console logs from module (default: true)
+  },
   // pwa: {
   //   strategies: sw ? "injectManifest" : "generateSW",
   //   srcDir: sw ? "service-worker" : undefined,
