@@ -46,5 +46,8 @@
   },
   "devDependencies": {
     "vant": "^4.9.21"
+  },
+   "pnpm":{
+    "overrides": { "rollup": "4.46.2" }
   }
 }
