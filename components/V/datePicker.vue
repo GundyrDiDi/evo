@@ -25,8 +25,8 @@ const open = () => {
 }
 watch(show, (v) => v && open())
 
-const default_slot = useSlots().default
-const renderSlot = () => cloneVNode(default_slot!()[0], { onClick: () => toggle(true) })
+const default_slot = ref(useSlots().default)
+const renderSlot = () => cloneVNode(default_slot.value!()[0], { onClick: () => toggle(true) })
 </script>
 
 <template>
