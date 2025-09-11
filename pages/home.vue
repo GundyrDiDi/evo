@@ -4,11 +4,12 @@ const [loading, withLoading] = useLoading()
 
 const { data, refresh } = await useAsyncData(withLoading(async () => {
   // const {data}=await client.rpc('',{})`
-  const { data } = await selectTable('game[]').order('created_at', { ascending: false }).range(0,20)
+  const { data } = await selectTable('game[]').order('created_at', { ascending: false })
   return data?.map(v => injectGameRow(v)) ?? []
 }), {
   server: false,
   // immediate:false
+  default: () => <GameDTO[]>[]
 })
 
 const { insertGame, upsertGame } = useGameZod()
@@ -35,6 +36,12 @@ const handleDelete = useDebounceFn(withLoading(async (row: GameDTO) => {
 
 const sortBy = useLocalStorage('sortBy', '')
 
+const { list, containerProps, wrapperProps } = useVirtualList(
+  data,
+  {
+    itemHeight: 44,
+  },
+)
 
 // 总数 虚拟列表
 // 筛选 手势
@@ -44,16 +51,18 @@ const sortBy = useLocalStorage('sortBy', '')
 </script>
 
 <template>
-  <AppHeader />
-  <div class=" flex-1 flex flex-col px-4">
-    <Cell v-for="v in data" :key="v.id" :cell_key="v.id" :model-value="v" @update="handleUpdate" />
-  </div>
-  <Plus @commit="handleUpsert"></Plus>
-  <AppFooter>
-    <div class=" flex justify-end text-xs text-gray-400 font-[500]">
-      {{ data?.length }} records
+  <div class=" h-screen flex flex-col" v-bind="containerProps">
+    <AppHeader />
+    <div class=" flex-1 flex flex-col px-4" v-bind="wrapperProps">
+      <Cell v-for="v in list" :key="v.data.id" :cell_key="v.data.id" :model-value="v.data" @update="handleUpdate" />
     </div>
-  </AppFooter>
+    <Plus @commit="handleUpsert"></Plus>
+    <AppFooter>
+      <div class=" flex justify-end text-xs text-gray-400 font-[500]">
+        {{ data?.length }} records
+      </div>
+    </AppFooter>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

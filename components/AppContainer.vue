@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div class="h-screen overflow-x-hidden flex flex-col">
+  <div class="h-screen overflow-x-hidden">
     <slot></slot>
   </div>
 </template>
