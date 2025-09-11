@@ -32,6 +32,12 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["composables/*", "composables/**", "types/*"],
   },
+  vant: {
+    lazyload: {
+      lazyComponent: true,
+    },
+    components: ["field"],
+  },
   lottie: {
     componentName: "Lottie", // Optional: Customize the component name
     lottieFolder: "/assets/lottie", // Optional: Customize the Lottie folder path
