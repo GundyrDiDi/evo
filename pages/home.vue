@@ -4,7 +4,7 @@ const [loading, withLoading] = useLoading()
 
 const { data, refresh } = await useAsyncData(withLoading(async () => {
   // const {data}=await client.rpc('',{})`
-  const { data } = await selectTable('game[]').order('created_at', { ascending: false })
+  const { data } = await selectTable('game[]').order('created_at', { ascending: false }).range(0,20)
   return data?.map(v => injectGameRow(v)) ?? []
 }), {
   server: false,

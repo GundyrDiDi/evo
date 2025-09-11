@@ -27,17 +27,23 @@ const dragMotion = useMotion(thumb, {
     type: 'spring',
     stiffness: 300,
     damping: 20
-  }
+  },
 })
 
 useDrag((state) => {
+  state.event.stopPropagation()
+  state.event.preventDefault()
   const { offset: [mx, my], dragging } = state
   dragMotion.apply({
     x: mx,
     y: my,
     scale: dragging ? 0.95 : 1
   })
-}, { domTarget: thumb })
+}, {
+  domTarget: thumb,
+  preventDefault: true,
+  eventOptions: { passive: false }
+})
 
 </script>
 
