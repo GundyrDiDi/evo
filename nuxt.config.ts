@@ -10,9 +10,9 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@vueuse/nuxt",
     "@pinia/nuxt",
-    "@vant/nuxt",
     "@vite-pwa/nuxt",
     "@vueuse/motion/nuxt",
+    "@vant/nuxt",
     "nuxt-lottie",
   ],
   css: ["~/assets/css/main.css"],
@@ -32,7 +32,6 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["composables/*", "composables/**", "types/*"],
   },
-  vant: {},
   lottie: {
     componentName: "Lottie", // Optional: Customize the component name
     lottieFolder: "/assets/lottie", // Optional: Customize the Lottie folder path
