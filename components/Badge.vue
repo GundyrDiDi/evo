@@ -3,7 +3,7 @@ const model = defineModel<GameDTO>({ required: true })
 
 const data = toValue(model)
 
-// 显示顺序：tier>judgment>status
+// 显示顺序：tier > judgment > status
 const badge = computed(() => {
   if (data.tier) return data.tier
   if (data.judgment) return data.judgment.slice(0, 1)

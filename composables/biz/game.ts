@@ -35,6 +35,14 @@ export const injectGameRow = (data: Tables<"game">) => {
   return Object.assign(data, {});
 };
 
+// 基于的状态
+// export const 
+
+//
+const filters=()=>{
+
+}
+
 const partialZod = <
   U extends z.ZodObject,
   K extends keyof U["shape"],

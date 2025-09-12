@@ -27,12 +27,10 @@ const dragMotion = useMotion(thumb, {
     type: 'spring',
     stiffness: 300,
     damping: 20
-  },
+  }
 })
 
 useDrag((state) => {
-  state.event.stopPropagation()
-  state.event.preventDefault()
   const { offset: [mx, my], dragging } = state
   dragMotion.apply({
     x: mx,
@@ -41,16 +39,13 @@ useDrag((state) => {
   })
 }, {
   domTarget: thumb,
-  preventDefault: true,
-  eventOptions: { passive: false }
 })
-
 </script>
 
 <template>
   <v-popup>
     <div ref="thumb"
-      class=" fixed z-99 bottom-12 right-4 h-12 w-12 bg-teal-700 rounded-full flex justify-center items-center">
+      class=" fixed z-99 bottom-12 right-4 h-12 w-12 bg-teal-700 rounded-full flex justify-center items-center touch-none">
       <i-plus-solid class="text-[32px]" />
     </div>
     <template #content="{ close }">

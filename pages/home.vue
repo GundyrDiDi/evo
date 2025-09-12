@@ -7,9 +7,9 @@ const { data, refresh } = await useAsyncData(withLoading(async () => {
   const { data } = await selectTable('game[]').order('created_at', { ascending: false })
   return data?.map(v => injectGameRow(v)) ?? []
 }), {
+  default: () => <GameDTO[]>[],
   server: false,
-  // immediate:false
-  default: () => <GameDTO[]>[]
+  // immediate:false,
 })
 
 const { insertGame, upsertGame } = useGameZod()
@@ -34,8 +34,6 @@ const handleDelete = useDebounceFn(withLoading(async (row: GameDTO) => {
 
 }), 300)
 
-const sortBy = useLocalStorage('sortBy', '')
-
 const { list, containerProps, wrapperProps } = useVirtualList(
   data,
   {
@@ -43,11 +41,10 @@ const { list, containerProps, wrapperProps } = useVirtualList(
   },
 )
 
-// 总数 虚拟列表
-// 筛选 手势
 // pwa、定时同步,记录修改过的数据
-// 自动填写系列 合并dlc按钮
-// 术语表 同义词集合
+// 总数 虚拟列表 按钮拖动 ✅
+// 手势 筛选 自定义保存筛选 
+// 术语表 同义词集合 自动填写“系列字段” 合并dlc按钮
 </script>
 
 <template>
