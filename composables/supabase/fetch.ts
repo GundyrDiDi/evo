@@ -19,7 +19,7 @@ const handleRequest = () => {
 const handleResponse = (res) => {
   loadingEnd(res);
   console.log("handleResponse", res);
-  if (res.error) alert(res.error);
+  if (res.error) alert(res.error?.message);
   return res;
 };
 
@@ -58,6 +58,7 @@ export const upsertTable = <T extends Table_Name>(
   record: TablesInsert<T>,
   primary_key?: keyof Tables<T>
 ) => {
+  
   const builder = useSupabaseClient().from(table_name);
   return withResponse(
     builder

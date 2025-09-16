@@ -26,6 +26,7 @@ const { list, containerProps, wrapperProps } = useVirtualList(
   { itemHeight: 44 },
 )
 
+
 // pwa、定时同步,记录修改过的数据
 // 总数 虚拟列表 按钮拖动 ✅
 // 手势 筛选 自定义保存筛选 
@@ -33,19 +34,19 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 </script>
 
 <template>
-  <VSlide class=" h-screen touch-none">
-    <div class="h-full flex flex-col" v-bind="containerProps">
-      <AppHeader />
+  <VSlide class=" h-screen touch-none flex flex-col">
+    <AppHeader />
+    <div class="flex-1 flex flex-col" v-bind="containerProps">
       <div class=" flex-1 flex flex-col px-4" v-bind="wrapperProps">
         <Cell v-for="v in list" :key="v.data.id" :cell_key="v.data.id" :model-value="v.data" @update="handleUpdate" />
       </div>
-      <AppFooter>
-        <div class=" flex justify-end text-xs text-gray-400 font-[500]">
-          {{ data?.length }} records
-        </div>
-      </AppFooter>
     </div>
-    <template #slider>
+    <AppFooter>
+      <div class=" flex justify-end text-xs text-gray-400 font-[500]">
+        {{ data?.length }} records
+      </div>
+    </AppFooter>
+    <template #slider="{ close }">
       <div class="h-full bg-gray-800 w-[240px]">
         <Search />
       </div>

@@ -3,6 +3,13 @@ import { useDrag } from '@vueuse/gesture'
 
 const props = defineProps<{ duration?: number }>()
 
+onMounted(() => {
+  toggle(true)
+  requestAnimationFrame(() => {
+    animate('enter')
+  })
+})
+
 // todo:各类钩子
 const emits = defineEmits<{ (e: 'dragging', state): void }>()
 
@@ -20,7 +27,7 @@ const slider = ref<HTMLElement>()
 const width = computed(() => slider.value?.getBoundingClientRect().width ?? 0)
 
 // 容器的motion
-const motion = useMotion(container, {})
+const motion = useMotion(container, { initial: { x: 0 } })
 
 const [show, toggle] = useToggle()
 
@@ -86,6 +93,7 @@ useDrag((state) => {
   //
   last && (direction.value = undefined)
 }, {
+  swipeVelocity: 0.3,
   domTarget: container,
   threshold: 10
 })
@@ -97,9 +105,10 @@ const mask = ref<HTMLElement>()
 const maskMotion = useMotion(mask, {
   initial: { opacity: 0 }
 })
-// nextState 表示下一次的状态，值为[0,1]；后续可以通过当前值和下一次值，计算出合适的duration
+// nextState 表示下一次的状态，值为[0,1]
 const animateMask = (nextState: number, duration?: number) => {
   if (isNaN(nextState)) return
+  // 后续可以通过当前值和下一次值，计算出合适的duration
   const calcD = 0
   maskMotion.apply({
     opacity: nextState / 1.4,

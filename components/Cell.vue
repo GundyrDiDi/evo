@@ -45,7 +45,7 @@ const showDay = (d) => dayjs(d).format("YYYY/MM")
         <v-date-picker v-model="data.finish_date" :min-date="new Date('2000/01/01')" :max-date="new Date()">
           <span class=" text-[12px]">{{
             data.finish_date ? showDay(data.finish_date) : '--/--'
-          }}</span>
+            }}</span>
         </v-date-picker>
         <Badge v-model="data" />
       </span>

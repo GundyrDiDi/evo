@@ -22,7 +22,9 @@ export const useGame = defineStore("game_table", () => {
   const { insertGame, updateGame, filterGame } = useGameZod();
 
   // 返回 {筛选项，搜索查询条件}
-  const useFilter = () => {};
+  const useFilter = () => {
+    //
+  };
 
   const query = async (params) => {
     // todo:处理条件
@@ -32,7 +34,6 @@ export const useGame = defineStore("game_table", () => {
       .order("created_at", {
         ascending: false,
       })
-      .range(0, 100);
     return data?.map((v) => injectGameRow(v)) ?? [];
   };
 
