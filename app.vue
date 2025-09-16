@@ -22,4 +22,8 @@ const colorMode = useColorMode()
   --van-padding-md: 0px !important;
   --van-cell-vertical-padding: 0 !important;
 }
+
+body{
+  touch-action: none;
+}
 </style>

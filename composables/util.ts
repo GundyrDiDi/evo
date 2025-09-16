@@ -24,6 +24,10 @@ export const _values = <T extends Object>(t?: T) => {
   return t ? (Object.values(t) as Valueof<T>[]) : [];
 };
 
+export function _range(min, max, cur) {
+  return Math.max(min, Math.min(max, cur));
+}
+
 export function _randomId(): string {
   // 取时间戳后6位 + 4位随机字符
   return (
@@ -180,7 +184,10 @@ export const _obj2map = <K extends string | number, T>(obj: Record<K, T>) => {
 };
 
 // 状态事务取消
-export const exclusiveRunner = <S extends AnyFn, E extends (...r: any[]) => void>(
+export const exclusiveRunner = <
+  S extends AnyFn,
+  E extends (...r: any[]) => void
+>(
   start: S,
   end: E
 ) => {

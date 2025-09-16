@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-
 </script>
 
 <template>
-  <div class=" sticky bottom-0 z-1 bg-[var(--ui-bg)] px-4 py-2 shadow pb-6">
-    <slot></slot>
+  <div>
+    <h1>fi</h1>
+    <h1>fiflsdf</h1>
+    <h1>fiflsdflorem</h1>
   </div>
 </template>
 

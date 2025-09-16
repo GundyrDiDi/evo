@@ -1,44 +1,29 @@
 <script lang="ts" setup>
 
-const [loading, withLoading] = useLoading()
+const game = useGame()
 
-const { data, refresh } = await useAsyncData(withLoading(async () => {
-  // const {data}=await client.rpc('',{})`
-  const { data } = await selectTable('game[]').order('created_at', { ascending: false })
-  return data?.map(v => injectGameRow(v)) ?? []
-}), {
+const { data, refresh, pending } = await useAsyncData(() => game.query({}), {
   default: () => <GameDTO[]>[],
   server: false,
-  // immediate:false,
+  // immediate: false,
 })
 
-const { insertGame, upsertGame } = useGameZod()
+const inserted = (row: GameDTO) => {
+  data.value?.unshift(row)
+}
 
-const handleUpsert = useDebounceFn(withLoading(async (row: GameDTO, type: 'create' | 'update' = 'create') => {
-  console.log({ ...row })
-  const zod = type === 'create' ? insertGame : upsertGame
-  const { data: params, error } = zod.safeParse(row)
-  if (params) {
-    const { data: row, error } = await upsertTable('game', params)
-    // 
-    if (type === 'create' && row) data.value?.unshift(row)
-    error && alert(error.message)
-  } else {
-    alert(error)
-  }
-}), 300)
+const handleUpdate = useDebounceFn(async (row: GameDTO) => {
+  await game.upsert(row, 'update')
+}, 300)
 
-const handleUpdate = (row: GameDTO) => handleUpsert(row, 'update')
-
-const handleDelete = useDebounceFn(withLoading(async (row: GameDTO) => {
+const handleDelete = useDebounceFn((async (row: GameDTO) => {
 
 }), 300)
 
 const { list, containerProps, wrapperProps } = useVirtualList(
   data,
-  {
-    itemHeight: 44,
-  },
+  // 每条数据高度
+  { itemHeight: 44 },
 )
 
 // pwa、定时同步,记录修改过的数据
@@ -48,18 +33,25 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 </script>
 
 <template>
-  <div class=" h-screen flex flex-col" v-bind="containerProps">
-    <AppHeader />
-    <div class=" flex-1 flex flex-col px-4" v-bind="wrapperProps">
-      <Cell v-for="v in list" :key="v.data.id" :cell_key="v.data.id" :model-value="v.data" @update="handleUpdate" />
-    </div>
-    <Plus @commit="handleUpsert"></Plus>
-    <AppFooter>
-      <div class=" flex justify-end text-xs text-gray-400 font-[500]">
-        {{ data?.length }} records
+  <VSlide class=" h-screen touch-none">
+    <div class="h-full flex flex-col" v-bind="containerProps">
+      <AppHeader />
+      <div class=" flex-1 flex flex-col px-4" v-bind="wrapperProps">
+        <Cell v-for="v in list" :key="v.data.id" :cell_key="v.data.id" :model-value="v.data" @update="handleUpdate" />
       </div>
-    </AppFooter>
-  </div>
+      <AppFooter>
+        <div class=" flex justify-end text-xs text-gray-400 font-[500]">
+          {{ data?.length }} records
+        </div>
+      </AppFooter>
+    </div>
+    <template #slider>
+      <div class="h-full bg-gray-800 w-[240px]">
+        <Search />
+      </div>
+    </template>
+    <Plus @inserted="inserted"></Plus>
+  </VSlide>
 </template>
 
 <style lang="scss" scoped></style>

@@ -19,6 +19,7 @@ const handleRequest = () => {
 const handleResponse = (res) => {
   loadingEnd(res);
   console.log("handleResponse", res);
+  if (res.error) alert(res.error);
   return res;
 };
 

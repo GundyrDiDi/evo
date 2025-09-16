@@ -1,11 +1,63 @@
 import z, { ZodAny, ZodObject } from "zod";
 
+export type GameDTO = Tables<"game"> & {};
+
 export const useGameColumn = () => Columns.game;
 
 export type GameColumns = Pick<
   Required<Columns_Type["game"]>,
   keyof typeof Columns.game
 >;
+
+export const injectGameRow = (data: GameDTO) => {
+  // 添加计算字段
+  return Object.assign(data, {});
+};
+
+//
+export const useGame = defineStore("game_table", () => {
+  const useGameColumn = () => Columns.game;
+
+  // zod schema
+  const { insertGame, updateGame, filterGame } = useGameZod();
+
+  // 返回 {筛选项，搜索查询条件}
+  const useFilter = () => {};
+
+  const query = async (params) => {
+    // todo:处理条件
+    const { error } = filterGame.safeParse(params);
+    // const {data}=await client.rpc('',{})`
+    const { data } = await selectTable("game[]")
+      .order("created_at", {
+        ascending: false,
+      })
+      .range(0, 100);
+    return data?.map((v) => injectGameRow(v)) ?? [];
+  };
+
+  const upsert = async (row: GameDTO, type: "create" | "update" = "create") => {
+    const zod = type === "create" ? insertGame : updateGame;
+    const { data, error } = zod.safeParse(row);
+    if (error) {
+      alert(error);
+      return { data, error };
+    } else {
+      const res = await upsertTable("game", data);
+      return res;
+    }
+  };
+
+  return {
+    insertGame,
+    updateGame,
+    filterGame,
+    query,
+    upsert,
+    useFilter,
+    useGameColumn,
+  };
+});
 
 //
 export const useGameDTODefault = () => {
@@ -19,37 +71,13 @@ export const useGameDTODefault = () => {
   return d as GameDTO;
 };
 
-export type GameDTO = Tables<"game"> & {};
-
-export const before_play_status = [
-  null,
-  "not_published",
-  "not_start",
-  "look_forward",
-] as Enums<"complete_status">[];
-
-// const played = ['abandon', 'finished', 'mastery'] as Enums<'complete_status'>[]
-
-export const injectGameRow = (data: Tables<"game">) => {
-  // 添加计算字段
-  return Object.assign(data, {});
-};
-
-// 基于的状态
-// export const 
-
-//
-const filters=()=>{
-
-}
-
 const partialZod = <
   U extends z.ZodObject,
   K extends keyof U["shape"],
   I extends "invert" | ""
 >(
   zod: U,
-  partProps: K[] = Object.values(zod) as K[],
+  partProps: K[] = Object.keys(zod.shape) as K[],
   invert: I = "" as I
 ) => {
   if (invert === "invert") {
@@ -105,9 +133,8 @@ const defineZod = <
   o: U
 ) => z.object(o);
 
-// 查询,提交的过滤和校验
+// 查询，新增，更新的过滤和校验，并修改转换 比如 trim()
 export const useGameZod = defineStore("game_zod", () => {
-  //
   const allGame = defineZod("game", {
     alias: z.array(z.string().trim().min(1)),
     finish_date: z.iso.date(),
@@ -128,23 +155,29 @@ export const useGameZod = defineStore("game_zod", () => {
     tags: z.array(z.string()),
   });
 
+  const filterGame = partialZod(allGame);
+
   const insertGame = partialZod(
     pickZod(allGame, ["id"], "invert"),
     ["name"],
     "invert"
   );
 
+  const updateGame = partialZod(allGame, ["id", "name"], "invert");
+
   // const { data, error } = insertGame.safeParse({ name: " 1", alias: [" cc"] });
   // console.log(data, error);
-  //
-  const upsertGame = partialZod(allGame, ["id", "name"], "invert");
-  //
+
   return {
+    filterGame,
     insertGame,
-    upsertGame,
+    updateGame,
   };
 });
 
+/**
+ *
+ */
 type GameRPC = {
   get_game_with_tags: GameDTO;
 };

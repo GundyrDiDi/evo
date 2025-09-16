@@ -1,19 +1,17 @@
 <script lang="ts" setup>
 import { useDrag } from '@vueuse/gesture'
 
-const emit = defineEmits<{ (e: 'commit', data: any): void }>()
+const emit = defineEmits<{ (e: 'inserted', data: any): void }>()
 
 const data = useLocalStorage('new_game_data', {} as any)
 
-const { insertGame } = useGameZod()
+const game = useGame()
 
-const commit = () => {
-  const safe = insertGame.safeParse(data.value)
-  if (safe.data) {
-    emit('commit', data.value)
+const commit = async () => {
+  const { data: record } = await game.upsert(data.value)
+  if (record) {
+    emit('inserted', record)
     data.value = useGameDTODefault()
-  } else {
-    alert(safe.error)
   }
 }
 
@@ -32,13 +30,14 @@ const dragMotion = useMotion(thumb, {
 
 useDrag((state) => {
   const { offset: [mx, my], dragging } = state
+  state.event.stopPropagation()
   dragMotion.apply({
     x: mx,
     y: my,
     scale: dragging ? 0.95 : 1
   })
 }, {
-  domTarget: thumb,
+  domTarget: thumb
 })
 </script>
 
