@@ -36,7 +36,7 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 <template>
   <VSlide class=" h-screen touch-none flex flex-col">
     <AppHeader />
-    <div class="flex-1 flex flex-col" v-bind="containerProps">
+    <div class="flex-1" v-bind="containerProps">
       <div class=" flex-1 flex flex-col px-4" v-bind="wrapperProps">
         <Cell v-for="v in list" :key="v.data.id" :cell_key="v.data.id" :model-value="v.data" @update="handleUpdate" />
       </div>
