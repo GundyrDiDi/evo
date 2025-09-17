@@ -29,7 +29,7 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 
 // pwa、定时同步,记录修改过的数据
 // 总数 虚拟列表 按钮拖动 ✅
-// 手势 筛选 自定义保存筛选 
+// 手势 筛选 blur后查询 搜索历史 自定义保存筛选 查询条件写在底部 可删除
 // 术语表 同义词集合 自动填写“系列字段” 合并dlc按钮
 </script>
 

@@ -93,7 +93,8 @@ useDrag((state) => {
   //
   last && (direction.value = undefined)
 }, {
-  swipeVelocity: 0.3,
+  swipeVelocity: 0.2,
+  // swipeDuration: 400,
   domTarget: container,
   threshold: 10
 })

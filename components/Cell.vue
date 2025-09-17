@@ -22,9 +22,9 @@ function isFocusedInput() {
 
 const update = useDebounceFn(() => {
   // 输入框聚焦时不提交
-  if (isFocusedInput()) return setTimeout(update, 4000)
+  if (isFocusedInput()) return requestAnimationFrame(update)
   emit('update', data)
-}, 5000)
+}, 3000)
 
 watch(data, update)
 
@@ -45,13 +45,13 @@ const showDay = (d) => dayjs(d).format("YYYY/MM")
         <v-date-picker v-model="data.finish_date" :min-date="new Date('2000/01/01')" :max-date="new Date()">
           <span class=" text-[12px]">{{
             data.finish_date ? showDay(data.finish_date) : '--/--'
-            }}</span>
+          }}</span>
         </v-date-picker>
         <Badge v-model="data" />
       </span>
     </div>
     <div v-auto-animate>
-      <div v-if="cell_id === data.id">
+      <div v-if="cell_id === data.id" class=" max-h-[70vh] overflow-auto">
         <v-field v-model="data.tags" :label="tags.label" />
         <v-field v-model="data.alias" :label="alias.label" :as-array="alias.asArray" trim />
         <v-pick-single v-model="data.status!" :label="status.label" :enums="status.enums" />
