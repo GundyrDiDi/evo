@@ -34,7 +34,7 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 </script>
 
 <template>
-  <VSlide class=" h-screen touch-none flex flex-col">
+  <VSlide class=" h-full touch-none flex flex-col">
     <AppHeader />
     <div class="flex-1" v-bind="containerProps">
       <div class=" flex-1 flex flex-col px-4" v-bind="wrapperProps">
