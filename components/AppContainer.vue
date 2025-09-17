@@ -6,7 +6,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-screen overflow-x-hidden" :style="{ minHeight: h + 'px' }">
+  <div class="h-screen overflow-x-hidden fixed top-0 w-screen" :style="{ minHeight: h + 'px' }">
     <slot></slot>
   </div>
 </template>
