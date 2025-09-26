@@ -3,13 +3,6 @@ import { useDrag } from '@vueuse/gesture'
 
 const props = defineProps<{ duration?: number }>()
 
-onMounted(() => {
-  toggle(true)
-  requestAnimationFrame(() => {
-    animate('enter')
-  })
-})
-
 // todo:各类钩子
 const emits = defineEmits<{ (e: 'dragging', state): void }>()
 
@@ -29,6 +22,7 @@ const width = computed(() => slider.value?.getBoundingClientRect().width ?? 0)
 // 容器的motion
 const motion = useMotion(container, { initial: { x: 0 } })
 
+// 展示
 const [show, toggle] = useToggle()
 
 // 类似transition组件的逻辑
@@ -47,7 +41,7 @@ const animate = (state: 'enter' | 'leave' = 'enter') => {
   // 其他元素的过渡动效
   next_state = isE ? 1 : 0
   next_duration = duration
-  animateMask(next_state, duration)
+  animateMask(next_state, next_duration)
 }
 
 const direction = ref<'x' | 'y' | void>()
