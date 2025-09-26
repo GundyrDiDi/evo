@@ -9,6 +9,8 @@ type Options = { text?: string, value: Numeric }[]
 
 const props = defineProps<{ columns: Options[] }>()
 
+const emits=defineEmits<{(e:'closed',state):void}>()
+
 const model = defineModel<Numeric[]>()
 
 const selectItems = computed(() => {
@@ -44,7 +46,7 @@ const vin = ref()
   <v-field v-else :label="$attrs.label ?? ''" readonly :model-value="selectItems.map(v => v?.text).join()"
     placeholder="请选择" clickable @click="toggle(true)" />
   <!--  -->
-  <van-popup v-model:show="show" position="bottom" destroy-on-close @open="open">
+  <van-popup v-model:show="show" position="bottom" destroy-on-close @open="open" @closed="emits('closed',openState)"  :teleport="$attrs.teleport??null">
     <van-picker ref="vin" v-model="model" :columns="columns" cancel-button-text="清空" @cancel="clear"
       confirm-button-text="重置" @confirm="reset" />
   </van-popup>

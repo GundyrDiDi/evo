@@ -37,7 +37,7 @@ export const useLoading = () => {
   return [loading, hook] as const;
 };
 
-export const usePending=()=>{}
+export const usePending = () => {};
 
 export const useMountListen = (fn, unmount = true) => {
   let stop;
@@ -101,4 +101,15 @@ export const useExpose = <T extends Component, K extends Object>(self?: K) => {
     }
   };
   return { expose, vins };
+};
+
+export const debounceWatch = <T>(
+  value: Ref<T>,
+  fn: (v?: T, old?: T) => void,
+  time = 300,
+  options?
+) => {
+  const cb = useDebounceFn(fn, time);
+  watch(value, cb, options);
+  return cb;
 };

@@ -5,6 +5,7 @@ export type Enum_Value<P = string> = {
   value: P;
   label?: string;
   icon?: string;
+  color?: string;
 };
 
 export type Enum_Data<T extends Enum_Name> = {
@@ -94,14 +95,30 @@ let edition = defineEnum("edition", {
 // S为独一无二(比如个人年度)的作品，A为佳作，B为平庸，C以下为不值得玩，D则表示对精神造成创伤
 // 同等级中“+”代表存在差距但不大(比如S与A+的差距比A+与A的差距会大得多)，更多是个人喜好，或者品味
 let tier = defineEnum("g_tier", {
-  "S+": {},
-  S: {},
-  "A+": {},
-  A: {},
-  "B+": {},
-  B: {},
-  C: {},
-  D: {},
+  "S+": {
+    color: "#FF5252",
+  },
+  S: {
+    color: "#FF6E6E",
+  },
+  "A+": {
+    color: "#FF8A65",
+  },
+  A: {
+    color: "#FFB74D",
+  },
+  "B+": {
+    color: "#A5D6A7",
+  },
+  B: {
+    color: "#66BB6A",
+  },
+  C: {
+    color: "#64B5F6",
+  },
+  D: {
+    color: "#BA68C8",
+  },
 });
 
 export const Enum = {
@@ -111,7 +128,9 @@ export const Enum = {
   tier,
 } as const;
 
-// 
+//
 export type Enums_Type = {
   [P in Enum_Name]: Enum_Data<P>;
 };
+
+export const _Enums = Constants.public.Enums;

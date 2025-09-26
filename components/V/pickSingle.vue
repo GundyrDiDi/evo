@@ -7,7 +7,13 @@ defineOptions({
 
 type Options = { text?: string, value: Numeric }[]
 
-const props = defineProps<{ options?: Options, enums?: Record<Numeric, Enum_Value>, allowNull?: boolean }>()
+const props = defineProps<{
+  options?: Options,
+  enums?: Record<Numeric, Enum_Value>,
+  allowNull?: boolean, teleport?: string,
+}>()
+
+const emits = defineEmits<{ (e: 'closed', state): void }>()
 
 const options = computed<Options>(() => {
   if (props.enums) return Object.values(props.enums).map(v => ({ text: v.label ?? v.value, value: v.value }))
@@ -52,8 +58,9 @@ const vin = ref()
   <v-field v-else :label="$attrs.label ?? ''" readonly :model-value="selectOpt?.text ?? model?.toString() ?? ''"
     placeholder="请选择" clickable @click="toggle(true)" />
   <!--  -->
-  <van-popup v-model:show="show" position="bottom" destroy-on-close @open="open">
-    <van-picker ref="vin" :model-value="[model!]" @change="change" :columns="options" cancel-button-text="清空"
+  <van-popup v-model:show="show" position="bottom" destroy-on-close @open="open" @closed="emits('closed', model)"
+    :teleport="teleport">
+    <van-picker ref="vin" :model-value="[model!]" @change="change" :columns="options" cancel-button-text="置空"
       @cancel="clear" confirm-button-text="重置" @confirm="reset" />
   </van-popup>
 </template>

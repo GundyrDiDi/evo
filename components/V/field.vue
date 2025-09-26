@@ -37,7 +37,7 @@ defineExpose(expose)
 </script>
 
 <template>
-  <van-field :ref="vins" label-width="auto" v-bind="$attrs" v-model="text" @blur="blur" />
+  <van-field :ref="vins" label-width="auto" v-bind="$attrs" v-model="text" @blur="blur" class=" bg-transparent!" />
 </template>
 
 <style lang="scss" scoped></style>

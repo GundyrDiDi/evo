@@ -8,7 +8,7 @@ export type Column_Value<T, P extends keyof T> = {
   name: P;
   label?: string;
   asArray?: boolean;
-  enums?: Valueof<Enums_Type>;
+  // enums?: Valueof<Enums_Type>;
   // primaryKey?: boolean; 提交校验
   // filter?: (a: any) => T[P];
 } & Value<T[P]>;
@@ -16,6 +16,13 @@ export type Column_Value<T, P extends keyof T> = {
 export type Column_Data<T extends Table_Name> = {
   [P in keyof Tables<T>]?: Column_Value<Tables<T>, P>;
 };
+
+export const typeGame = <
+  K extends keyof Tables<"game">,
+  R extends { [P in K]?: unknown }
+>(
+  r: R
+) => r;
 
 export const defineColumn = <
   E extends Table_Name,
@@ -38,6 +45,9 @@ export const defineColumn = <
 
 const game = defineColumn("game", {
   id: {},
+  created_at: {
+    label: "添加时间",
+  },
   name: {
     label: "游戏名",
   },
@@ -85,6 +95,14 @@ const game = defineColumn("game", {
   },
   owned: {
     label: "已拥有",
+    map: {
+      0: { label: "未购买", value: true },
+      1: { label: "已购买", value: false },
+    },
+  },
+  tier: {
+    label: "等级",
+    enums: Enum.tier,
   },
 });
 

@@ -1,29 +1,30 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends string | Date">
 import { cloneVNode } from 'vue'
 
-const props = defineProps<{ transfer?: (val: string[]) => string | Date | null }>()
+const props = defineProps<{ transfer?: (val: string[]) => T | null }>()
 
-const model = defineModel<string | Date | null>()
+// 默认 model 格式 YYYY-MM-DD
+const model = defineModel<T | null>()
 
 const date = ref()
 
 const [show, toggle] = useToggle()
 
-const setNowOrNull = (now?: boolean) => {
-  now ? change({ selectedValues: _date_str().split('-') }) : (model.value = null)
+const setNowOrNull = (val: 'now' | '' = '') => {
+  val === 'now' ? change({ selectedValues: _date_str().split('-') }) : (model.value = null)
   toggle(false)
 }
 
 const change = ({ selectedValues }) => {
   date.value = selectedValues
   const transfer = props.transfer ?? ((val) => val.length ? val.join('-') : null)
-  model.value = transfer(selectedValues)
+  model.value = transfer(selectedValues) as T
 }
 
-const open = () => {
+const onShow = () => {
   date.value = _date_str(model.value || undefined).split('-')
 }
-watch(show, (v) => v && open())
+watch(show, (v) => v && onShow())
 
 const default_slot = ref(useSlots().default)
 const renderSlot = () => cloneVNode(default_slot.value!()[0], { onClick: () => toggle(true) })
@@ -36,7 +37,7 @@ const renderSlot = () => cloneVNode(default_slot.value!()[0], { onClick: () => t
   <!--  -->
   <van-popup v-model:show="show" position="bottom" class=" h-[50%]" destroy-on-close>
     <van-date-picker :model-value="date" v-bind="$attrs" title="选择日期" confirm-button-text="今日" cancel-button-text="置空"
-      @confirm="setNowOrNull(true)" @cancel="setNowOrNull()" @change="change" />
+      @confirm="setNowOrNull('now')" @cancel="setNowOrNull()" @change="change" />
   </van-popup>
 </template>
 

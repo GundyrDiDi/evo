@@ -16,8 +16,6 @@ const options = computed<Options>(() => {
 
 const model = defineModel<Numeric[]>()
 
-const modelSet = computed(() => new Set(model.value))
-
 const selectOpts = computed(() => {
   return options.value.filter(v => model.value?.includes(v.value))
 })
@@ -29,6 +27,7 @@ const [show, toggle] = useToggle()
 
 // 重置回打开时的状态
 const openState = ref()
+
 const open = () => {
   openState.value = model.value
 }
@@ -41,7 +40,7 @@ const clear = () => {
 }
 
 const check = (opt: Options[number]) => {
-  if (modelSet.value.has(opt.value)) {
+  if (model.value?.includes(opt.value)) {
     model.value = model.value?.filter(v => v !== opt.value)
   } else {
     model.value ? model.value.push(opt.value) : (model.value = [opt.value])
@@ -57,7 +56,8 @@ const vins = ref()
   <v-field v-else :label="$attrs.label ?? ''" readonly :model-value="selectOpts.map(v => v.text).join()"
     placeholder="请选择" clickable @click="toggle(true)" />
   <!--  -->
-  <van-popup v-model:show="show" position="bottom" class=" pt-4" destroy-on-close @open="open">
+  <van-popup v-model:show="show" position="bottom" class=" pt-4" destroy-on-close @open="open"
+    :teleport="$attrs.teleport ?? undefined">
     <!-- <div class=" header"></div> -->
     <div class=" max-h-[50vh] pb-6 overflow-auto">
       <div class=" flex items-center h-12 px-4 text-[#fff] justify-center gap-4" v-for="v in options"

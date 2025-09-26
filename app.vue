@@ -26,4 +26,8 @@ const colorMode = useColorMode()
 body{
   touch-action: none;
 }
+
+.van-picker__toolbar {
+  padding: 0 1rem;
+}
 </style>

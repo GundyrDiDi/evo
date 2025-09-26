@@ -2,9 +2,17 @@
 
 const game = useGame()
 
-const { data, refresh, pending } = await useAsyncData(() => game.query({}), {
+const { sort_params } = game.useSort()
+
+const { chain } = game.useFilter('home_page')
+
+const { data, refresh: query, pending } = await useAsyncData('game_list', () => game.query({
+  order: sort_params.value,
+  chain
+}), {
   default: () => <GameDTO[]>[],
   server: false,
+  watch: []
   // immediate: false,
 })
 
@@ -26,10 +34,9 @@ const { list, containerProps, wrapperProps } = useVirtualList(
   { itemHeight: 44 },
 )
 
-
 // pwa、定时同步,记录修改过的数据
 // 总数 虚拟列表 按钮拖动 ✅
-// 手势 筛选 blur后查询 搜索历史 自定义保存筛选 查询条件写在底部 可删除
+// 手势 排序 筛选 blur后查询 搜索历史 自定义保存筛选 查询条件写在底部 可删除
 // 术语表 同义词集合 自动填写“系列字段” 合并dlc按钮
 </script>
 
@@ -42,20 +49,23 @@ const { list, containerProps, wrapperProps } = useVirtualList(
       </div>
     </div>
     <AppFooter>
-      <div class=" flex justify-end text-xs text-gray-400 font-[500]">
-        {{ data?.length }} records
+      <div class=" flex justify-between text-xs text-gray-400 font-[500] gap-4">
+        <FilterLabels />
+        <div>
+          {{ data?.length }} records
+        </div>
       </div>
     </AppFooter>
     <template #slider="{ close }">
       <div class="h-full bg-gray-800 w-[240px]">
-        <Search />
+        <Search @query="query" />
       </div>
     </template>
     <Plus @inserted="inserted"></Plus>
   </VSlide>
 </template>
 
-<style lang="scss" scoped></style>
+<style scoped></style>
 
 
 

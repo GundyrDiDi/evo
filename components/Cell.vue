@@ -51,7 +51,7 @@ const showDay = (d) => dayjs(d).format("YYYY/MM")
       </span>
     </div>
     <div v-auto-animate>
-      <div v-if="cell_id === data.id" class=" max-h-[70vh] overflow-auto">
+      <div v-if="cell_id === data.id">
         <v-field v-model="data.tags" :label="tags.label" />
         <v-field v-model="data.alias" :label="alias.label" :as-array="alias.asArray" trim />
         <v-pick-single v-model="data.status!" :label="status.label" :enums="status.enums" />
@@ -77,10 +77,6 @@ const showDay = (d) => dayjs(d).format("YYYY/MM")
 <style scoped>
 :deep(.van-cell) {
   line-height: 36px;
-}
-
-:deep(.van-picker__toolbar) {
-  padding: 0 1rem;
 }
 
 :deep(.van-cell__title) {

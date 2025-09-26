@@ -24,6 +24,10 @@ export const _values = <T extends Object>(t?: T) => {
   return t ? (Object.values(t) as Valueof<T>[]) : [];
 };
 
+// export const _entries = <T extends Object>(t?: T) => {
+//   return t ? (Object.entries(t) as ([T,Valueof<T>])[]) : [];
+// };
+
 export function _range(min, max, cur) {
   return Math.max(min, Math.min(max, cur));
 }
@@ -290,4 +294,9 @@ export function _isMouseOver(element: Element, mouseEvent: MouseEvent) {
   const y = mouseEvent.clientY;
 
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+}
+
+export function _isFocusedInput() {
+  const activeElement = document.activeElement
+  return activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(activeElement.tagName)
 }
