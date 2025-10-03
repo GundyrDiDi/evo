@@ -14,43 +14,40 @@ const { query_labels, filter } = game.useFilter('home_page')
           {{ filter.name_or_alias }}
         </div>
       </template>
-      <!-- <template #tags>
-        <v-field-blur v-model="filter.name_or_alias" />
-      </template> -->
+      <template #tags>
+        <!-- <v-field-blur v-model="filter.name_or_alias" /> -->
+      </template>
       <template #status>
-        {{ filter.status.join() }}
+        {{ filter.status }}
         <!-- <v-tag-group v-model="filter.status" :enums="columns.status.enums" /> -->
       </template>
-      <!-- 
       <template #finish_date_range>
-        <v-field-blur type="number" v-model="filter.finish_date_range" clearable />
+        <!-- <v-field-blur type="number" v-model="filter.finish_date_range" clearable /> -->
       </template>
       <template #play_time_range>
-        <div class=" flex items-baseline gap-2">
+        <!-- <div class=" flex items-baseline gap-2">
           <v-field-blur type="number" v-model="filter.play_time_range[0]" clearable />
           至
           <v-field-blur type="number" v-model="filter.play_time_range[1]" clearable />
-        </div>
+        </div> -->
       </template>
       <template #tiers>
-        <v-tag-group v-model="filter.tiers" :enums="columns.tier.enums">
-          <template #default="{ option }">
-            <span class=" text-[12px]" :style="{ color: option.color }">{{ option.value }}</span>
-          </template>
-        </v-tag-group>
+        {{ filter.tiers }}
       </template>
       <template #only_owned_or_not>
-        <v-check class=" flex items-center gap-3 text-[12px] py-1" v-model="filter.only_owned_or_not"
+        <!-- <v-check class=" flex items-center gap-3 text-[12px] py-1" v-model="filter.only_owned_or_not"
           :options="_values(columns.owned.map)">
-        </v-check>
+        </v-check> -->
       </template>
       <template #platforms>
-        <v-tag-group v-model="filter.platforms" :enums="columns.platform.enums"
-          item-class=" w-auto px-3 text-[12px]"></v-tag-group>
+        <!-- <v-tag-group v-model="filter.platforms" :enums="columns.platform.enums"
+          item-class=" w-auto px-3 text-[12px]"></v-tag-group> -->
       </template>
       <template #series>
-        <v-field-blur v-model="filter.series" clearable />
-      </template> -->
+        <div class=" max-w-6 truncate">
+          {{ filter.series }}
+        </div>
+      </template>
     </slot-list>
   </div>
 </template>

@@ -50,42 +50,6 @@ export type Database = {
           },
         ]
       }
-      _relations_game_tag: {
-        Row: {
-          created_at: string
-          game_id: number | null
-          id: number
-          tag_id: number | null
-        }
-        Insert: {
-          created_at?: string
-          game_id?: number | null
-          id?: number
-          tag_id?: number | null
-        }
-        Update: {
-          created_at?: string
-          game_id?: number | null
-          id?: number
-          tag_id?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "_link_game_tag_game_id_fkey"
-            columns: ["game_id"]
-            isOneToOne: false
-            referencedRelation: "game"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "_link_game_tag_tag_id_fkey"
-            columns: ["tag_id"]
-            isOneToOne: false
-            referencedRelation: "game_tag"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       _relations_tag: {
         Row: {
           child_id: number
@@ -136,8 +100,8 @@ export type Database = {
           remark: string | null
           series: string | null
           status: Database["public"]["Enums"]["complete_status"] | null
-          tags: string[] | null
-          tier: string | null
+          tags: number[] | null
+          tier: Database["public"]["Enums"]["g_tier"] | null
           user_id: string | null
         }
         Insert: {
@@ -156,8 +120,8 @@ export type Database = {
           remark?: string | null
           series?: string | null
           status?: Database["public"]["Enums"]["complete_status"] | null
-          tags?: string[] | null
-          tier?: string | null
+          tags?: number[] | null
+          tier?: Database["public"]["Enums"]["g_tier"] | null
           user_id?: string | null
         }
         Update: {
@@ -176,8 +140,8 @@ export type Database = {
           remark?: string | null
           series?: string | null
           status?: Database["public"]["Enums"]["complete_status"] | null
-          tags?: string[] | null
-          tier?: string | null
+          tags?: number[] | null
+          tier?: Database["public"]["Enums"]["g_tier"] | null
           user_id?: string | null
         }
         Relationships: [
@@ -188,13 +152,6 @@ export type Database = {
             referencedRelation: "game"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "game_tier_fkey"
-            columns: ["tier"]
-            isOneToOne: false
-            referencedRelation: "tier"
-            referencedColumns: ["name"]
-          },
         ]
       }
       game_tag: {
@@ -202,16 +159,19 @@ export type Database = {
           created_at: string
           id: number
           name: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: number
           name: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: number
           name?: string
+          user_id?: string | null
         }
         Relationships: []
       }

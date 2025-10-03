@@ -276,6 +276,7 @@ export const useGameDTODefault = () => {
     edition: "standard",
     status: "not_start",
     owned: false,
+    tags: [],
   };
   return d as GameDTO;
 };
@@ -361,7 +362,7 @@ export const useGameZod = defineStore("game_zod", () => {
     tier: z.enum(_Enums.g_tier),
     user_id: z.string(),
     play_time: z.number(),
-    tags: z.array(z.string()),
+    tags: z.array(z.number()),
   });
 
   const filterGame = partialZod(allGame);
